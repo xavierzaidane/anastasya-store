@@ -1,0 +1,76 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  ADMIN
+  CUSTOMER
+}
+
+// ============================================
+// USER - For admin authentication
+// ============================================
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  name      String?
+  role      Role     @default(CUSTOMER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// ============================================
+// CATEGORY - Product categories (small, medium, large, etc.)
+// ============================================
+model Category {
+  id       Int       @id @default(autoincrement())
+  slug     String    @unique
+  name     String
+  image    String?
+  products Product[]
+}
+
+// ============================================
+// PRODUCT - Flower bouquets and arrangements
+// ============================================
+model Product {
+  id          Int      @id @default(autoincrement())
+  slug        String   @unique
+  name        String
+  description String?
+  items       String[] // What's included in the bouquet
+  price       Decimal  @db.Decimal(10, 2)
+  image       String?
+  rating      Float    @default(0)
+  reviewCount Int      @default(0)
+  isActive    Boolean  @default(true)
+  isStaffPick Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  categoryId Int
+  category   Category @relation(fields: [categoryId], references: [id])
+}
+
+// ============================================
+// BLOG - Blog posts for content marketing
+// ============================================
+model Blog {
+  id        Int      @id @default(autoincrement())
+  slug      String   @unique
+  title     String
+  excerpt   String?
+  content   String
+  category  String?
+  readTime  Int      @default(5)
+  author    String?
+  image     String?
+  published Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

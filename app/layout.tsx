@@ -1,15 +1,25 @@
+// For adding custom fonts with other frameworks, see:
+// https://tailwindcss.com/docs/font-family
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { ABeeZee, Merriweather, Fira_Code } from "next/font/google";
 import "./globals.css";
+import { DialogProvider } from "@/components/products/DialogProvider";
+import { SavedItemsProvider } from "@/hooks/use-saved-items";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const fontSans = ABeeZee({
   subsets: ["latin"],
+  variable: "--font-sans",
+  weight: "400",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const fontSerif = Merriweather({
   subsets: ["latin"],
+  variable: "--font-serif",
+});
+
+const fontMono = Fira_Code({
+  subsets: ["latin"],
+  variable: "--font-mono",
 });
 
 export const metadata: Metadata = {
@@ -24,10 +34,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {children}
+      <body className={`${fontSans.variable} ${fontSerif.variable} ${fontMono.variable} antialiased`}>
+        <SavedItemsProvider>
+          <DialogProvider>
+            {children}
+          </DialogProvider>
+        </SavedItemsProvider>
       </body>
     </html>
   );
