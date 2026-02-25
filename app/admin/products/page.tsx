@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
-import Link from 'next/link';
 import { products, Product } from '@/data/products';
 import {
   Table,
@@ -15,10 +14,12 @@ import {
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Badge } from '@/components/ui/badge';
-import {
-  Plus,
-  ArrowUpDown,
-} from 'lucide-react';
+import { ArrowUpDown } from 'lucide-react';
+import CreateProductDialog from '@/components/admin/products/CreateProductDialog';
+import ViewProductDialog from '@/components/admin/products/ViewProductDialog';
+import EditProductDialog from '@/components/admin/products/EditProductDialog';
+import DeleteProductDialog from '@/components/admin/products/DeleteProductDialog';
+
 
 export default function ProductsPage() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -82,8 +83,12 @@ export default function ProductsPage() {
         return 'default';
       case 'large':
         return 'destructive';
-      default:
+      case 'money':
+        return 'ghost';
+      case 'round':
         return 'outline';
+      case 'custom':
+        return 'link';
     }
   };
 
@@ -97,12 +102,7 @@ export default function ProductsPage() {
             Manage your flower bouquet inventory
           </p>
         </div>
-        <Button asChild className="gap-2 rounded-xl">
-          <Link href="/admin/products/new">
-            <Plus className="h-4 w-4" />
-            Add Product
-          </Link>
-        </Button>
+        <CreateProductDialog />
       </div>
 
       {/* Products Table */}
@@ -213,43 +213,40 @@ export default function ProductsPage() {
                     </Badge>
                   </TableCell>
                   <TableCell>
-                    <span className="font-medium text-neutral-900">
+                    <span className="font-light font-mono text-neutral-900">
                       {product.price}
                     </span>
                   </TableCell>
 
                   <TableCell className="text-center pr-1">
                     <div className="inline-flex items-center gap-3">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="h-8 px-4 text-xs rounded-full shadow-none"
-                        asChild
-                      >
-                        <Link
-                          href={`/catalog/${product.category}/${product.slug}`}
-                          target="_blank"
+                      <ViewProductDialog product={product}>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="h-8 px-4 text-xs rounded-full shadow-none"
                         >
                           View
-                        </Link>
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="h-8 px-4 text-xs rounded-full shadow-none"
-                        asChild
-                      >
-                        <Link href={`/admin/products/${product.slug}/edit`}>
+                        </Button>
+                      </ViewProductDialog>
+                      <EditProductDialog product={product}>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="h-8 px-4 text-xs rounded-full shadow-none"
+                        >
                           Edit
-                        </Link>
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="h-8 px-4 text-xs rounded-full shadow-none text-red-600 hover:text-red-700 hover:bg-red-50 border-red-200"
-                      >
-                        Delete
-                      </Button>
+                        </Button>
+                      </EditProductDialog>
+                      <DeleteProductDialog product={product}>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="h-8 px-4 text-xs rounded-full shadow-none bg-destructive text-primary-foreground hover:text-destructive-foreground hover:bg-destructive-50 border"
+                        >
+                          Delete
+                        </Button>
+                      </DeleteProductDialog>
                     </div>
                   </TableCell>
                 </TableRow>

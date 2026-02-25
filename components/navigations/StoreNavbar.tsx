@@ -1,9 +1,8 @@
 "use client";
 import { useState } from "react";
-import { Search, ShoppingBag, Menu, Bookmark, SearchIcon, Handbag } from "lucide-react";
+import {SearchIcon, Handbag } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import ExpandableSearchBar from "../ui/expandable-search-bar";
 import { useSavedItems } from "@/hooks/use-saved-items";
 import { SavedItemsSheet } from "../products/SavedItemsSheet";
 
@@ -21,16 +20,15 @@ export default function StoreNavbar() {
 
   const navItems = [
     { href: '/', label: 'Discover' },
-    { href: '/catalog', label: 'Browse' },
+    { href: '/catalog', label: 'Browse' }, 
     { href: '/blog', label: 'Blog' },
-    { href: '/about', label: 'Guestbook' },
+
   ];
 
   return (
     <nav className="w-full absolute top-0 z-50 py-4 sm:py-6">
       <div className="w-full max-w-6xl mx-auto px-4 sm:px-2">
         <div className="flex items-center justify-between gap-4">
-          {/* Logo/Home Button */}
           <div className="flex-1 flex items-center justify-start">
             <Link href="/" className="p-2 rounded-full hover:bg-zinc-100 transition-colors duration-200">
                 <svg
@@ -60,7 +58,6 @@ export default function StoreNavbar() {
             </Link>
           </div>
 
-          {/* Navigation Pills */}
           <div className="shrink-0">
             <div className="flex items-center bg-white border border-zinc-200/80 rounded-full p-1 gap-1">
               {navItems.map((item) => (
@@ -79,13 +76,11 @@ export default function StoreNavbar() {
             </div>
           </div>
 
-          {/* Right Icons */}
           <div className="flex-1 flex items-center justify-end gap-1 sm:gap-2">
             <button className="p-2 rounded-full  transition-colors duration-200" aria-label="Search">
               <SearchIcon className="w-5 h-5 text-zinc-500" />
             </button>
             
-            {/* Saved Items Button */}
             <button 
               onClick={() => setSavedItemsSheetOpen(true)}
               className="relative p-2 rounded-full hover:bg-zinc-100 transition-colors duration-200" 
@@ -102,7 +97,6 @@ export default function StoreNavbar() {
         </div>
       </div>
       
-      {/* Saved Items Sheet */}
       <SavedItemsSheet 
         open={savedItemsSheetOpen} 
         onOpenChange={setSavedItemsSheetOpen} 

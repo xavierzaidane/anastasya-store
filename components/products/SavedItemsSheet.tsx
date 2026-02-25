@@ -234,7 +234,6 @@ function SavedItemCard({
       transition={{ duration: 0.2 }}
       className="flex gap-4 p-4 border border-zinc-200 rounded-lg"
     >
-      {/* Image */}
       <div className="size-24 bg-zinc-100 rounded-lg overflow-hidden shrink-0">
         <img
           src={item.img}
@@ -246,9 +245,7 @@ function SavedItemCard({
         />
       </div>
 
-      {/* Details */}
       <div className="flex-1 min-w-0 flex flex-col justify-between">
-        {/* Top Row: Name & Remove */}
         <div className="flex justify-between gap-2">
           <div className="flex flex-col gap-y-0.5">
             <h3 className="text-sm font-medium text-zinc-900 truncate">{item.name}</h3>

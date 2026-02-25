@@ -29,7 +29,6 @@ import {
   Users,
   Settings,
   ChevronRight,
-  Flower2,
   MoreVertical,
 } from 'lucide-react';
 
@@ -106,8 +105,7 @@ export function AdminSidebar() {
   };
 
   return (
-    <Sidebar className="border-r  bg-white">
-      {/* Header - Clean Brand */}
+    <Sidebar className="border-r  ">
       <SidebarHeader className="px-4 py-5 border-b h-15 ">
         <Link href="/admin" className="flex items-center gap-3">
           <div className="flex flex-col">
@@ -117,7 +115,6 @@ export function AdminSidebar() {
         </Link>
       </SidebarHeader>
 
-      {/* Navigation Menu */}
       <SidebarContent className="px-3 py-4">
         <div className="mb-2 px-3">
           <span className="text-[11px] font-semibold text-neutral-400 uppercase tracking-wider">Menu</span>
@@ -126,7 +123,6 @@ export function AdminSidebar() {
           {navItems.map((item) => (
             <SidebarMenuItem key={item.url}>
               {item.items ? (
-                // Collapsible menu item
                 <details className="group" open={isParentActive(item)}>
                   <summary className={`flex cursor-pointer items-center gap-3 rounded-lg px-3 py-2.5 transition-all duration-200 ${
                     isParentActive(item) 
@@ -178,7 +174,6 @@ export function AdminSidebar() {
         </SidebarMenu>
       </SidebarContent>
 
-      {/* Footer - User Profile */}
       <SidebarFooter className="p-3 border-t ">
         <SidebarMenu>
           <SidebarMenuItem>

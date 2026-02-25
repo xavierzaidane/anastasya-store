@@ -8,7 +8,7 @@
   --foreground: #3d3c4f;
   --card: #ffffff;
   --card-foreground: #3d3c4f;
-  --popover: #ffffff;
+  --popover: #ffffff; 
   --popover-foreground: #3d3c4f;
   --primary: #8a79ab;
   --primary-foreground: #f8f7fa;
@@ -28,6 +28,7 @@
   --chart-3: #77b8a1;
   --chart-4: #f0c88d;
   --chart-5: #a0bbe3;
+  --chart-6: #c0c0c0;
   --sidebar: #f1eff5;
   --sidebar-foreground: #3d3c4f;
   --sidebar-primary: #8a79ab;

@@ -5,8 +5,7 @@ export interface Product {
   name: string;
   price: string;
   img: string;
-  rating: number;
-  reviews: number;
+
   description: string;
   items: string[];
 }
@@ -18,10 +17,8 @@ export const products: Product[] = [
     slug: 'rose-whisper',
     category: 'small',
     name: 'Rose Whisper',
-    price: '50 Euro',
+    price: 'Rp 85.000',
     img: '/bunga1.jpg',
-    rating: 5,
-    reviews: 12,
     description: 'A delicate arrangement of fresh roses perfect for intimate occasions. Expertly curated with premium blooms.',
     items: [
       "5 Tangkai Daisy Putih",
@@ -36,10 +33,8 @@ export const products: Product[] = [
     slug: 'tulip-dream',
     category: 'small',
     name: 'Tulip Dream',
-    price: '55 Euro',
+    price: 'Rp 95.000',
     img: '/bunga2.jpg',
-    rating: 5,
-    reviews: 8,
     description: 'Vibrant tulips arranged in a simple yet elegant style. Perfect for brightening any space.',
     items: [
       "5 Tangkai Daisy Putih",
@@ -54,10 +49,8 @@ export const products: Product[] = [
     slug: 'daisy-fresh',
     category: 'small',
     name: 'Daisy Fresh',
-    price: '45 Euro',
+    price: 'Rp 75.000',
     img: '/bunga3.jpg',
-    rating: 4,
-    reviews: 6,
    description: `
 Bouquet bernuansa pastel yang lembut dan elegan, cocok untuk hadiah ulang tahun, wisuda, atau anniversary. Kombinasi warna soft memberikan kesan manis dan hangat.
 `,
@@ -76,10 +69,8 @@ items: [
     slug: 'rose-bliss',
     category: 'medium',
     name: 'Rose Bliss',
-    price: '70 Euro',
+    price: 'Rp 125.000',
     img: '/bunga1.jpg',
-    rating: 5,
-    reviews: 25,
     description: 'A beautifully balanced bouquet featuring our finest seasonal roses. Perfect for celebrations.',
     items: [
       "5 Tangkai Daisy Putih",
@@ -95,10 +86,8 @@ items: [
     slug: 'lily-elegance',
     category: 'medium',
     name: 'Lily Elegance',
-    price: '75 Euro',
+    price: 'Rp 135.000',
     img: '/bunga2.jpg',
-    rating: 5,
-    reviews: 18,
     description: 'Stunning lilies with sophisticated charm. Perfect for romantic moments and special events.',
     items: [
       "5 Tangkai Daisy Putih",
@@ -113,10 +102,8 @@ items: [
     slug: 'sunflower-joy',
     category: 'medium',
     name: 'Sunflower Joy',
-    price: '65 Euro',
+    price: 'Rp 115.000',
     img: '/bunga3.jpg',
-    rating: 5,
-    reviews: 14,
     description: 'Bright and cheerful sunflowers perfect for spreading happiness and positive vibes.',
     items: [
       "5 Tangkai Daisy Putih",
@@ -131,10 +118,8 @@ items: [
     slug: 'orchid-passion',
     category: 'medium',
     name: 'Orchid Passion',
-    price: '80 Euro',
+    price: 'Rp 145.000',
     img: '/bunga4.jpg',
-    rating: 5,
-    reviews: 20,
     description: 'Exotic orchids arranged with elegance and sophistication. A true statement piece.',
     items: [
       "5 Tangkai Daisy Putih",
@@ -152,10 +137,8 @@ items: [
     slug: 'premium-rose-garden',
     category: 'large',
     name: 'Premium Rose Garden',
-    price: '95 Euro',
+    price: 'Rp 175.000',
     img: '/bunga1.jpg',
-    rating: 5,
-    reviews: 32,
     description: 'An impressive arrangement with lush greenery and vibrant blooms. Ideal for grand occasions.',
     items: [
       "5 Tangkai Daisy Putih",
@@ -170,10 +153,8 @@ items: [
     slug: 'wildflower-cascade',
     category: 'large',
     name: 'Wildflower Cascade',
-    price: '90 Euro',
+    price: 'Rp 165.000',
     img: '/bunga2.jpg',
-    rating: 5,
-    reviews: 27,
     description: 'A beautiful mix of wildflowers creating a natural and romantic cascade effect.',
     items: [
       "5 Tangkai Daisy Putih",
@@ -188,10 +169,8 @@ items: [
     slug: 'luxury-exotic-blend',
     category: 'large',
     name: 'Luxury Exotic Blend',
-    price: '100 Euro',
+    price: 'Rp 185.000',
     img: '/bunga3.jpg',
-    rating: 5,
-    reviews: 29,
     description: 'A premium selection of exotic flowers creating a luxurious and unforgettable display.',
     items: [
       "5 Tangkai Daisy Putih",
@@ -209,10 +188,8 @@ items: [
     slug: 'sphere-elegance',
     category: 'round',
     name: 'Sphere Elegance',
-    price: '85 Euro',
+    price: 'Rp 155.000',
     img: '/bunga1.jpg',
-    rating: 5,
-    reviews: 23,
     description: 'Perfectly spherical arrangement of premium flowers. A classic choice for formal events.',
     items: [
       "5 Tangkai Daisy Putih",
@@ -227,10 +204,8 @@ items: [
     slug: 'globe-romance',
     category: 'round',
     name: 'Globe Romance',
-    price: '90 Euro',
+    price: 'Rp 165.000',
     img: '/bunga2.jpg',
-    rating: 5,
-    reviews: 19,
     description: 'A romantic spherical bouquet perfect for anniversaries and special romantic occasions.',
     items: [
       "5 Tangkai Daisy Putih",
@@ -246,10 +221,8 @@ items: [
     slug: 'zen-sphere',
     category: 'round',
     name: 'Zen Sphere',
-    price: '88 Euro',
+    price: 'Rp 160.000',
     img: '/bunga4.jpg',
-    rating: 5,
-    reviews: 21,
     description: 'A minimalist round arrangement with calming, balanced aesthetics.',
     items: [
       "5 Tangkai Daisy Putih",
@@ -266,10 +239,8 @@ items: [
     slug: 'prosperity-bloom',
     category: 'money',
     name: 'Prosperity Bloom',
-    price: '120 Euro',
+    price: 'Rp 225.000',
     img: '/bunga1.jpg',
-    rating: 5,
-    reviews: 35,
     description: 'A unique and luxurious arrangement combining premium flowers with elegant accents. Perfect for celebrations.',
     items: [
       "5 Tangkai Daisy Putih",
@@ -285,10 +256,8 @@ items: [
     slug: 'golden-abundance',
     category: 'money',
     name: 'Golden Abundance',
-    price: '130 Euro',
+    price: 'Rp 245.000',
     img: '/bunga2.jpg',
-    rating: 5,
-    reviews: 28,
     description: 'Radiant flowers with golden accents bringing prosperity and joy to any celebration.',
     items: [
       "5 Tangkai Daisy Putih",
@@ -303,10 +272,8 @@ items: [
     slug: 'luxury-crown',
     category: 'money',
     name: 'Luxury Crown',
-    price: 'RP140.000',
+    price: 'Rp 265.000',
     img: '/bunga3.jpg',
-    rating: 5,
-    reviews: 31,
     description: 'A regal arrangement fit for royalty. Premium flowers with luxury packaging.',
     items: [
       "5 Tangkai Daisy Putih",
@@ -324,10 +291,8 @@ items: [
     slug: 'custom-romantic',
     category: 'custom',
     name: 'Custom Romantic',
-    price: '75 Euro',
+    price: 'Rp 135.000',
     img: '/bunga1.jpg',
-    rating: 5,
-    reviews: 16,
     description: 'Create your own romantic masterpiece. Mix and match your favorite flowers for a personalized touch.',
     items: [
       "5 Tangkai Daisy Putih",
@@ -342,10 +307,8 @@ items: [
     slug: 'custom-celebration',
     category: 'custom',
     name: 'Custom Celebration',
-    price: '85 Euro',
+    price: 'Rp 155.000',
     img: '/bunga2.jpg',
-    rating: 5,
-    reviews: 14,
     description: 'Design your perfect celebration bouquet with our unlimited customization options.',
     items: [
       "5 Tangkai Daisy Putih",
@@ -360,10 +323,8 @@ items: [
     slug: 'custom-elegant',
     category: 'custom',
     name: 'Custom Elegant',
-    price: '95 Euro',
+    price: 'Rp 175.000',
     img: '/bunga3.jpg',
-    rating: 5,
-    reviews: 12,
     description: 'Craft an elegant arrangement tailored to your exact preferences and style.',
     items: [
       "5 Tangkai Daisy Putih",

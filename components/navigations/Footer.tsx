@@ -15,7 +15,6 @@ export default function Footer() {
     <footer className=" border-t border-zinc-200/80 mt-16">
       <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
-          {/* Left Column */}
           <div className="flex flex-col">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -42,7 +41,6 @@ export default function Footer() {
               />
             </svg>
 
-            {/* Newsletter Subscription */}
             <div className="mb-6 w-full max-w-md">
               <form onSubmit={handleSubscribe} className="flex gap-0 rounded-full border border-zinc-200 bg-white p-1">
                 <input
@@ -71,9 +69,7 @@ export default function Footer() {
             <p className="text-sm text-zinc-500 mt-auto pt-8">© 2025 Curated Supply. All rights reserved.</p>
           </div>
 
-          {/* Right Column */}
           <div className="flex flex-col">
-            {/* Navigation, About, Contact */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
               <div>
                 <h3 className="font-medium text-zinc-600 mb-4 tracking-tight">Navigation</h3>
@@ -102,7 +98,6 @@ export default function Footer() {
               </div>
             </div>
 
-            {/* Categories, Brands, Lists */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-auto">
               <div>
                 <h3 className="font-medium text-zinc-600 mb-4 tracking-tight">Categories</h3>
@@ -145,7 +140,6 @@ export default function Footer() {
               </div>
             </div>
 
-            {/* Creator Info */}
             <div className="flex items-center gap-1.5 text-sm text-zinc-500 mt-auto pt-8 justify-center md:justify-end">
               <span>Made by</span>
               <a

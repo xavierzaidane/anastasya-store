@@ -43,7 +43,6 @@ export function ProductDetailDialogAdvanced({
     if (isBookmarked) {
       toggleItem(product);
     } else {
-      // When saving, include the selected quantity
       addItem(product, quantity);
     }
   };
@@ -96,8 +95,6 @@ export function ProductDetailDialogAdvanced({
     visible: { opacity: 1, scale: 1, y: 0 },
     exit: { opacity: 0, scale: 0.95, y: 10 },
   };
-
-  // Parse price from string like "$99.99" to number
   const priceDisplay = product.price;
 
   return (
@@ -105,7 +102,6 @@ export function ProductDetailDialogAdvanced({
       {open && (
         <Dialog.Root open={open} onOpenChange={onOpenChange}>
           <Dialog.Portal forceMount>
-            {/* Overlay */}
             <Dialog.Overlay forceMount asChild>
               <motion.div
                 variants={overlayVariants}
@@ -117,7 +113,6 @@ export function ProductDetailDialogAdvanced({
               />
             </Dialog.Overlay>
 
-            {/* Content */}
             <Dialog.Content forceMount asChild>
               <motion.div
                 variants={contentVariants}
@@ -141,7 +136,7 @@ export function ProductDetailDialogAdvanced({
                   md:grid md:grid-cols-2
                 "
               >
-                {/* Left Column - Image */}
+
                 <div className="hidden md:flex bg-zinc-100 items-center justify-center p-0 relative min-h-full">
                   {!imageLoaded && !imageError && (
                     <div className="w-full h-full bg-zinc-200 animate-pulse" />
@@ -163,17 +158,13 @@ export function ProductDetailDialogAdvanced({
                   )}
                 </div>
 
-                {/* Right Column - Details */}
                 <div className="flex flex-col md:p-9 p-6 max-h-[90vh] overflow-y-auto relative">
-                  {/* Close Button - Top Right */}
                   <Dialog.Close className="absolute top-4 right-4 md:top-4 md:right-4 p-2 bg-white rounded-full hover:bg-zinc-100 text-zinc-600 hover:text-zinc-800 transition-colors z-10">
                     <XIcon className="h-5 w-5" />
                   </Dialog.Close>
 
-                  {/* Close Button - Mobile */}
                   <div className="h-8" />
 
-                  {/* Mobile Image */}
                   <div className="md:hidden mb-6">
                     {!imageLoaded && !imageError && (
                       <div className="w-full h-48 bg-zinc-200 animate-pulse rounded-lg" />
@@ -195,28 +186,23 @@ export function ProductDetailDialogAdvanced({
                     )}
                   </div>
 
-                  {/* Scrollable Content */}
                   <div
                     ref={scrollContainerRef}
                     onWheel={handleWheel}
                     className="flex-1 overflow-y-auto pr-4 md:pr-0 no-scrollbar"
                   >
-                    {/* Category */}
                     <p className="text-sm text-zinc-500 mb-2">
                       {product.category || 'Product'} · {product.category || 'General'}
                     </p>
 
-                    {/* Title */}
                     <Dialog.Title className="text-3xl font-medium font-mono text-zinc-900 mb-4 tracking-tight">
                       {product.name}
                     </Dialog.Title>
 
-                    {/* Price */}
                     <div className="mb-6">
                       <p className="text-4xl font-mono font-semibold text-zinc-900 tracking-tight">{priceDisplay}</p>
                     </div>
 
-                    {/* Product Details Section */}
                     <div className="py-6 border-t border-zinc-200">
                       <h3 className="text-sm font-semibold text-zinc-900 mb-3">Product Details</h3>
                       <div className="space-y-2 text-sm text-zinc-600">
@@ -233,28 +219,8 @@ export function ProductDetailDialogAdvanced({
                           <span className="font-medium text-zinc-900">{priceDisplay}</span>
                         </div>
                         <div className="flex justify-between items-center pt-2">
-                          <span className="text-zinc-500">Reviews:</span>
-                          <button className="text-sm font-medium text-zinc-600 hover:text-zinc-900 underline-offset-2 hover:underline transition-colors flex items-center gap-1">
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              width="14"
-                              height="14"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              color="currentColor"
-                              className="text-zinc-500/80"
-                            >
-                              <path
-                                d="M13.7276 3.44418L15.4874 6.99288C15.7274 7.48687 16.3673 7.9607 16.9073 8.05143L20.0969 8.58575C22.1367 8.92853 22.6167 10.4206 21.1468 11.8925L18.6671 14.3927C18.2471 14.8161 18.0172 15.6327 18.1471 16.2175L18.8571 19.3125C19.417 21.7623 18.1271 22.71 15.9774 21.4296L12.9877 19.6452C12.4478 19.3226 11.5579 19.3226 11.0079 19.6452L8.01827 21.4296C5.8785 22.71 4.57865 21.7522 5.13859 19.3125L5.84851 16.2175C5.97849 15.6327 5.74852 14.8161 5.32856 14.3927L2.84884 11.8925C1.389 10.4206 1.85895 8.92853 3.89872 8.58575L7.08837 8.05143C7.61831 7.9607 8.25824 7.48687 8.49821 6.99288L10.258 3.44418C11.2179 1.51861 12.7777 1.51861 13.7276 3.44418Z"
-                                stroke="currentColor"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth="1.5"
-                              />
-                            </svg>
-                            <span>{product.rating.toFixed(1)}</span>
-                            <span className="text-zinc-500">({product.reviews.toLocaleString()})</span>
-                          </button>
+                          
+                     
                         </div>
                         <div className="flex flex-col gap-2 pt-2">
                           <span className="text-zinc-500">Description:</span>
@@ -263,7 +229,6 @@ export function ProductDetailDialogAdvanced({
                       </div>
                     </div>
 
-                    {/* Items Included */}
                     {product.items.length > 0 && (
                       <div className="py-6 border-t border-zinc-200">
                         <h3 className="text-sm font-semibold text-zinc-900 mb-3">What's Included</h3>
@@ -279,10 +244,8 @@ export function ProductDetailDialogAdvanced({
                     )}
                   </div>
 
-                  {/* Footer - Quantity & Buttons */}
                   <div className="pt-6 border-t border-zinc-200 mt-6">
                     <div className="flex flex-col gap-4">
-                      {/* Quantity & Wishlist Row */}
                       <div className="flex justify-between items-end">
                         <div className="flex items-center gap-4">
                           <label htmlFor="quantity" className="text-sm font-medium text-zinc-900">
@@ -342,7 +305,6 @@ export function ProductDetailDialogAdvanced({
                           </div>
                         </div>
 
-                        {/* Action Icons */}
                         <div className="flex gap-1">
                           <button
                             onClick={handleToggleBookmark}
@@ -364,7 +326,6 @@ export function ProductDetailDialogAdvanced({
                         </div>
                       </div>
 
-                      {/* Order via WhatsApp Button */}
                       <button
                         onClick={handleOrderViaWhatsApp}
                         disabled={isOrdering}

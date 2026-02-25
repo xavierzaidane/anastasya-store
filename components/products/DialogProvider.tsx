@@ -1,7 +1,7 @@
 'use client';
 
 import { useProductDialogs } from '@/hooks/use-product-dialogs';
-import { ProductDetailDialogAdvanced } from './ProductDetailDialogAdvanced';
+import { ProductDetailDialogAdvanced } from './ProductDetailDialog';
 
 export function DialogProvider({ children }: { children: React.ReactNode }) {
   const {
@@ -13,8 +13,6 @@ export function DialogProvider({ children }: { children: React.ReactNode }) {
   return (
     <>
       {children}
-
-      {/* Product Detail Dialog */}
       {selectedProduct && (
         <ProductDetailDialogAdvanced
           product={selectedProduct}
@@ -27,6 +25,4 @@ export function DialogProvider({ children }: { children: React.ReactNode }) {
     </>
   );
 }
-
-// Export hook for use in components
 export { useProductDialogs } from '@/hooks/use-product-dialogs';

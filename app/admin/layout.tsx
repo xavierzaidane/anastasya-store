@@ -28,14 +28,14 @@ export default function AdminRootLayout({
       <AdminSidebar />
       <main className="flex-1 flex flex-col min-h-screen">
         {/* Header with Sidebar Trigger - Always visible */}
-        <header className="sticky top-0 z-40 flex items-center gap-4 h-15 px-4 border-b bg-primary-foreground">
+        <header className="sticky top-0 z-40 flex items-center gap-4 h-15 px-4 border-b bg-sidebar">
           <SidebarTrigger className="h-8 w-8" />
          <div className="relative flex-1 max-w-xs ">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-neutral-400" />
           <Input
             placeholder="Search products..."
            
-            className="pl-9 h-9 rounded-full bg-white border-neutral-200 shadow-none focus-visible:ring-0 focus-visible:border-neutral-300"
+            className="pl-9 h-9 rounded-full bg-primary-foreground border-neutral-200 shadow-none focus-visible:ring-0 focus-visible:border-neutral-300"
           />
         </div>
         </header>

@@ -1,3 +1,2 @@
-// Product Components
-export { ProductDetailDialogAdvanced } from './ProductDetailDialogAdvanced';
+export { ProductDetailDialogAdvanced } from './ProductDetailDialog';
 export { DialogProvider, useProductDialogs } from './DialogProvider';
