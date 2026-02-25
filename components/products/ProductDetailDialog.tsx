@@ -7,20 +7,10 @@ import { XIcon, MessageCircle, Share2, Bookmark, ShoppingCart } from 'lucide-rea
 import { orderViaWhatsApp } from '@/lib/whatsapp';
 import { SiWhatsapp } from "react-icons/si";
 import { useSavedItems } from '@/hooks/use-saved-items';
+import { Product } from '@/data/products';
 
 interface ProductDetailDialogProps {
-  product: {
-    id: number;
-    slug: string;
-    name: string;
-    price: string;
-    img: string;
-    rating: number;
-    reviews: number;
-    description: string;
-    items: string[];
-    category?: string;
-  };
+  product: Product;
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }

@@ -41,7 +41,7 @@ export default function BlogPage() {
 				</div>
 
 				{/* Blog Grid */}
-				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 min-h-[400px] items-stretch pb-16">
+				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 min-h-100 items-stretch pb-16">
 					{blogPosts.map((post) => (
 						<article
 							key={post.id}
@@ -75,7 +75,7 @@ export default function BlogPage() {
 									</div>
 
 									{/* Content */}
-									<div className="p-5 sm:p-6 flex flex-col flex-grow">
+									<div className="p-5 sm:p-6 flex flex-col grow">
 										{/* Category & Read Time */}
 										<div className="flex items-center gap-3 mb-3">
 											<span className="px-3 py-1 bg-pink-50 text-pink-700 text-xs font-medium rounded-full">
@@ -88,12 +88,12 @@ export default function BlogPage() {
 										</div>
 
 										{/* Title */}
-										<h2 className="text-lg sm:text-xl font-semibold text-zinc-900 mb-2 transition-colors duration-200 line-clamp-2 min-h-[3rem] sm:min-h-[3.5rem]">
+										<h2 className="text-lg sm:text-xl font-semibold text-zinc-900 mb-2 transition-colors duration-200 line-clamp-2 min-h-12 sm:min-h-14">
 											{post.title}
 										</h2>
 
 										{/* Excerpt */}
-										<p className="text-zinc-600 text-sm leading-relaxed mb-4 line-clamp-3 flex-grow">
+										<p className="text-zinc-600 text-sm leading-relaxed mb-4 line-clamp-3 grow">
 											{post.excerpt}
 										</p>
 

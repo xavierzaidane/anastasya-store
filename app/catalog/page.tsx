@@ -72,7 +72,7 @@ export default function BrowsePage() {
         </div>
 
         {/* Categories Grid */}
-        <div className="pb-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 min-h-[400px]">
+        <div className="pb-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 min-h-100">
           {categories.map(({ id, slug, name, img, itemCount }) => (
             <Link
               key={id}
@@ -82,7 +82,7 @@ export default function BrowsePage() {
               tabIndex={0}
               aria-label={`Browse ${name} category`}
             >
-              <div className="relative bg-zinc-100 rounded-xl overflow-hidden aspect-[4/3]">
+              <div className="relative bg-zinc-100 rounded-xl overflow-hidden aspect-4/3">
                 <img
                   alt={name}
                   className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"

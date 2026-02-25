@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
-import Link from 'next/link';
 import { blogPosts, BlogPost } from '@/data/blog';
 import {
   Table,
@@ -16,11 +15,14 @@ import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Badge } from '@/components/ui/badge';
 import {
-  Plus,
   ArrowUpDown,
   ImageIcon,
   Clock,
 } from 'lucide-react';
+import { ViewBlogDialog } from '@/components/admin/blog/ViewBlogDialog';
+import { EditBlogDialog } from '@/components/admin/blog/EditBlogDialog';
+import { DeleteBlogDialog } from '@/components/admin/blog/DeleteBlogDialog';
+import { CreateBlogDialog } from '@/components/admin/blog/CreateBlogDialog';
 
 export default function BlogPage() {
   const [selectedPosts, setSelectedPosts] = useState<number[]>([]);
@@ -87,12 +89,6 @@ export default function BlogPage() {
     }
   };
 
-  const handleDeletePost = (slug: string) => {
-    if (!confirm('Are you sure you want to delete this blog post?')) return;
-    // TODO: Implement delete when connected to backend
-    alert(`Delete post: ${slug} (not implemented yet)`);
-  };
-
   return (
     <div className="space-y-6">
       {/* Page Header */}
@@ -103,12 +99,7 @@ export default function BlogPage() {
             Manage your blog content and articles
           </p>
         </div>
-        <Button asChild className="gap-2 rounded-xl">
-          <Link href="/admin/blog/new">
-            <Plus className="h-4 w-4" />
-            Add Post
-          </Link>
-        </Button>
+        <CreateBlogDialog />
       </div>
 
       {/* Blog Table */}
@@ -245,37 +236,33 @@ export default function BlogPage() {
                   </TableCell>
                   <TableCell className="text-center pr-1">
                     <div className="inline-flex items-center gap-3">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="h-8 px-4 text-xs rounded-full shadow-none"
-                        asChild
-                      >
-                        <Link
-                          href={`/blog/${post.slug}`}
-                          target="_blank"
+                      <ViewBlogDialog post={post}>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="h-8 px-4 text-xs rounded-full shadow-none"
                         >
                           View
-                        </Link>
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="h-8 px-4 text-xs rounded-full shadow-none"
-                        asChild
-                      >
-                        <Link href={`/admin/blog/${post.slug}/edit`}>
+                        </Button>
+                      </ViewBlogDialog>
+                      <EditBlogDialog post={post}>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="h-8 px-4 text-xs rounded-full shadow-none"
+                        >
                           Edit
-                        </Link>
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="h-8 px-4 text-xs rounded-full shadow-none text-red-600 hover:text-red-700 hover:bg-red-50 border-red-200"
-                        onClick={() => handleDeletePost(post.slug)}
-                      >
-                        Delete
-                      </Button>
+                        </Button>
+                      </EditBlogDialog>
+                      <DeleteBlogDialog post={post}>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="h-8 px-4 text-xs rounded-full shadow-none text-red-600 hover:text-red-700 hover:bg-red-50 border-red-200"
+                        >
+                          Delete
+                        </Button>
+                      </DeleteBlogDialog>
                     </div>
                   </TableCell>
                 </TableRow>

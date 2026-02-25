@@ -49,18 +49,6 @@ const navItems: NavItem[] = [
     title: 'Products',
     url: '/admin/products',
     icon: Package,
-    items: [
-      {
-        title: 'All Products',
-        url: '/admin/products',
-        icon: Package,
-      },
-      {
-        title: 'Categories',
-        url: '/admin/products/categories',
-        icon: Package,
-      },
-    ],
   },
   {
     title: 'Blog',
@@ -109,15 +97,14 @@ export function AdminSidebar() {
       <SidebarHeader className="px-4 py-5 border-b h-15 ">
         <Link href="/admin" className="flex items-center gap-3">
           <div className="flex flex-col">
-            <span className="text-base font-semibold text-neutral-900 tracking-tight">Anastasya</span>
-            <span className="text-[10px] font-medium text-neutral-400 uppercase tracking-wider">Admin</span>
+            <span className="text-base font-semibold font-mono text-neutral-900 tracking-tight">Anastasya Bouquet</span> 
           </div>
         </Link>
       </SidebarHeader>
 
       <SidebarContent className="px-3 py-4">
         <div className="mb-2 px-3">
-          <span className="text-[11px] font-semibold text-neutral-400 uppercase tracking-wider">Menu</span>
+          <span className="text-[11px] font-semibold font-mono text-neutral-400 uppercase tracking-wider">Menu</span>
         </div>
         <SidebarMenu className="space-y-1">
           {navItems.map((item) => (
@@ -159,7 +146,7 @@ export function AdminSidebar() {
                   isActive={isActive(item.url)}
                   className={`rounded-lg px-3 py-2.5 transition-all duration-200 ${
                     isActive(item.url)
-                      ? 'bg-neutral-900 text-white font-medium shadow-sm'
+                      ? 'bg-neutral-900 text-white font-medium '
                       : 'text-neutral-600 hover:bg-neutral-50 hover:text-neutral-900'
                   }`}
                 >
@@ -181,7 +168,7 @@ export function AdminSidebar() {
               <DropdownMenuTrigger asChild>
                 <SidebarMenuButton className="w-full rounded-lg px-3 py-2.5 hover:bg-neutral-50 transition-colors">
                   <div className="flex items-center gap-3 flex-1">
-                    <div className="w-8 h-8 rounded-full bg-linear-to-br from-violet-500 to-purple-600 flex items-center justify-center text-white text-sm font-semibold shadow-sm">
+                    <div className="w-8 h-8 rounded-full bg-linear-to-br from-violet-500 to-purple-600 flex items-center justify-center text-white text-sm font-semibold ">
                       A
                     </div>
                     <div className="flex flex-col items-start">

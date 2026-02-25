@@ -52,7 +52,7 @@ export default function CategoryPage() {
       </div>
 
       {/* Category Header */}
-      <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mb-6 py-6 mt-[-3rem] flex justify-between items-start">
+      <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mb-6 py-6 -mt-12 flex justify-between items-start">
         <div>
           <h1 className="text-2xl sm:text-3xl lg:text-4xl font-semibold font-mono text-zinc-900 tracking-tight mb-2">
             {categoryName} Collection
@@ -65,7 +65,7 @@ export default function CategoryPage() {
 
       {/* Product Grid */}
       <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-2 mt-2">
-        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-3 sm:gap-4 lg:gap-6 min-h-[400px] pb-16">
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-3 sm:gap-4 lg:gap-6 min-h-100 pb-16">
           {products.map((product) => (
             <div
               key={product.id}
@@ -82,7 +82,7 @@ export default function CategoryPage() {
               }}
             >
               {/* Image Container */}
-              <div className="relative bg-zinc-100 rounded-lg sm:rounded-xl overflow-hidden aspect-[4/3]">
+              <div className="relative bg-zinc-100 rounded-lg sm:rounded-xl overflow-hidden aspect-4/3">
                 <img
                   src={product.img}
                   alt={product.name}
@@ -131,7 +131,7 @@ export default function CategoryPage() {
               {/* Product Info */}
               <div className="pt-2 sm:pt-3">
                 <p className="text-[10px] sm:text-xs text-zinc-500 line-clamp-1">
-                  {product.category ? `${product.category}` : categoryName} · {product.reviews} reviews
+                  {product.category ? `${product.category}` : categoryName}
                 </p>
                 <h3 className="text-xs sm:text-sm font-medium text-zinc-900 line-clamp-2 mt-0.5">
                   {product.name}

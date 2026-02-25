@@ -1,19 +1,7 @@
 'use client';
 
 import { useState, useCallback } from 'react';
-
-interface Product {
-  id: number;
-  slug: string;
-  name: string;
-  price: string;
-  img: string;
-  rating: number;
-  reviews: number;
-  description: string;
-  items: string[];
-  category?: string;
-}
+import { Product } from '@/data/products';
 
 export function useProductDialogs() {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);

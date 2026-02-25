@@ -69,7 +69,7 @@ export function DeleteProductDialog({ product, children, onProductDeleted }: Del
         </DialogHeader>
 
         {/* Product Preview */}
-        <div className="flex items-center gap-3 p-3 bg-neutral-50 rounded-lg border border mb-4">
+        <div className="flex items-center gap-3 p-3 bg-neutral-50 rounded-lg border mb-4">
           <div className="relative w-12 h-12 rounded-md overflow-hidden bg-neutral-100 shrink-0">
             <Image
               src={product.img}

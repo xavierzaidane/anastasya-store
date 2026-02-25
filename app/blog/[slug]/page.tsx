@@ -55,7 +55,7 @@ function BlogCard({ post }: { post: BlogPost }) {
       >
         <div className="rounded-xl overflow-hidden border bg-white border-zinc-200/80   transition-shadow duration-300 h-full flex flex-col">
           {/* Image Placeholder */}
-          <div className="aspect-video bg-gradient-to-br from-pink-50 to-pink-100 flex items-center justify-center relative overflow-hidden">
+          <div className="aspect-video bg-linear-to-br from-pink-50 to-pink-100 flex items-center justify-center relative overflow-hidden">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="40"
@@ -75,7 +75,7 @@ function BlogCard({ post }: { post: BlogPost }) {
           </div>
 
           {/* Content */}
-          <div className="p-5 sm:p-6 flex flex-col flex-grow">
+          <div className="p-5 sm:p-6 flex flex-col grow">
             {/* Category & Read Time */}
             <div className="flex items-center gap-3 mb-3">
               <span className="px-3 py-1  text-pink-700 text-xs font-medium rounded-full">
@@ -88,7 +88,7 @@ function BlogCard({ post }: { post: BlogPost }) {
             </div>
 
             {/* Title */}
-            <h3 className="text-lg sm:text-xl font-semibold text-zinc-900 mb-2 group-hover:text-pink-600 transition-colors duration-200 line-clamp-2 min-h-[3rem] sm:min-h-[3.5rem]">
+            <h3 className="text-lg sm:text-xl font-semibold text-zinc-900 mb-2 group-hover:text-pink-600 transition-colors duration-200 line-clamp-2 min-h-12 sm:min-h-14">
               {post.title}
             </h3>
 
@@ -221,7 +221,7 @@ export default async function BlogDetailPage({ params }: PageProps) {
         {/* Article */}
         <article className="bg-white rounded-xl border border-zinc-200/80 overflow-hidden">
           {/* Header Image Placeholder */}
-          <div className="aspect-video bg-gradient-to-br from-pink-50 to-pink-100 flex items-center justify-center relative overflow-hidden">
+          <div className="aspect-video bg-linear-to-br from-pink-50 to-pink-100 flex items-center justify-center relative overflow-hidden">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="64"
