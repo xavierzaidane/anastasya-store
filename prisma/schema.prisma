@@ -11,9 +11,6 @@ enum Role {
   CUSTOMER
 }
 
-// ============================================
-// USER - For admin authentication
-// ============================================
 model User {
   id        Int      @id @default(autoincrement())
   email     String   @unique
@@ -24,9 +21,6 @@ model User {
   updatedAt DateTime @updatedAt
 }
 
-// ============================================
-// CATEGORY - Product categories (small, medium, large, etc.)
-// ============================================
 model Category {
   id       Int       @id @default(autoincrement())
   slug     String    @unique
@@ -35,19 +29,14 @@ model Category {
   products Product[]
 }
 
-// ============================================
-// PRODUCT - Flower bouquets and arrangements
-// ============================================
 model Product {
   id          Int      @id @default(autoincrement())
   slug        String   @unique
   name        String
   description String?
-  items       String[] // What's included in the bouquet
+  items       String[] 
   price       Decimal  @db.Decimal(10, 2)
   image       String?
-  rating      Float    @default(0)
-  reviewCount Int      @default(0)
   isActive    Boolean  @default(true)
   isStaffPick Boolean  @default(false)
   createdAt   DateTime @default(now())
@@ -57,9 +46,6 @@ model Product {
   category   Category @relation(fields: [categoryId], references: [id])
 }
 
-// ============================================
-// BLOG - Blog posts for content marketing
-// ============================================
 model Blog {
   id        Int      @id @default(autoincrement())
   slug      String   @unique

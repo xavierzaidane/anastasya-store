@@ -1,8 +1,16 @@
-import prisma from '@/lib/prisma';
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from "next/server";
+import prisma from "@/lib/prisma";
+import {
+  successResponse,
+  createdResponse,
+  handleApiError,
+  requireAdmin,
+  isAuthenticated,
+  createCategorySchema,
+  validateBody,
+} from "@/lib/api";
 
-
-// GET - List all categories with product count
+// GET /api/categories - List all categories with product count
 export async function GET() {
   try {
     const categories = await prisma.category.findMany({
@@ -11,50 +19,36 @@ export async function GET() {
           select: { products: true },
         },
       },
+      orderBy: { name: "asc" },
     });
 
     const categoriesWithCount = categories.map((category) => ({
-      ...category,
+      id: category.id,
+      slug: category.slug,
+      name: category.name,
+      image: category.image,
       productCount: category._count.products,
-      _count: undefined,
     }));
 
-    return NextResponse.json(categoriesWithCount, { status: 200 });
+    return successResponse(categoriesWithCount, "Categories retrieved successfully");
   } catch (error) {
-    return NextResponse.json(
-      { error: 'Failed to fetch categories' },
-      { status: 500 }
-    );
+    return handleApiError(error);
   }
 }
 
-// POST - Create category (Admin only)
+// POST /api/categories - Create category (Admin only)
 export async function POST(request: NextRequest) {
   try {
-    // TODO: Add authentication middleware to verify admin role
-    const body = await request.json();
-    const { slug, name, image } = body;
-
-    // Validate required fields
-    if (!slug || !name) {
-      return NextResponse.json(
-        { error: 'slug and name are required' },
-        { status: 400 }
-      );
+    // Check admin authorization
+    const authResult = await requireAdmin();
+    if (!isAuthenticated(authResult)) {
+      return authResult.response;
     }
 
-    // Check if category with same slug already exists
-    const existingCategory = await prisma.category.findUnique({
-      where: { slug },
-    });
+    // Validate request body
+    const { slug, name, image } = await validateBody(request, createCategorySchema);
 
-    if (existingCategory) {
-      return NextResponse.json(
-        { error: 'Category with this slug already exists' },
-        { status: 409 }
-      );
-    }
-
+    // Create category (Prisma will throw on duplicate slug)
     const category = await prisma.category.create({
       data: {
         slug,
@@ -63,11 +57,8 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    return NextResponse.json(category, { status: 201 });
+    return createdResponse(category, "Category created successfully");
   } catch (error) {
-    return NextResponse.json(
-      { error: 'Failed to create category' },
-      { status: 500 }
-    );
+    return handleApiError(error);
   }
 }

@@ -57,7 +57,7 @@ export function DeleteBlogDialog({ post, children, onPostDeleted }: DeleteBlogDi
           </Button>
         )}
       </DialogTrigger>
-      <DialogContent className="sm:max-w-xl p-6 gap-0 border-neutral-200/80">
+      <DialogContent className="sm:max-w-lg p-6 gap-0 border-neutral-200/80">
         <DialogHeader className="space-y-4 pb-4">
           <div className="mx-auto h-12 w-12 rounded-full bg-red-50 flex items-center justify-center">
             <Trash2 className="h-5 w-5 text-destructive" />
@@ -69,14 +69,9 @@ export function DeleteBlogDialog({ post, children, onPostDeleted }: DeleteBlogDi
 
         {/* Post Preview */}
         <div className="flex items-center gap-3 p-3 bg-neutral-50 rounded-lg border mb-4">
-          <div className="w-10 h-10 rounded-full bg-pink-100 flex items-center justify-center shrink-0">
-            <span className="text-xs font-medium text-pink-700">
-              {post.author.initial}
-            </span>
-          </div>
           <div className="flex-1 min-w-0">
             <p className="text-sm font-medium text-neutral-900 truncate">{post.title}</p>
-            <p className="text-xs text-neutral-500">{post.category}</p>
+            <p className="text-xs text-neutral-500">{post.category} . {post.author.name}</p>
           </div>
         </div>
 

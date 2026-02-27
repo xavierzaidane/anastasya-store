@@ -3,15 +3,17 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Eye, EyeOff, Mail, Lock, Loader2, ArrowRight } from "lucide-react";
+import { Eye, EyeOff, Mail, Lock, Shield, Loader2, ArrowRight } from "lucide-react";
 
 export default function LoginPage() {
     const router = useRouter();
     const [formData, setFormData] = useState({
         email: "",
         password: "",
+        adminSecret: "",
     });
     const [showPassword, setShowPassword] = useState(false);
+    const [showAdminSecret, setShowAdminSecret] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState("");
 
@@ -34,13 +36,17 @@ export default function LoginPage() {
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify(formData),
+                body: JSON.stringify({
+                    email: formData.email,
+                    password: formData.password,
+                    ...(formData.adminSecret && { adminSecret: formData.adminSecret }),
+                }),
             });
 
             const data = await response.json();
 
             if (!response.ok) {
-                throw new Error(data.error || "Login failed");
+                throw new Error(data.message || "Login failed");
             }
 
             router.push("/admin");
@@ -147,6 +153,45 @@ export default function LoginPage() {
                                     )}
                                 </button>
                             </div>
+                        </div>
+
+                        {/* Admin Secret field (optional) */}
+                        <div className="space-y-2">
+                            <label
+                                htmlFor="adminSecret"
+                                className="block text-sm font-medium text-zinc-600 ml-1"
+                            >
+                                Admin Secret <span className="text-zinc-400 font-normal">(optional)</span>
+                            </label>
+                            <div className="relative group">
+                                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                    <Shield className="h-5 w-5 text-zinc-400 group-focus-within:text-zinc-600 transition-colors" />
+                                </div>
+                                <input
+                                    id="adminSecret"
+                                    name="adminSecret"
+                                    type={showAdminSecret ? "text" : "password"}
+                                    autoComplete="off"
+                                    value={formData.adminSecret}
+                                    onChange={handleChange}
+                                    className="w-full pl-12 pr-12 py-4 bg-white/80 border border-zinc-200 rounded-2xl text-zinc-800 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-zinc-800/10 focus:border-zinc-400 transition-all duration-200"
+                                    placeholder="Required for admin accounts"
+                                />
+                                <button
+                                    type="button"
+                                    onClick={() => setShowAdminSecret(!showAdminSecret)}
+                                    className="absolute inset-y-0 right-0 pr-4 flex items-center text-zinc-400 hover:text-zinc-600 transition-colors"
+                                >
+                                    {showAdminSecret ? (
+                                        <EyeOff className="h-5 w-5" />
+                                    ) : (
+                                        <Eye className="h-5 w-5" />
+                                    )}
+                                </button>
+                            </div>
+                            <p className="text-xs text-zinc-400 ml-1">
+                                Only required if logging in as an admin
+                            </p>
                         </div>
 
                         {/* Submit button */}

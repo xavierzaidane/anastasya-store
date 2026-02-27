@@ -101,11 +101,6 @@ export function ViewBlogDialog({ post, children }: ViewBlogDialogProps) {
                 Author
               </div>
               <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-full bg-pink-100 flex items-center justify-center">
-                  <span className="text-xs font-medium text-pink-700">
-                    {post.author.initial}
-                  </span>
-                </div>
                 <span className="font-medium text-neutral-900">{post.author.name}</span>
               </div>
             </div>

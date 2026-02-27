@@ -1,13 +1,25 @@
-import { NextRequest, NextResponse } from 'next/server';
-import prisma from '@/lib/prisma';
+import { NextRequest } from "next/server";
+import prisma from "@/lib/prisma";
+import {
+  successResponse,
+  ApiErrors,
+  handleApiError,
+  requireAdmin,
+  isAuthenticated,
+  updateCategorySchema,
+  validateBody,
+} from "@/lib/api";
 
-// GET - Get category with products
+type RouteParams = { params: Promise<{ slug: string }> };
+
+// GET /api/categories/[slug] - Get category with products
 export async function GET(
-  request: NextRequest,
-  { params }: { params: Promise<{ slug: string }> }
+  _request: NextRequest,
+  { params }: RouteParams
 ) {
   try {
     const { slug } = await params;
+
     const category = await prisma.category.findUnique({
       where: { slug },
       include: {
@@ -18,8 +30,6 @@ export async function GET(
             name: true,
             price: true,
             image: true,
-            rating: true,
-            reviewCount: true,
           },
         },
         _count: {
@@ -29,89 +39,92 @@ export async function GET(
     });
 
     if (!category) {
-      return NextResponse.json(
-        { error: 'Category not found' },
-        { status: 404 }
-      );
+      return ApiErrors.notFound("Category not found");
     }
 
     const { _count, ...categoryData } = category;
-    return NextResponse.json(
-      { ...categoryData, productCount: _count.products },
-      { status: 200 }
-    );
+    const result = {
+      ...categoryData,
+      productCount: _count.products,
+    };
+
+    return successResponse(result, "Category retrieved successfully");
   } catch (error) {
-    return NextResponse.json(
-      { error: 'Failed to fetch category' },
-      { status: 500 }
-    );
+    return handleApiError(error);
   }
 }
 
-// PUT - Update category (Admin only)
+// PUT /api/categories/[slug] - Update category (Admin only)
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { slug: string } }
+  { params }: RouteParams
 ) {
   try {
-    // TODO: Add authentication middleware to verify admin role
-    const body = await request.json();
-    const { name, image } = body;
+    // Check admin authorization
+    const authResult = await requireAdmin();
+    if (!isAuthenticated(authResult)) {
+      return authResult.response;
+    }
+
+    const { slug } = await params;
+
+    // Validate request body
+    const data = await validateBody(request, updateCategorySchema);
+
+    // Check if category exists
     const existingCategory = await prisma.category.findUnique({
-      where: { slug: params.slug },
+      where: { slug },
     });
 
     if (!existingCategory) {
-      return NextResponse.json(
-        { error: 'Category not found' },
-        { status: 404 }
-      );
+      return ApiErrors.notFound("Category not found");
     }
+
+    // Update category
     const category = await prisma.category.update({
-      where: { slug: params.slug },
+      where: { slug },
       data: {
-        ...(name && { name }),
-        ...(image !== undefined && { image: image || null }),
+        ...(data.name && { name: data.name }),
+        ...(data.image !== undefined && { image: data.image || null }),
       },
     });
-    return NextResponse.json(category, { status: 200 });
+
+    return successResponse(category, "Category updated successfully");
   } catch (error) {
-    return NextResponse.json(
-      { error: 'Failed to update category' },
-      { status: 500 }
-    );
+    return handleApiError(error);
   }
 }
 
+// DELETE /api/categories/[slug] - Delete category (Admin only)
 export async function DELETE(
-  request: NextRequest,
-  { params }: { params: { slug: string } }
+  _request: NextRequest,
+  { params }: RouteParams
 ) {
   try {
-    // TODO: Add authentication middleware to verify admin role
+    // Check admin authorization
+    const authResult = await requireAdmin();
+    if (!isAuthenticated(authResult)) {
+      return authResult.response;
+    }
+
+    const { slug } = await params;
+
+    // Check if category exists
     const category = await prisma.category.findUnique({
-      where: { slug: params.slug },
+      where: { slug },
     });
 
     if (!category) {
-      return NextResponse.json(
-        { error: 'Category not found' },
-        { status: 404 }
-      );
+      return ApiErrors.notFound("Category not found");
     }
 
+    // Delete category
     await prisma.category.delete({
-      where: { slug: params.slug },
+      where: { slug },
     });
 
-    return NextResponse.json(
-      { message: 'Category deleted successfully' },
-      { status: 200 }
-    );
+    return successResponse(null, "Category deleted successfully");
   } catch (error) {
-    return NextResponse.json(
-      { error: 'Failed to delete category' },
-      { status: 500 }
-    );
+    return handleApiError(error);
   }
 }

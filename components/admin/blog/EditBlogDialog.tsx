@@ -235,17 +235,6 @@ export function EditBlogDialog({ post, children, onPostUpdated }: EditBlogDialog
                     required
                   />
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="edit-authorInitial">Author Initial</Label>
-                  <Input
-                    id="edit-authorInitial"
-                    placeholder="A"
-                    maxLength={2}
-                    value={formData.author.initial}
-                    onChange={(e) => handleAuthorChange('initial', e.target.value.toUpperCase())}
-                    required
-                  />
-                </div>
               </div>
 
               <div className="space-y-2">

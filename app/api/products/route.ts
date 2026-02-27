@@ -1,85 +1,98 @@
-import prisma from '@/lib/prisma';
-import { NextResponse } from 'next/server';
+import { NextRequest } from "next/server";
+import prisma from "@/lib/prisma";
+import {
+  successResponse,
+  createdResponse,
+  handleApiError,
+  parsePaginationParams,
+  createPaginatedResult,
+  requireAdmin,
+  isAuthenticated,
+  createProductSchema,
+  validateBody,
+} from "@/lib/api";
 
-export async function GET(req: Request) {
-  const { searchParams } = new URL(req.url);
-  const search = searchParams.get('search') || ''; 
-  const category = searchParams.get('category'); 
-  const page = parseInt(searchParams.get('page') || '1', 10); 
-  const limit = parseInt(searchParams.get('limit') || '10', 10); 
-  const skip = (page - 1) * limit;
-
+// GET /api/products - List products with pagination and filtering
+export async function GET(request: NextRequest) {
   try {
-    const products = await prisma.product.findMany({
-      where: {
-        name: {
-          contains: search,
-          mode: 'insensitive',
-        },
-        ...(category && { category: { slug: category } }),
-      },
-      skip,
-      take: limit,
-      include: {
-        category: true, 
-      },
-    });
+    const url = request.url;
+    const { page, limit, skip } = parsePaginationParams(url);
+    const { searchParams } = new URL(url);
+    
+    const search = searchParams.get("search") || "";
+    const category = searchParams.get("category");
 
-    const totalProducts = await prisma.product.count({
-      where: {
-        name: {
-          contains: search,
-          mode: 'insensitive',
-        },
-        ...(category && { category: { slug: category } }),
+    // Build where clause
+    const where = {
+      name: {
+        contains: search,
+        mode: "insensitive" as const,
       },
-    });
+      ...(category && { category: { slug: category } }),
+    };
 
-    return NextResponse.json({
-      data: products,
-      meta: {
-        total: totalProducts,
-        page,
-        limit,
-        totalPages: Math.ceil(totalProducts / limit),
-      },
-    });
+    // Execute queries in parallel
+    const [products, total] = await Promise.all([
+      prisma.product.findMany({
+        where,
+        skip,
+        take: limit,
+        include: {
+          category: true,
+        },
+        orderBy: { createdAt: "desc" },
+      }),
+      prisma.product.count({ where }),
+    ]);
+
+    const result = createPaginatedResult(products, total, { page, limit, skip });
+
+    return successResponse(result, "Products retrieved successfully");
   } catch (error) {
-    console.error('Error fetching products:', error);
-    return NextResponse.json({ error: 'Failed to fetch products' }, { status: 500 });
+    return handleApiError(error);
   }
 }
 
-
-export async function POST(req: Request) {
+// POST /api/products - Create product (Admin only)
+export async function POST(request: NextRequest) {
   try {
-    const body = await req.json();
-    const { name, price, categoryId, description, img, items } = body;
-    if (!name || !price || !categoryId) {
-      return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
+    // Check admin authorization
+    const authResult = await requireAdmin();
+    if (!isAuthenticated(authResult)) {
+      return authResult.response;
     }
 
-    const slug = name.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '');
+    const { name, price, categoryId, description, img, items } = await validateBody(
+      request,
+      createProductSchema
+    );
 
+    // Generate slug from name
+    const slug = name
+      .toLowerCase()
+      .replace(/ /g, "-")
+      .replace(/[^\w-]+/g, "");
+
+    // Create product
     const product = await prisma.product.create({
       data: {
         name,
-        slug, 
+        slug,
         price,
         description,
         items: items ?? [],
         image: img,
-        rating: 0,
-        reviewCount: 0,
         category: {
           connect: { id: categoryId },
         },
       },
+      include: {
+        category: true,
+      },
     });
 
-    return NextResponse.json({ data: product }, { status: 201 });
+    return createdResponse(product, "Product created successfully");
   } catch (error) {
-    console.error('Error creating product:', error);
-    return NextResponse.json({ error: 'Failed to create product' }, { status: 500 });
+    return handleApiError(error);
   }
 }

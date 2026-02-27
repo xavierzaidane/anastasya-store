@@ -212,7 +212,7 @@ export function ProductDetailDialogAdvanced({
                           
                      
                         </div>
-                        <div className="flex flex-col gap-2 pt-2">
+                        <div className="flex flex-col gap-2 -mt-3">
                           <span className="text-zinc-500">Description:</span>
                           <span className="font-medium text-zinc-700">{product.description}</span>
                         </div>

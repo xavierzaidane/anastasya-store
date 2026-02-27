@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Eye, EyeOff, Mail, Lock, User, Shield, Loader2, ArrowRight, ArrowLeft, Check } from "lucide-react";
+import { Eye, EyeOff, Mail, Lock, User, Loader2, ArrowRight, ArrowLeft, Check } from "lucide-react";
 
 export default function RegisterPage() {
     const router = useRouter();
@@ -12,12 +12,9 @@ export default function RegisterPage() {
         email: "",
         password: "",
         confirmPassword: "",
-        role: "CUSTOMER" as "CUSTOMER" | "ADMIN",
-        adminSecret: "",
     });
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-    const [showAdminSecret, setShowAdminSecret] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState("");
 
@@ -63,15 +60,13 @@ export default function RegisterPage() {
                     name: formData.name,
                     email: formData.email,
                     password: formData.password,
-                    role: formData.role,
-                    adminSecret: formData.role === "ADMIN" ? formData.adminSecret : undefined,
                 }),
             });
 
             const data = await response.json();
 
             if (!response.ok) {
-                throw new Error(data.error || "Registration failed");
+                throw new Error(data.message || "Registration failed");
             }
 
             router.push("/admin");
@@ -271,78 +266,6 @@ export default function RegisterPage() {
                                 </button>
                             </div>
                         </div>
-
-                        {/* Role selection */}
-                        <div className="space-y-2">
-                            <label className="block text-sm font-medium text-zinc-600 ml-1">
-                                Account Type
-                            </label>
-                            <div className="grid grid-cols-2 gap-3">
-                                <button
-                                    type="button"
-                                    onClick={() => setFormData(prev => ({ ...prev, role: "CUSTOMER", adminSecret: "" }))}
-                                    className={`py-3 px-4 rounded-2xl border text-sm font-medium transition-all duration-200 flex items-center justify-center gap-2 ${formData.role === "CUSTOMER"
-                                            ? "bg-zinc-800 text-white border-zinc-800 shadow-lg"
-                                            : "bg-white/80 text-zinc-600 border-zinc-200 hover:border-zinc-300"
-                                        }`}
-                                >
-                                    <User className="h-4 w-4" />
-                                    Customer
-                                </button>
-                                <button
-                                    type="button"
-                                    onClick={() => setFormData(prev => ({ ...prev, role: "ADMIN" }))}
-                                    className={`py-3 px-4 rounded-2xl border text-sm font-medium transition-all duration-200 flex items-center justify-center gap-2 ${formData.role === "ADMIN"
-                                            ? "bg-zinc-800 text-white border-zinc-800 shadow-lg"
-                                            : "bg-white/80 text-zinc-600 border-zinc-200 hover:border-zinc-300"
-                                        }`}
-                                >
-                                    <Shield className="h-4 w-4" />
-                                    Admin
-                                </button>
-                            </div>
-                        </div>
-
-                        {/* Admin Secret field (conditional) */}
-                        {formData.role === "ADMIN" && (
-                            <div className="space-y-2 animate-in slide-in-from-top-2 duration-200">
-                                <label
-                                    htmlFor="adminSecret"
-                                    className="block text-sm font-medium text-zinc-600 ml-1"
-                                >
-                                    Admin Secret Key
-                                </label>
-                                <div className="relative group">
-                                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                                        <Shield className="h-5 w-5 text-amber-500 group-focus-within:text-amber-600 transition-colors" />
-                                    </div>
-                                    <input
-                                        id="adminSecret"
-                                        name="adminSecret"
-                                        type={showAdminSecret ? "text" : "password"}
-                                        required={formData.role === "ADMIN"}
-                                        value={formData.adminSecret}
-                                        onChange={handleChange}
-                                        className="w-full pl-12 pr-12 py-3.5 bg-amber-50/50 border border-amber-200 rounded-2xl text-zinc-800 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-400 transition-all duration-200"
-                                        placeholder="Enter admin secret"
-                                    />
-                                    <button
-                                        type="button"
-                                        onClick={() => setShowAdminSecret(!showAdminSecret)}
-                                        className="absolute inset-y-0 right-0 pr-4 flex items-center text-zinc-400 hover:text-zinc-600 transition-colors"
-                                    >
-                                        {showAdminSecret ? (
-                                            <EyeOff className="h-5 w-5" />
-                                        ) : (
-                                            <Eye className="h-5 w-5" />
-                                        )}
-                                    </button>
-                                </div>
-                                <p className="text-xs text-amber-600 ml-1">
-                                    Admin accounts require a valid secret key
-                                </p>
-                            </div>
-                        )}
 
                         {/* Submit button */}
                         <button

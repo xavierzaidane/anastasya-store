@@ -248,17 +248,6 @@ export function CreateBlogDialog({ children, onPostCreated }: CreateBlogDialogPr
                     required
                   />
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="authorInitial">Author Initial</Label>
-                  <Input
-                    id="authorInitial"
-                    placeholder="A"
-                    maxLength={2}
-                    value={formData.author.initial}
-                    onChange={(e) => handleAuthorChange('initial', e.target.value.toUpperCase())}
-                    required
-                  />
-                </div>
               </div>
 
               <div className="space-y-2">

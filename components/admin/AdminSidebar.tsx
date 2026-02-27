@@ -56,8 +56,8 @@ const navItems: NavItem[] = [
     icon: FileText,
   },
   {
-    title: 'Users',
-    url: '/admin/users',
+    title: 'Categories',
+    url: '/admin/categories',
     icon: Users,
   },
   {

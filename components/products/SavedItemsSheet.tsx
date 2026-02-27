@@ -56,13 +56,14 @@ export function SavedItemsSheet({ open, onOpenChange }: SavedItemsSheetProps) {
 
   const calculateTotal = () => {
     return savedItems.reduce((total, item) => {
-      const priceNum = parseFloat(item.price.replace(/[^0-9.]/g, ''));
+      // Remove "Rp", spaces, and dots (thousands separator) to get the raw number
+      const priceNum = parseInt(item.price.replace(/[^0-9]/g, ''), 10);
       return total + (priceNum * item.quantity);
     }, 0);
   };
 
   const formatPrice = (price: number) => {
-    return `${price.toLocaleString('de-DE')} Euro`;
+    return `Rp ${price.toLocaleString('id-ID')}`;
   };
 
   return (
@@ -75,7 +76,7 @@ export function SavedItemsSheet({ open, onOpenChange }: SavedItemsSheetProps) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-0 bg-black/50 z-50"
+            className="fixed inset-0 bg-black/50 z-50 backdrop-blur-sm"
             onClick={() => onOpenChange(false)}
             aria-hidden="true"
           />
@@ -92,7 +93,7 @@ export function SavedItemsSheet({ open, onOpenChange }: SavedItemsSheetProps) {
           >
             {/* Header */}
             <div className="flex items-center justify-between px-6 py-4 border-b border-zinc-200">
-              <h2 className="text-xl font-semibold text-zinc-900">
+              <h2 className="text-xl font-semibold font-mono text-zinc-900">
                 Bag{' '}
                 <span className="text-zinc-500 text-base font-normal">
                   [{getTotalItems()}]
@@ -285,7 +286,7 @@ function SavedItemCard({
               <Plus className="w-3.5 h-3.5 text-zinc-700" />
             </button>
           </div>
-          <p className="text-base font-semibold text-zinc-900">{item.price}</p>
+          <p className="text-sm font-semibold font-mono text-zinc-900 whitespace-nowrap min-w-20 text-right">{item.price}</p>
         </div>
       </div>
     </motion.div>
