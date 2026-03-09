@@ -24,7 +24,7 @@ export default function Hero() {
     >
       <div className="px-4 sm:px-6 lg:px-8">
         <h1 className="text-2xl sm:text-3xl lg:text-8xl font-light font-mono tracking-tight text-zinc-900 max-w-3xl mx-auto">
-          Discover Our Flower Shop's Delightful Collection
+          Discover Our Flower Shop&apos;s Delightful Collection
         </h1>
 
         <p className="mt-3 max-w-xl mx-auto text-base text-zinc-500">

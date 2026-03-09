@@ -52,7 +52,6 @@ export default function AdminDashboard() {
         const categoryEntries = categoriesData.data || [];
         setTotalCategories(categoryEntries.length || 0);
       } catch (error) {
-        // eslint-disable-next-line no-console
         console.error('Failed to fetch dashboard data:', error);
       } finally {
         setLoading(false);
@@ -95,7 +94,6 @@ export default function AdminDashboard() {
           >
             <div className="flex items-start justify-between">
               <div className="p-2 rounded-2xl bg-muted">
-                {/* eslint-disable-next-line react/jsx-pascal-case */}
                 <stat.icon className={`w-5 h-5 ${stat.iconColor}`} />
               </div>
               <span className="text-xs font-medium text-muted-foreground">+2 this month</span>

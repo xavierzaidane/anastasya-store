@@ -1,5 +1,6 @@
 "use client";
 import React, { useState } from 'react';
+import Link from 'next/link';
 
 export default function Footer() {
   const [email, setEmail] = useState('');
@@ -64,7 +65,7 @@ export default function Footer() {
             </div>
 
             <p className="text-sm text-zinc-600 mb-auto">
-              I built this because I was inspired by UI designs I've seen on the internet, with some of my own tweaks and creativity. This page currently serves no purpose other than an experiment.
+              I built this because I was inspired by UI designs I&apos;ve seen on the internet, with some of my own tweaks and creativity. This page currently serves no purpose other than an experiment.
             </p>
             <p className="text-sm text-zinc-500 mt-auto pt-8">© 2025 Curated Supply. All rights reserved.</p>
           </div>
@@ -85,7 +86,7 @@ export default function Footer() {
                 <h3 className="font-medium text-zinc-600 mb-4 tracking-tight">About</h3>
                 <ul className="space-y-1">
                   <li><a href="/info" className="text-zinc-600 hover:text-zinc-900 transition-colors duration-200 text-sm">Info</a></li>
-                  <li><a href="/blog" className="text-zinc-600 hover:text-zinc-900 transition-colors duration-200 text-sm">Blog</a></li>
+                  <li><Link href="/blog" className="text-zinc-600 hover:text-zinc-900 transition-colors duration-200 text-sm">Blog</Link></li>
                   <li><a href="/legal" className="text-zinc-600 hover:text-zinc-900 transition-colors duration-200 text-sm">Legal</a></li>
                 </ul>
               </div>

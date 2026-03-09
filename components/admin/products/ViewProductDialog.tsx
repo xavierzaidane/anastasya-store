@@ -13,9 +13,8 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
 import { Product } from '@/types/api';
-import { Eye, Star, ExternalLink } from 'lucide-react';
+import { Eye, ExternalLink } from 'lucide-react';
 import Link from 'next/link';
 
 interface ViewProductDialogProps {

@@ -44,7 +44,6 @@ export default function ExpandableSearchBar(props: ExpandableSearchBarProps) {
         value === ''
       ) {
         setOpen(false);
-        setValue('');
       }
     }
     document.addEventListener('mousedown', onDocClick);
@@ -55,39 +54,17 @@ export default function ExpandableSearchBar(props: ExpandableSearchBarProps) {
     if (open) {
       const id = setTimeout(() => inputRef.current?.focus(), 120);
       return () => clearTimeout(id);
-    } else {
-      setValue('');
     }
+    // Clear value when closing - use callback to avoid direct setState
+    return () => {
+      if (!open) setValue('');
+    };
   }, [open]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onSearch?.(value);
   };
-
-  useEffect(() => {
-    function onDocClick(e: MouseEvent) {
-      if (
-        !containerRef.current?.contains(e.target as Node) &&
-        open &&
-        value === ''
-      ) {
-        setOpen(false);
-        setValue('');
-      }
-    }
-    document.addEventListener('mousedown', onDocClick);
-    return () => document.removeEventListener('mousedown', onDocClick);
-  }, [open, value]);
-
-  useEffect(() => {
-    if (open) {
-      const id = setTimeout(() => inputRef.current?.focus(), 120);
-      return () => clearTimeout(id);
-    } else {
-      setValue('');
-    }
-  }, [open]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {

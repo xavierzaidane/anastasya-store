@@ -8,7 +8,7 @@ import { SavedItemsSheet } from "../products/SavedItemsSheet";
 
 export default function StoreNavbar() {
   const pathname = usePathname();
-  const { getTotalItems, savedItems } = useSavedItems();
+  const { getTotalItems } = useSavedItems();
   const [savedItemsSheetOpen, setSavedItemsSheetOpen] = useState(false);
   const totalItems = getTotalItems();
 

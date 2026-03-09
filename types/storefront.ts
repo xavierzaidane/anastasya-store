@@ -1,11 +1,10 @@
 export interface StorefrontProduct {
-  image: any;
-  image: string | Blob;
   id: number;
   slug: string;
   category: string;
   name: string;
   price: string;
+  image: string;
   img: string;
   description: string;
   items: string[];

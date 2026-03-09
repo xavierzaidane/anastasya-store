@@ -33,13 +33,6 @@ export default function LoginPage() {
 
     const heroLineColor = "color-mix(in srgb, var(--primary-foreground) 35%, transparent)";
     const heroMutedForeground = "color-mix(in srgb, var(--primary-foreground) 75%, transparent)";
-    const heroSubtleForeground = "color-mix(in srgb, var(--primary-foreground) 60%, transparent)";
-
-    const heroSurfaceStyle: CSSProperties = {
-        border: "1px solid color-mix(in srgb, var(--primary-foreground) 28%, transparent)",
-        backgroundColor: "color-mix(in srgb, var(--primary-foreground) 9%, transparent)",
-        boxShadow: "0 35px 90px color-mix(in srgb, var(--primary) 22%, transparent)",
-    };
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value, type, checked } = e.target;

@@ -1,7 +1,29 @@
 import { NextResponse } from "next/server";
 import { ZodError } from "zod";
-import { Prisma } from "@prisma/client";
 import { ApiErrors, errorResponse } from "./response";
+
+// Type guard for Prisma errors (avoids import issues when client isn't generated)
+interface PrismaKnownError {
+  code: string;
+  meta?: { target?: string[] };
+}
+
+function isPrismaKnownError(error: unknown): error is PrismaKnownError {
+  return (
+    typeof error === 'object' &&
+    error !== null &&
+    'code' in error &&
+    typeof (error as PrismaKnownError).code === 'string'
+  );
+}
+
+function isPrismaValidationError(error: unknown): boolean {
+  return (
+    typeof error === 'object' &&
+    error !== null &&
+    error.constructor?.name === 'PrismaClientValidationError'
+  );
+}
 
 export class ApiError extends Error {
   public readonly statusCode: number;
@@ -67,11 +89,11 @@ export function handleApiError(error: unknown): NextResponse {
     return errorResponse(error.message, error.statusCode);
   }
 
-  // Handle Prisma errors
-  if (error instanceof Prisma.PrismaClientKnownRequestError) {
+  // Handle Prisma errors using type guards
+  if (isPrismaKnownError(error)) {
     switch (error.code) {
       case "P2002": // Unique constraint violation
-        const target = (error.meta?.target as string[])?.join(", ") || "field";
+        const target = error.meta?.target?.join(", ") || "field";
         return ApiErrors.conflict(`A record with this ${target} already exists`);
       case "P2025": // Record not found
         return ApiErrors.notFound("Record not found");
@@ -84,7 +106,7 @@ export function handleApiError(error: unknown): NextResponse {
     }
   }
 
-  if (error instanceof Prisma.PrismaClientValidationError) {
+  if (isPrismaValidationError(error)) {
     return ApiErrors.badRequest("Invalid data provided");
   }
 

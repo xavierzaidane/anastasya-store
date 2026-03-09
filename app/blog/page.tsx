@@ -3,7 +3,6 @@ import Link from 'next/link';
 import Image from 'next/image';
 import StoreNavbar from '@/components/navigations/StoreNavbar';
 import Footer from '@/components/navigations/Footer';
-import { Skeleton } from '@/components/ui/skeleton';
 import { ApiBlog, BlogApiResponse, StorefrontBlog } from '@/types/blog';
 import { mapApiBlogsToStorefront } from '@/lib/storefront-blogs';
 

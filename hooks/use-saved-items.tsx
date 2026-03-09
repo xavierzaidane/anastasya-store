@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, useCallback, ReactNode, useRef } from 'react';
 
 export interface SavedItem {
   id: number;
@@ -29,33 +29,32 @@ const SavedItemsContext = createContext<SavedItemsContextType | undefined>(undef
 const STORAGE_KEY = 'anastasya-saved-items';
 
 export function SavedItemsProvider({ children }: { children: ReactNode }) {
-  const [savedItems, setSavedItems] = useState<SavedItem[]>([]);
-  const [isHydrated, setIsHydrated] = useState(false);
-
-  // Load from localStorage on mount
-  useEffect(() => {
-    try {
-      const stored = localStorage.getItem(STORAGE_KEY);
-      if (stored) {
-        const parsed = JSON.parse(stored);
-        setSavedItems(parsed);
+  const [savedItems, setSavedItems] = useState<SavedItem[]>(() => {
+    // Initialize from localStorage synchronously if available (client-side only)
+    if (typeof window !== 'undefined') {
+      try {
+        const stored = localStorage.getItem(STORAGE_KEY);
+        if (stored) {
+          return JSON.parse(stored);
+        }
+      } catch {
+        // Ignore parse errors
       }
-    } catch (error) {
-      console.error('Error loading saved items:', error);
     }
-    setIsHydrated(true);
-  }, []);
+    return [];
+  });
+  const isHydratedRef = useRef(true);
 
   // Save to localStorage whenever savedItems changes
   useEffect(() => {
-    if (isHydrated) {
+    if (isHydratedRef.current) {
       try {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(savedItems));
       } catch (error) {
         console.error('Error saving items:', error);
       }
     }
-  }, [savedItems, isHydrated]);
+  }, [savedItems]);
 
   const addItem = useCallback((item: Omit<SavedItem, 'quantity' | 'addedAt'>, quantity: number = 1) => {
     setSavedItems((prev) => {

@@ -102,6 +102,7 @@ export function validateAdminSecret(secret: string | undefined): boolean {
 
 // Remove sensitive fields from user object
 export function sanitizeUser(user: { id: number; email: string; name: string | null; role: "ADMIN" | "CUSTOMER"; createdAt: Date; password?: string }): SafeUser {
-    const { password, ...safeUser } = user;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password: _password, ...safeUser } = user;
     return safeUser as SafeUser;
 }

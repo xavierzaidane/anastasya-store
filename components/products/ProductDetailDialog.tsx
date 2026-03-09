@@ -280,7 +280,7 @@ export function ProductDetailDialogAdvanced({
 
                     {liveProduct.items.length > 0 && (
                       <div className="py-6 border-t border-zinc-200">
-                        <h3 className="text-sm font-semibold text-zinc-900 mb-3">What's Included</h3>
+                        <h3 className="text-sm font-semibold text-zinc-900 mb-3">What&apos;s Included</h3>
                         <ul className="space-y-2">
                           {liveProduct.items.map((item, index) => (
                             <li key={index} className="flex items-start gap-2 text-sm text-zinc-700">

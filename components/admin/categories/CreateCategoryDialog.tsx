@@ -14,7 +14,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Plus, X, ImageIcon, Upload } from 'lucide-react';
+import { Plus, X, Upload } from 'lucide-react';
 
 interface CreateCategoryDialogProps {
   children?: React.ReactNode;

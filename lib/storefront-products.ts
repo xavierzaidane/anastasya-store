@@ -69,6 +69,7 @@ export function mapApiProductToStorefront(
   product: StorefrontApiProduct,
   fallbackCategorySlug = 'general'
 ): StorefrontProduct {
+  const imageUrl = product.image || '/bunga1.jpg';
   return {
     id: product.id,
     slug: product.slug,
@@ -76,7 +77,8 @@ export function mapApiProductToStorefront(
     categoryName: product.category?.name,
     name: product.name,
     price: formatRupiah(product.price),
-    img: product.image || '/bunga1.jpg',
+    image: imageUrl,
+    img: imageUrl,
     description: product.description || 'No description available.',
     items: product.items || [],
     isStaffPick: Boolean(product.isStaffPick),
