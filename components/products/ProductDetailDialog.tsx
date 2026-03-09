@@ -11,7 +11,7 @@ import { mapApiProductToStorefront } from '@/lib/storefront-products';
 import { StorefrontApiResponse, StorefrontProduct } from '@/types/storefront';
 
 interface ProductDetailDialogProps {
-  product: StorefrontProduct;
+  product: StorefrontProduct | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
@@ -35,7 +35,7 @@ export function ProductDetailDialogAdvanced({
   open,
   onOpenChange,
 }: ProductDetailDialogProps) {
-  const [liveProduct, setLiveProduct] = useState<StorefrontProduct>(product);
+  const [liveProduct, setLiveProduct] = useState<StorefrontProduct | null>(product);
   const [quantity, setQuantity] = useState(1);
   const [isOrdering, setIsOrdering] = useState(false);
   const [isFetchingProduct, setIsFetchingProduct] = useState(false);
@@ -44,13 +44,15 @@ export function ProductDetailDialogAdvanced({
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   
   const { isItemSaved, toggleItem, addItem } = useSavedItems();
-  const isBookmarked = isItemSaved(liveProduct.id);
+  const isBookmarked = liveProduct ? isItemSaved(liveProduct.id) : false;
 
   useEffect(() => {
-    setLiveProduct(product);
-    setImageLoaded(false);
-    setImageError(false);
-    setQuantity(1);
+    if (product) {
+      setLiveProduct(product);
+      setImageLoaded(false);
+      setImageError(false);
+      setQuantity(1);
+    }
   }, [product]);
 
   useEffect(() => {
@@ -86,7 +88,12 @@ export function ProductDetailDialogAdvanced({
     return () => {
       isMounted = false;
     };
-  }, [open, product.slug, product.category]);
+  }, [open, product?.slug, product?.category]);
+
+  // Early return if no product - must be AFTER all hooks
+  if (!product || !liveProduct) {
+    return null;
+  }
 
   const handleToggleBookmark = () => {
     if (isBookmarked) {
@@ -216,17 +223,17 @@ export function ProductDetailDialogAdvanced({
 
                   <div className="md:hidden mb-6">
                     {!imageLoaded && !imageError && (
-                      <div className="w-full h-48 bg-zinc-200 animate-pulse rounded-lg" />
+                      <div className="w-full aspect-square max-h-[40vh] bg-zinc-200 animate-pulse rounded-lg" />
                     )}
                     {imageError ? (
-                      <div className="w-full h-48 flex items-center justify-center bg-zinc-100 text-zinc-500 text-sm rounded-lg">
+                      <div className="w-full aspect-square max-h-[40vh] flex items-center justify-center bg-zinc-100 text-zinc-500 text-sm rounded-lg">
                         Image not available
                       </div>
                     ) : (
                       <img
                         src={liveProduct.img}
                         alt={liveProduct.name}
-                        className={`w-full h-48 object-contain transition-opacity duration-300 ${
+                        className={`w-full aspect-square max-h-[40vh] object-cover rounded-lg transition-opacity duration-300 ${
                           imageLoaded ? 'opacity-100' : 'opacity-0'
                         }`}
                         onLoad={handleImageLoad}

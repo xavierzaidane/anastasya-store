@@ -4,6 +4,8 @@ import { useEffect, useMemo, useState } from 'react';
 
 import { fetchStorefrontProducts } from '@/lib/storefront-products';
 import { StorefrontProduct } from '@/types/storefront';
+import { ProductDetailDialogAdvanced } from '@/components/products';
+import { useProductDialogs } from '@/hooks/use-product-dialogs';
 
 interface FilterOption {
   id: string;
@@ -37,6 +39,13 @@ export default function ProductGrid() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [reloadKey, setReloadKey] = useState(0);
+
+  const {
+    selectedProduct,
+    isProductDialogOpen,
+    openProductDialog,
+    closeProductDialog,
+  } = useProductDialogs();
 
   useEffect(() => {
     let isMounted = true;
@@ -207,6 +216,13 @@ export default function ProductGrid() {
                 role="button"
                 tabIndex={0}
                 aria-label={`View details for ${product.name}`}
+                onClick={() => openProductDialog(product)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    openProductDialog(product);
+                  }
+                }}
               >
                 <div className="relative bg-zinc-100 rounded-lg sm:rounded-xl overflow-hidden aspect-[4/3]">
                   <img
@@ -268,6 +284,12 @@ export default function ProductGrid() {
           <p className="pt-6 text-center text-sm text-zinc-500">No products found for this filter.</p>
         )}
       </div>
+
+      <ProductDetailDialogAdvanced
+        product={selectedProduct}
+        open={isProductDialogOpen}
+        onOpenChange={(open) => !open && closeProductDialog()}
+      />
     </div>
   );
 }
