@@ -4,8 +4,9 @@ import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import StoreNavbar from '@/components/navigations/StoreNavbar';
 import Footer from '@/components/navigations/Footer';
-import { ApiBlog, BlogApiResponse, StorefrontBlog } from '@/types/blog';
-import { mapApiBlogToStorefront, mapApiBlogsToStorefront, getRelatedBlogs } from '@/lib/storefront-blogs';
+import { StorefrontBlog } from '@/types/blog';
+import { getRelatedBlogs } from '@/lib/storefront-blogs';
+import { getBlogBySlug, getPublishedBlogs } from '@/lib/server/blogs';
 
 // Clock icon component
 function ClockIcon({ size = 16 }: { size?: number }) {
@@ -185,51 +186,15 @@ interface PageProps {
   params: Promise<{ slug: string }>;
 }
 
-async function fetchBlogBySlug(slug: string): Promise<StorefrontBlog | null> {
-  try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/api/blogs/${slug}`,
-      { cache: 'no-store' }
-    );
-    const result: BlogApiResponse<ApiBlog> = await res.json();
-
-    if (!res.ok || !result.success || !result.data) {
-      return null;
-    }
-
-    return mapApiBlogToStorefront(result.data);
-  } catch {
-    return null;
-  }
-}
-
-async function fetchAllBlogs(): Promise<StorefrontBlog[]> {
-  try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/api/blogs`,
-      { cache: 'no-store' }
-    );
-    const result: BlogApiResponse<ApiBlog[]> = await res.json();
-
-    if (!res.ok || !result.success || !result.data) {
-      return [];
-    }
-
-    return mapApiBlogsToStorefront(result.data);
-  } catch {
-    return [];
-  }
-}
-
 export default async function BlogDetailPage({ params }: PageProps) {
   const { slug } = await params;
-  const post = await fetchBlogBySlug(slug);
+  const post = await getBlogBySlug(slug);
 
   if (!post) {
     notFound();
   }
 
-  const allBlogs = await fetchAllBlogs();
+  const allBlogs = await getPublishedBlogs();
   const relatedPosts = getRelatedBlogs(allBlogs, slug, 3);
 
   return (

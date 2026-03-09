@@ -3,8 +3,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import StoreNavbar from '@/components/navigations/StoreNavbar';
 import Footer from '@/components/navigations/Footer';
-import { ApiBlog, BlogApiResponse, StorefrontBlog } from '@/types/blog';
-import { mapApiBlogsToStorefront } from '@/lib/storefront-blogs';
+import { getPublishedBlogs } from '@/lib/server/blogs';
 
 // Clock icon component
 function ClockIcon() {
@@ -26,25 +25,8 @@ function ClockIcon() {
 	);
 }
 
-async function fetchBlogPosts(): Promise<StorefrontBlog[]> {
-	try {
-		const res = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/api/blogs`, {
-			cache: 'no-store',
-		});
-		const result: BlogApiResponse<ApiBlog[]> = await res.json();
-
-		if (!res.ok || !result.success || !result.data) {
-			return [];
-		}
-
-		return mapApiBlogsToStorefront(result.data);
-	} catch {
-		return [];
-	}
-}
-
 export default async function BlogPage() {
-	const blogPosts = await fetchBlogPosts();
+	const blogPosts = await getPublishedBlogs();
 	return (
 		<section className="w-full min-h-screen ">
 			<StoreNavbar />
