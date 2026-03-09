@@ -20,7 +20,7 @@ export default function StoreNavbar() {
 
   const navItems = [
     { href: '/', label: 'Discover' },
-    { href: '/catalog', label: 'Browse' }, 
+    { href: '/browse', label: 'Browse' }, 
     { href: '/blog', label: 'Blog' },
 
   ];

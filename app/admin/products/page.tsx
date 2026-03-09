@@ -1,8 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
-import { products, Product } from '@/data/products';
+import { Product, ApiResponse, PaginatedData, Category } from '@/types/api';
 import {
   Table,
   TableBody,
@@ -14,7 +14,14 @@ import {
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Badge } from '@/components/ui/badge';
-import { ArrowUpDown } from 'lucide-react';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { ArrowUpDown, Loader2 } from 'lucide-react';
 import CreateProductDialog from '@/components/admin/products/CreateProductDialog';
 import ViewProductDialog from '@/components/admin/products/ViewProductDialog';
 import EditProductDialog from '@/components/admin/products/EditProductDialog';
@@ -22,16 +29,95 @@ import DeleteProductDialog from '@/components/admin/products/DeleteProductDialog
 
 
 export default function ProductsPage() {
+  const [products, setProducts] = useState<Product[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isCategoriesLoading, setIsCategoriesLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [selectedProducts, setSelectedProducts] = useState<number[]>([]);
   const [sortField, setSortField] = useState<keyof Product | null>(null);
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [total, setTotal] = useState(0);
 
-  // Filter products based on search query
+  const fetchCategories = useCallback(async () => {
+    try {
+      setIsCategoriesLoading(true);
+      const response = await fetch('/api/categories');
+      if (!response.ok) {
+        throw new Error('Failed to fetch categories');
+      }
+      const result: ApiResponse<Category[]> = await response.json();
+      setCategories(result.data || []);
+    } catch (err) {
+      console.error('Error fetching categories:', err);
+    } finally {
+      setIsCategoriesLoading(false);
+    }
+  }, []);
+
+  const fetchProducts = useCallback(async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      // Find category slug if selectedCategory is set
+      let categorySlug = '';
+      if (selectedCategory) {
+        const category = categories.find(c => c.id.toString() === selectedCategory);
+        categorySlug = category?.slug || '';
+      }
+
+      const params = new URLSearchParams({
+        page: page.toString(),
+        limit: '10',
+        ...(searchQuery && { search: searchQuery }),
+        ...(categorySlug && { category: categorySlug }),
+      });
+      
+      const response = await fetch(`/api/products?${params}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch products');
+      }
+      
+      const result: ApiResponse<PaginatedData<Product>> = await response.json();
+      setProducts(result.data.items);
+      setTotalPages(result.data.totalPages);
+      setTotal(result.data.total);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An error occurred');
+    } finally {
+      setIsLoading(false);
+    }
+  }, [page, searchQuery, selectedCategory, categories]);
+
+  useEffect(() => {
+    fetchCategories();
+  }, [fetchCategories]);
+
+  useEffect(() => {
+    fetchProducts();
+  }, [fetchProducts]);
+
+  const handleProductCreated = () => {
+    fetchProducts();
+  };
+
+  const handleProductUpdated = () => {
+    fetchProducts();
+  };
+
+  const handleProductDeleted = () => {
+    fetchProducts();
+  };
+
+  // Filter products based on search query (client-side filtering for sorting)
   const filteredProducts = products.filter(
     (product) =>
       product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      product.category.toLowerCase().includes(searchQuery.toLowerCase())
+      product.category.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   // Sort products
@@ -75,21 +161,25 @@ export default function ProductsPage() {
     }
   };
 
-  const getCategoryBadgeVariant = (category: string) => {
-    switch (category) {
-      case 'small':
-        return 'secondary';
-      case 'medium':
-        return 'default';
-      case 'large':
-        return 'destructive';
-      case 'money':
-        return 'ghost';
-      case 'round':
-        return 'outline';
-      case 'custom':
-        return 'link';
-    }
+  const getCategoryBadgeVariant = (categoryId: number) => {
+    const variants: Array<'default' | 'secondary' | 'destructive' | 'outline' | 'ghost' | 'link'> = [
+      'default',
+      'secondary',
+      'destructive',
+      'outline',
+      'ghost',
+      'link',
+    ];
+    return variants[categoryId % variants.length];
+  };
+
+  const formatPrice = (price: string | number) => {
+    const numPrice = typeof price === 'string' ? parseFloat(price) : price;
+    return new Intl.NumberFormat('id-ID', {
+      style: 'currency',
+      currency: 'IDR',
+      minimumFractionDigits: 0,
+    }).format(numPrice);
   };
 
   return (
@@ -97,19 +187,50 @@ export default function ProductsPage() {
       {/* Page Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-semibold font-mono text-neutral-900">Products</h1>
-          <p className="text-sm text-neutral-500 mt-1">
+          <h1 className="text-2xl font-semibold font-mono text-foreground">Products</h1>
+          <p className="text-sm text-muted-foreground mt-1">
             Manage your flower bouquet inventory
           </p>
         </div>
-        <CreateProductDialog />
+        <CreateProductDialog onProductCreated={handleProductCreated} />
       </div>
 
+      {/* Category Filter */}
+      <div className="flex items-center gap-2">
+        <label className="text-sm font-medium text-foreground">Filter by Category:</label>
+        <Select value={selectedCategory} onValueChange={(value) => {
+          setSelectedCategory(value === 'all' ? '' : value);
+          setPage(1);
+        }}>
+          <SelectTrigger className="w-48">
+            <SelectValue placeholder="All Categories" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Categories</SelectItem>
+            {categories.map((category) => (
+              <SelectItem key={category.id} value={category.id.toString()}>
+                {category.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+
+      {/* Error State */}
+      {error && (
+        <div className="bg-destructive/10 border border-destructive/20 rounded-xl p-4">
+          <p className="text-destructive">{error}</p>
+          <Button variant="outline" size="sm" onClick={fetchProducts} className="mt-2">
+            Try Again
+          </Button>
+        </div>
+      )}
+
       {/* Products Table */}
-      <div className="bg-white rounded-xl border border-neutral-200 overflow-hidden">
+      <div className="bg-card rounded-xl border overflow-hidden">
         <Table>
           <TableHeader>
-            <TableRow className="bg-neutral-50 hover:bg-neutral-50">
+            <TableRow className="bg-muted hover:bg-muted">
               <TableHead className="w-12">
                 <Checkbox
                   checked={
@@ -123,7 +244,7 @@ export default function ProductsPage() {
               <TableHead>
                 <button
                   onClick={() => handleSort('name')}
-                  className="flex items-center gap-1 hover:text-neutral-900"
+                  className="flex items-center gap-1 hover:text-foreground"
                 >
                   Product
                   <ArrowUpDown className="h-3.5 w-3.5" />
@@ -135,7 +256,7 @@ export default function ProductsPage() {
               <TableHead>
                 <button
                   onClick={() => handleSort('category')}
-                  className="flex items-center gap-1 hover:text-neutral-900"
+                  className="flex items-center gap-1 hover:text-foreground"
                 >
                   Category
                   <ArrowUpDown className="h-3.5 w-3.5" />
@@ -144,7 +265,7 @@ export default function ProductsPage() {
               <TableHead>
                 <button
                   onClick={() => handleSort('price')}
-                  className="flex items-center gap-1 hover:text-neutral-900"
+                  className="flex items-center gap-1 hover:text-foreground"
                 >
                   Price
                   <ArrowUpDown className="h-3.5 w-3.5" />
@@ -155,10 +276,19 @@ export default function ProductsPage() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {sortedProducts.length === 0 ? (
+            {isLoading ? (
               <TableRow>
-                <TableCell colSpan={6} className="h-32 text-center">
-                  <p className="text-neutral-500">No products found</p>
+                <TableCell colSpan={7} className="h-32 text-center">
+                  <div className="flex items-center justify-center gap-2">
+                    <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+                    <span className="text-muted-foreground">Loading products...</span>
+                  </div>
+                </TableCell>
+              </TableRow>
+            ) : sortedProducts.length === 0 ? (
+              <TableRow>
+                <TableCell colSpan={7} className="h-32 text-center">
+                  <p className="text-muted-foreground">No products found</p>
                 </TableCell>
               </TableRow>
             ) : (
@@ -167,7 +297,7 @@ export default function ProductsPage() {
                   key={product.id}
                   className={
                     selectedProducts.includes(product.id)
-                      ? 'bg-neutral-50'
+                      ? 'bg-muted'
                       : ''
                   }
                 >
@@ -180,41 +310,46 @@ export default function ProductsPage() {
                     />
                   </TableCell>
                   <TableCell>
-                    <div className="relative w-12 h-12 rounded-lg overflow-hidden bg-neutral-100">
-                      <Image
-                        src={product.img}
-                        alt={product.name}
-                        fill
-                        className="object-cover"
-                      />
+                    <div className="relative w-12 h-12 rounded-lg overflow-hidden bg-muted">
+                      {product.image ? (
+                        <Image
+                          src={product.image}
+                          alt={product.name}
+                          fill
+                          className="object-cover"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center text-muted-foreground text-xs">
+                          No img
+                        </div>
+                      )}
                     </div>
                   </TableCell>
                   <TableCell>
                     <div className="flex flex-col">
-                      <span className="font-medium text-neutral-900">
+                      <span className="font-medium text-foreground">
                         {product.name}
                       </span>
-                      <span className="text-xs text-neutral-500 truncate max-w-50">
+                      <span className="text-xs text-muted-foreground truncate max-w-50">
                         {product.description}
                       </span>
                     </div>
                   </TableCell>
                      <TableCell>
                     <div className="flex flex-col">
-                      <span className="text-xs text-neutral-500 truncate max-w-50">
-                        {product.items}
+                      <span className="text-xs text-muted-foreground truncate max-w-50">
+                        {product.items?.length > 0 ? `${product.items.length} items` : 'No items'}
                       </span>
                     </div>
                   </TableCell>
                   <TableCell>
-                    <Badge variant={getCategoryBadgeVariant(product.category)}>
-                      {product.category.charAt(0).toUpperCase() +
-                        product.category.slice(1)}
+                    <Badge variant={getCategoryBadgeVariant(product.category?.id || 0)}>
+                      {product.category?.name || 'Uncategorized'}
                     </Badge>
                   </TableCell>
                   <TableCell>
-                    <span className="font-light font-mono text-neutral-900">
-                      {product.price}
+                    <span className="font-light font-mono text-foreground">
+                      {formatPrice(product.price)}
                     </span>
                   </TableCell>
 
@@ -229,7 +364,7 @@ export default function ProductsPage() {
                           View
                         </Button>
                       </ViewProductDialog>
-                      <EditProductDialog product={product}>
+                      <EditProductDialog product={product} onProductUpdated={handleProductUpdated}>
                         <Button
                           variant="outline"
                           size="sm"
@@ -238,11 +373,11 @@ export default function ProductsPage() {
                           Edit
                         </Button>
                       </EditProductDialog>
-                      <DeleteProductDialog product={product}>
+                      <DeleteProductDialog product={product} onProductDeleted={handleProductDeleted}>
                         <Button
                           variant="outline"
                           size="sm"
-                          className="h-8 px-4 text-xs rounded-full shadow-none bg-destructive text-primary-foreground hover:text-destructive-foreground hover:bg-destructive-50 border"
+                          className="h-8 px-4 text-xs rounded-full shadow-none bg-destructive text-primary-foreground dark:text-destructive hover:text-destructive-foreground hover:bg-destructive-50 border"
                         >
                           Delete
                         </Button>
@@ -256,16 +391,29 @@ export default function ProductsPage() {
         </Table>
 
         {/* Table Footer / Pagination */}
-        <div className="flex items-center justify-between px-4 py-3 border-t border-neutral-200 bg-neutral-50">
-          <p className="text-sm text-neutral-500">
+        <div className="flex items-center justify-between px-4 py-3 border-t bg-muted">
+          <p className="text-sm text-muted-foreground">
             Showing <span className="font-medium">{sortedProducts.length}</span> of{' '}
-            <span className="font-medium">{products.length}</span> products
+            <span className="font-medium">{total}</span> products
           </p>
           <div className="flex items-center gap-2">
-            <Button variant="outline" size="sm" disabled>
+            <Button 
+              variant="outline" 
+              size="sm" 
+              disabled={page <= 1 || isLoading}
+              onClick={() => setPage(p => Math.max(1, p - 1))}
+            >
               Previous
             </Button>
-            <Button variant="outline" size="sm" disabled>
+            <span className="text-sm text-muted-foreground">
+              Page {page} of {totalPages}
+            </span>
+            <Button 
+              variant="outline" 
+              size="sm" 
+              disabled={page >= totalPages || isLoading}
+              onClick={() => setPage(p => p + 1)}
+            >
               Next
             </Button>
           </div>

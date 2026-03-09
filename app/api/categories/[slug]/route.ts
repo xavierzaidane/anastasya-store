@@ -30,6 +30,8 @@ export async function GET(
             name: true,
             price: true,
             image: true,
+            description: true,
+            items: true,
           },
         },
         _count: {

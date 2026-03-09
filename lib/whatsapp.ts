@@ -1,19 +1,14 @@
 
+import { StorefrontProduct } from '@/types/storefront';
+
 export const ADMIN_WHATSAPP_NUMBER = '62895375681188'; 
 
-interface Product {
-  id: number;
-  slug: string;
-  name: string;
-  price: string;
-  category?: string;
-}
+export function generateWhatsAppMessage(product: StorefrontProduct, quantity: number): string {
 
-export function generateWhatsAppMessage(product: Product, quantity: number): string {
   const message = `Halo Kak, saya mau pesan produk berikut yaa:
 
 *Detail Pesanan*
-
+<me6ta
 Produk   : ${product.name}
 Kategori : ${product.category || 'Umum'}
 Harga    : ${product.price}
@@ -24,12 +19,12 @@ Boleh dibantu info ketersediaan dan cara pemesanannya? Terima kasih :)`;
   return encodeURIComponent(message);
 }
 
-export function generateWhatsAppUrl(product: Product, quantity: number): string {
+export function generateWhatsAppUrl(product: StorefrontProduct, quantity: number): string {
   const message = generateWhatsAppMessage(product, quantity);
   return `https://wa.me/${ADMIN_WHATSAPP_NUMBER}?text=${message}`;
 }
 
-export function orderViaWhatsApp(product: Product, quantity: number): void {
+export function orderViaWhatsApp(product: StorefrontProduct, quantity: number): void {
   const url = generateWhatsAppUrl(product, quantity);
   window.open(url, '_blank', 'noopener,noreferrer');
 }

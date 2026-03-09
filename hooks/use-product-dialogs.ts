@@ -1,13 +1,13 @@
 'use client';
 
 import { useState, useCallback } from 'react';
-import { Product } from '@/data/products';
+import { StorefrontProduct } from '@/types/storefront';
 
 export function useProductDialogs() {
-  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [selectedProduct, setSelectedProduct] = useState<StorefrontProduct | null>(null);
   const [isProductDialogOpen, setIsProductDialogOpen] = useState(false);
 
-  const openProductDialog = useCallback((product: Product) => {
+  const openProductDialog = useCallback((product: StorefrontProduct) => {
     setSelectedProduct(product);
     setIsProductDialogOpen(true);
   }, []);

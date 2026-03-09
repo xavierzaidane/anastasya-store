@@ -9,21 +9,23 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { BlogPost } from '@/data/blog';
+import { Blog } from '@/types/api';
 import { Trash2 } from 'lucide-react';
 
 interface DeleteBlogDialogProps {
-  post: BlogPost;
+  post: Blog;
   children?: React.ReactNode;
-  onPostDeleted?: (postId: number) => void;
+  onPostDeleted?: () => void;
 }
 
 export function DeleteBlogDialog({ post, children, onPostDeleted }: DeleteBlogDialogProps) {
   const [open, setOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleDelete = async () => {
     setIsDeleting(true);
+    setError(null);
 
     try {
       const response = await fetch(`/api/blogs/${post.slug}`, {
@@ -31,13 +33,14 @@ export function DeleteBlogDialog({ post, children, onPostDeleted }: DeleteBlogDi
       });
 
       if (!response.ok) {
-        throw new Error('Failed to delete blog post');
+        const data = await response.json();
+        throw new Error(data.message || 'Failed to delete blog post');
       }
 
-      onPostDeleted?.(post.id);
+      onPostDeleted?.();
       setOpen(false);
-    } catch (error) {
-      console.error('Error deleting blog post:', error);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An error occurred');
     } finally {
       setIsDeleting(false);
     }
@@ -71,9 +74,15 @@ export function DeleteBlogDialog({ post, children, onPostDeleted }: DeleteBlogDi
         <div className="flex items-center gap-3 p-3 bg-neutral-50 rounded-lg border mb-4">
           <div className="flex-1 min-w-0">
             <p className="text-sm font-medium text-neutral-900 truncate">{post.title}</p>
-            <p className="text-xs text-neutral-500">{post.category} . {post.author.name}</p>
+            <p className="text-xs text-neutral-500">{post.category || 'Uncategorized'} . {post.author || 'Unknown'}</p>
           </div>
         </div>
+
+        {error && (
+          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm mb-4">
+            {error}
+          </div>
+        )}
 
         <p className="text-sm text-neutral-500 text-center mb-6">
           This action cannot be undone.

@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, CSSProperties } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Eye, EyeOff, Mail, Lock, Shield, Loader2, ArrowRight } from "lucide-react";
+import { Eye, EyeOff, Mail, Lock, Shield, Loader2 } from "lucide-react";
 
 export default function LoginPage() {
     const router = useRouter();
@@ -11,16 +11,41 @@ export default function LoginPage() {
         email: "",
         password: "",
         adminSecret: "",
+        rememberMe: false,
     });
     const [showPassword, setShowPassword] = useState(false);
     const [showAdminSecret, setShowAdminSecret] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState("");
 
+    const heroGradientStyle: CSSProperties = {
+        background:
+            "radial-gradient(circle at 15% 20%, color-mix(in srgb, var(--primary) 65%, transparent) 0%, transparent 55%)," +
+            "radial-gradient(circle at 85% 5%, color-mix(in srgb, var(--accent) 55%, transparent) 0%, transparent 60%)," +
+            "linear-gradient(135deg, color-mix(in srgb, var(--primary) 70%, var(--background) 30%), color-mix(in srgb, var(--secondary) 80%, var(--background) 20%))",
+    };
+
+    const heroNoiseStyle: CSSProperties = {
+        backgroundImage:
+            "radial-gradient(circle at 1px 1px, color-mix(in srgb, var(--primary-foreground) 18%, transparent) 1px, transparent 0)",
+        backgroundSize: "4px 4px",
+    };
+
+    const heroLineColor = "color-mix(in srgb, var(--primary-foreground) 35%, transparent)";
+    const heroMutedForeground = "color-mix(in srgb, var(--primary-foreground) 75%, transparent)";
+    const heroSubtleForeground = "color-mix(in srgb, var(--primary-foreground) 60%, transparent)";
+
+    const heroSurfaceStyle: CSSProperties = {
+        border: "1px solid color-mix(in srgb, var(--primary-foreground) 28%, transparent)",
+        backgroundColor: "color-mix(in srgb, var(--primary-foreground) 9%, transparent)",
+        boxShadow: "0 35px 90px color-mix(in srgb, var(--primary) 22%, transparent)",
+    };
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value, type, checked } = e.target;
         setFormData((prev) => ({
             ...prev,
-            [e.target.name]: e.target.value,
+            [name]: type === "checkbox" ? checked : value,
         }));
         setError("");
     };
@@ -40,6 +65,7 @@ export default function LoginPage() {
                     email: formData.email,
                     password: formData.password,
                     ...(formData.adminSecret && { adminSecret: formData.adminSecret }),
+                    rememberMe: formData.rememberMe,
                 }),
             });
 
@@ -59,185 +85,176 @@ export default function LoginPage() {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center px-4 py-12 bg-gradient-to-br from-[#F8F3EC] via-[#FDF9F3] to-[#F0E8DC]">
-            {/* Decorative elements */}
-            <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                <div className="absolute top-20 left-10 w-72 h-72 bg-amber-200/20 rounded-full blur-3xl" />
-                <div className="absolute bottom-20 right-10 w-96 h-96 bg-orange-200/20 rounded-full blur-3xl" />
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-rose-100/10 rounded-full blur-3xl" />
-            </div>
-
-            <div className="relative w-full max-w-md">
-                {/* Glass card */}
-                <div className="backdrop-blur-xl bg-white/70 rounded-3xl shadow-2xl shadow-zinc-900/5 border border-white/50 p-10">
-                    {/* Header */}
-                    <div className="text-center mb-10">
-                        <h1
-                            className="text-4xl font-light text-zinc-800 mb-2"
-                            style={{ fontFamily: "'Shanti', sans-serif" }}
-                        >
-                            Welcome Back
-                        </h1>
-                        <p className="text-zinc-500 text-sm">
-                            Sign in to continue to your dashboard
-                        </p>
+        <div className="min-h-screen bg-background text-foreground">
+            <div className="grid min-h-screen grid-cols-1 md:grid-cols-2">
+                <section className="order-2 md:order-1 relative flex min-h-full flex-col overflow-hidden">
+                    <div className="absolute inset-0" style={heroGradientStyle} aria-hidden />
+                    <div className="absolute inset-0 mix-blend-soft-light opacity-40" style={heroNoiseStyle} aria-hidden />
+                    <div className="pointer-events-none absolute inset-0" style={{ color: heroLineColor, opacity: 0.1 }} aria-hidden>
+                        <svg viewBox="0 0 1200 1200" preserveAspectRatio="none" className="h-full w-full">
+                            <path d="M0,900 C300,780 480,1080 800,960 C1040,872 1100,520 1200,460" stroke="currentColor" strokeWidth="0.8" fill="none" />
+                            <path d="M-20,600 C220,500 500,700 720,640 C960,570 1120,260 1240,120" stroke="currentColor" strokeWidth="0.6" strokeDasharray="12 14" fill="none" />
+                        </svg>
                     </div>
+                    <div className="relative z-10 flex h-full items-center px-10 py-12 lg:px-16">
+                        <div className="mx-auto flex w-full max-w-xl flex-col gap-8 text-primary-foreground motion-safe:animate-in motion-safe:fade-in motion-safe:duration-700 motion-safe:slide-in-from-bottom-6">
 
-                    {/* Error message */}
-                    {error && (
-                        <div className="mb-6 p-4 bg-red-50 border border-red-100 rounded-2xl">
-                            <p className="text-red-600 text-sm text-center">{error}</p>
-                        </div>
-                    )}
+                            <div className="space-y-4">
+                                <p className="text-sm font-semibold font-mono uppercase tracking-[0.35em]" style={{ color: heroMutedForeground }}>
+                                    Hello Admin
+                                </p>
 
-                    {/* Form */}
-                    <form onSubmit={handleSubmit} className="space-y-6">
-                        {/* Email field */}
-                        <div className="space-y-2">
-                            <label
-                                htmlFor="email"
-                                className="block text-sm font-medium text-zinc-600 ml-1"
-                            >
-                                Email Address
-                            </label>
-                            <div className="relative group">
-                                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                                    <Mail className="h-5 w-5 text-zinc-400 group-focus-within:text-zinc-600 transition-colors" />
-                                </div>
-                                <input
-                                    id="email"
-                                    name="email"
-                                    type="email"
-                                    autoComplete="email"
-                                    required
-                                    value={formData.email}
-                                    onChange={handleChange}
-                                    className="w-full pl-12 pr-4 py-4 bg-white/80 border border-zinc-200 rounded-2xl text-zinc-800 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-zinc-800/10 focus:border-zinc-400 transition-all duration-200"
-                                    placeholder="you@example.com"
-                                />
+                                <h1 className="text-4xl font-semibold font-mono tracking-tight text-primary-foreground sm:text-5xl lg:text-6xl">
+                                    Hello Admin
+                                </h1>
+                                <p className="text-lg leading-relaxed" >
+                                    Manage your dashboard efficiently. Automate workflows and monitor system activity in one place.
+                                </p>
                             </div>
-                        </div>
 
-                        {/* Password field */}
-                        <div className="space-y-2">
-                            <label
-                                htmlFor="password"
-                                className="block text-sm font-medium text-zinc-600 ml-1"
-                            >
-                                Password
-                            </label>
-                            <div className="relative group">
-                                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                                    <Lock className="h-5 w-5 text-zinc-400 group-focus-within:text-zinc-600 transition-colors" />
-                                </div>
-                                <input
-                                    id="password"
-                                    name="password"
-                                    type={showPassword ? "text" : "password"}
-                                    autoComplete="current-password"
-                                    required
-                                    value={formData.password}
-                                    onChange={handleChange}
-                                    className="w-full pl-12 pr-12 py-4 bg-white/80 border border-zinc-200 rounded-2xl text-zinc-800 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-zinc-800/10 focus:border-zinc-400 transition-all duration-200"
-                                    placeholder="••••••••"
-                                />
-                                <button
-                                    type="button"
-                                    onClick={() => setShowPassword(!showPassword)}
-                                    className="absolute inset-y-0 right-0 pr-4 flex items-center text-zinc-400 hover:text-zinc-600 transition-colors"
-                                >
-                                    {showPassword ? (
-                                        <EyeOff className="h-5 w-5" />
-                                    ) : (
-                                        <Eye className="h-5 w-5" />
-                                    )}
-                                </button>
+                        </div>
+                    </div>
+                </section>
+
+                <section className="order-1 md:order-2 flex items-center justify-center px-6 py-10 sm:py-16">
+                    <div className="w-full max-w-md rounded-3xl border border-border bg-card/95 backdrop-blur-sm">
+                        <div className="px-6 py-10 sm:px-10">
+                            <div className="mb-8 text-center">
+                                <p className="text-xs font-semibold uppercase tracking-[0.3em] text-muted-foreground">Secure Access</p>
+                                <h2 className="mt-3 text-3xl font-semibold font-mono text-foreground">Admin Sign In</h2>
+                                <p className="mt-2 text-sm text-muted-foreground">Use your admin credentials to continue.</p>
                             </div>
-                        </div>
 
-                        {/* Admin Secret field (optional) */}
-                        <div className="space-y-2">
-                            <label
-                                htmlFor="adminSecret"
-                                className="block text-sm font-medium text-zinc-600 ml-1"
-                            >
-                                Admin Secret <span className="text-zinc-400 font-normal">(optional)</span>
-                            </label>
-                            <div className="relative group">
-                                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                                    <Shield className="h-5 w-5 text-zinc-400 group-focus-within:text-zinc-600 transition-colors" />
+                            {error && (
+                                <div className="mb-6 rounded-2xl border border-destructive/40 bg-destructive/10 px-4 py-3 text-sm text-destructive">
+                                    {error}
                                 </div>
-                                <input
-                                    id="adminSecret"
-                                    name="adminSecret"
-                                    type={showAdminSecret ? "text" : "password"}
-                                    autoComplete="off"
-                                    value={formData.adminSecret}
-                                    onChange={handleChange}
-                                    className="w-full pl-12 pr-12 py-4 bg-white/80 border border-zinc-200 rounded-2xl text-zinc-800 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-zinc-800/10 focus:border-zinc-400 transition-all duration-200"
-                                    placeholder="Required for admin accounts"
-                                />
-                                <button
-                                    type="button"
-                                    onClick={() => setShowAdminSecret(!showAdminSecret)}
-                                    className="absolute inset-y-0 right-0 pr-4 flex items-center text-zinc-400 hover:text-zinc-600 transition-colors"
-                                >
-                                    {showAdminSecret ? (
-                                        <EyeOff className="h-5 w-5" />
-                                    ) : (
-                                        <Eye className="h-5 w-5" />
-                                    )}
-                                </button>
-                            </div>
-                            <p className="text-xs text-zinc-400 ml-1">
-                                Only required if logging in as an admin
-                            </p>
-                        </div>
-
-                        {/* Submit button */}
-                        <button
-                            type="submit"
-                            disabled={isLoading}
-                            className="w-full py-4 px-6 bg-zinc-800 hover:bg-zinc-900 text-white font-medium rounded-2xl transition-all duration-300 flex items-center justify-center gap-2 group disabled:opacity-50 disabled:cursor-not-allowed hover:-translate-y-0.5"
-                        >
-                            {isLoading ? (
-                                <>
-                                    <Loader2 className="h-5 w-5 animate-spin" />
-                                    <span>Signing in...</span>
-                                </>
-                            ) : (
-                                <>
-                                    <span>Sign In</span>
-                                    
-                                </>
                             )}
-                        </button>
-                    </form>
 
-                    {/* Divider */}
-                    <div className="relative my-8">
-                        <div className="absolute inset-0 flex items-center">
-                            <div className="w-full border-t border-zinc-200"></div>
-                        </div>
-                        <div className="relative flex justify-center text-sm">
-                            <span className="px-4 bg-white/70 text-zinc-400">New here?</span>
+                            <form onSubmit={handleSubmit} className="space-y-6">
+                                <div className="space-y-2">
+                                    <label htmlFor="email" className="text-sm font-medium text-foreground">
+                                        Email or Username
+                                    </label>
+                                    <div className="relative">
+                                        <span className="absolute inset-y-0 left-0 flex items-center pl-4 text-muted-foreground">
+                                            <Mail className="h-4 w-4" />
+                                        </span>
+                                        <input
+                                            id="email"
+                                            name="email"
+                                            type="text"
+                                            autoComplete="email"
+                                            required
+                                            value={formData.email}
+                                            onChange={handleChange}
+                                            className="w-full rounded-2xl border border-input bg-background/70 px-12 py-3 text-sm text-foreground placeholder:text-muted-foreground/70 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition"
+                                            placeholder="you@example.com"
+                                        />
+                                    </div>
+                                </div>
+
+                                <div className="space-y-2">
+                                    <div className="flex items-center justify-between">
+                                        <label htmlFor="password" className="text-sm font-medium text-foreground">
+                                            Password
+                                        </label>
+                                        <Link href="/admin/forgot-password" className="text-xs font-medium text-primary hover:underline">
+                                            Forgot password?
+                                        </Link>
+                                    </div>
+                                    <div className="relative">
+                                        <span className="absolute inset-y-0 left-0 flex items-center pl-4 text-muted-foreground">
+                                            <Lock className="h-4 w-4" />
+                                        </span>
+                                        <input
+                                            id="password"
+                                            name="password"
+                                            type={showPassword ? "text" : "password"}
+                                            autoComplete="current-password"
+                                            required
+                                            value={formData.password}
+                                            onChange={handleChange}
+                                            className="w-full rounded-2xl border border-input bg-background/70 px-12 py-3 text-sm text-foreground placeholder:text-muted-foreground/70 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition"
+                                            placeholder="••••••••"
+                                        />
+                                        <button
+                                            type="button"
+                                            onClick={() => setShowPassword((prev) => !prev)}
+                                            className="absolute inset-y-0 right-0 flex items-center pr-4 text-muted-foreground hover:text-foreground"
+                                            aria-label={showPassword ? "Hide password" : "Show password"}
+                                        >
+                                            {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                                        </button>
+                                    </div>
+                                </div>
+
+                                                <div className="space-y-2">
+                                                    <label htmlFor="adminSecret" className="text-sm font-medium text-foreground flex items-center gap-2">
+                                                        Admin Secret <span className="text-xs font-normal text-muted-foreground"></span>
+                                                    </label>
+                                                    <div className="relative">
+                                                        <span className="absolute inset-y-0 left-0 flex items-center pl-4 text-muted-foreground">
+                                                            <Shield className="h-4 w-4" />
+                                                        </span>
+                                                        <input
+                                                            id="adminSecret"
+                                                            name="adminSecret"
+                                                            type={showAdminSecret ? "text" : "password"}
+                                                            autoComplete="off"
+                                                            value={formData.adminSecret}
+                                                            onChange={handleChange}
+                                                            className="w-full rounded-2xl border border-input bg-background/70 px-12 py-3 text-sm text-foreground placeholder:text-muted-foreground/70 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition"
+                                                            placeholder="Required for privileged access"
+                                                        />
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => setShowAdminSecret((prev) => !prev)}
+                                                            className="absolute inset-y-0 right-0 flex items-center pr-4 text-muted-foreground hover:text-foreground"
+                                                            aria-label={showAdminSecret ? "Hide admin secret" : "Show admin secret"}
+                                                        >
+                                                            {showAdminSecret ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                                                        </button>
+                                                    </div>
+                                                    <p className="text-xs text-muted-foreground">Only needed when accessing elevated admin areas.</p>
+                                                </div>
+
+                                <div className="flex items-center justify-between">
+                                    <label className="flex items-center gap-3 text-sm text-muted-foreground">
+                                        <input
+                                            type="checkbox"
+                                            name="rememberMe"
+                                            checked={formData.rememberMe}
+                                            onChange={handleChange}
+                                            className="h-4 w-4 rounded border-input text-primary focus:ring-primary/40"
+                                        />
+                                        Remember me
+                                    </label>
+                                    <span className="text-xs text-muted-foreground">Enterprise SSO enabled</span>
+                                </div>
+
+                                <button
+                                    type="submit"
+                                    disabled={isLoading}
+                                    className="w-full rounded-2xl bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground  transition-all hover:-translate-y-0.5 hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-70"
+                                >
+                                    {isLoading ? (
+                                        <span className="flex items-center justify-center gap-2">
+                                            <Loader2 className="h-4 w-4 animate-spin" />
+                                            Signing in...
+                                        </span>
+                                    ) : (
+                                        "Sign In"
+                                    )}
+                                </button>
+
+                                <p className="text-center text-xs text-muted-foreground">
+                                    Need access? <span className="font-semibold text-foreground">Contact Super Admin</span>
+                                </p>
+                            </form>
                         </div>
                     </div>
-
-                    {/* Register link */}
-                    <Link
-                        href="/admin/register"
-                        className="w-full py-4 px-6 bg-transparent hover:bg-zinc-100/50 text-zinc-600 hover:text-zinc-800 font-medium rounded-2xl transition-all duration-300 flex items-center justify-center gap-2 border border-zinc-200 hover:border-zinc-300 group"
-                    >
-                        <span>Create an Account</span>
-                        <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                    </Link>
-                </div>
-
-                {/* Footer */}
-                <p className="text-center mt-8 text-sm text-zinc-400">
-                    Protected by enterprise-grade security
-                </p>
+                </section>
             </div>
         </div>
     );

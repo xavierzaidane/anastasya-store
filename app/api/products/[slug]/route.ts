@@ -65,6 +65,7 @@ export async function PUT(
         ...(data.price && { price: data.price }),
         ...(data.description !== undefined && { description: data.description }),
         ...(data.image !== undefined && { image: data.image }),
+        ...(data.items !== undefined && { items: data.items }),
         ...(data.categoryId && {
           category: { connect: { id: data.categoryId } },
         }),

@@ -15,7 +15,6 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-// POST /api/upload - Upload image to Cloudinary (Admin only)
 export async function POST(request: NextRequest) {
   try {
     // Check admin authorization

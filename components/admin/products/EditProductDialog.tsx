@@ -22,42 +22,63 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Product } from '@/data/products';
+import { Product, Category, ApiResponse } from '@/types/api';
 import { Pencil, Plus, X, ImageIcon } from 'lucide-react';
 
 interface EditProductDialogProps {
   product: Product;
   children?: React.ReactNode;
-  onProductUpdated?: (product: ProductFormData) => void;
+  onProductUpdated?: () => void;
 }
 
 interface ProductFormData {
   id: number;
   name: string;
   slug: string;
-  category: string;
+  categoryId: string;
   price: string;
-  img: string;
+  image: string | null;
   description: string;
   items: string[];
 }
 
 export function EditProductDialog({ product, children, onProductUpdated }: EditProductDialogProps) {
   const [open, setOpen] = useState(false);
+  const [categories, setCategories] = useState<Category[]>([]);
   const [formData, setFormData] = useState<ProductFormData>({
     id: product.id,
     name: product.name,
     slug: product.slug,
-    category: product.category,
-    price: product.price,
-    img: product.img,
-    description: product.description,
-    items: [...product.items],
+    categoryId: product.categoryId?.toString() || '',
+    price: product.price?.toString() || '',
+    image: product.image,
+    description: product.description || '',
+    items: product.items?.length > 0 ? [...product.items] : [''],
   });
   const [imageFile, setImageFile] = useState<File | null>(null);
-  const [imagePreview, setImagePreview] = useState<string | null>(product.img || null);
+  const [imagePreview, setImagePreview] = useState<string | null>(product.image || null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Fetch categories when dialog opens
+  useEffect(() => {
+    if (open) {
+      fetchCategories();
+    }
+  }, [open]);
+
+  const fetchCategories = async () => {
+    try {
+      const response = await fetch('/api/categories');
+      if (response.ok) {
+        const result: ApiResponse<Category[]> = await response.json();
+        setCategories(result.data);
+      }
+    } catch (err) {
+      console.error('Error fetching categories:', err);
+    }
+  };
 
   // Reset form when product changes or dialog opens
   useEffect(() => {
@@ -66,14 +87,15 @@ export function EditProductDialog({ product, children, onProductUpdated }: EditP
         id: product.id,
         name: product.name,
         slug: product.slug,
-        category: product.category,
-        price: product.price,
-        img: product.img,
-        description: product.description,
-        items: [...product.items],
+        categoryId: product.categoryId?.toString() || '',
+        price: product.price?.toString() || '',
+        image: product.image,
+        description: product.description || '',
+        items: product.items?.length > 0 ? [...product.items] : [''],
       });
       setImageFile(null);
-      setImagePreview(product.img || null);
+      setImagePreview(product.image || null);
+      setError(null);
       if (fileInputRef.current) {
         fileInputRef.current.value = '';
       }
@@ -108,7 +130,7 @@ export function EditProductDialog({ product, children, onProductUpdated }: EditP
   };
 
   const handleCategoryChange = (value: string) => {
-    setFormData((prev) => ({ ...prev, category: value }));
+    setFormData((prev) => ({ ...prev, categoryId: value }));
   };
 
   const handleItemChange = (index: number, value: string) => {
@@ -131,43 +153,60 @@ export function EditProductDialog({ product, children, onProductUpdated }: EditP
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setError(null);
 
     try {
       // Filter out empty items
       const cleanedItems = formData.items.filter((item) => item.trim() !== '');
 
-      // Create FormData for file upload
-      const submitData = new FormData();
-      submitData.append('id', formData.id.toString());
-      submitData.append('name', formData.name);
-      submitData.append('slug', formData.slug);
-      submitData.append('category', formData.category);
-      submitData.append('price', formData.price);
-      submitData.append('description', formData.description);
-      submitData.append('items', JSON.stringify(cleanedItems));
-      
+      // Upload image first if exists
+      let imageUrl: string | null = formData.image;
       if (imageFile) {
-        submitData.append('image', imageFile);
-      } else if (imagePreview) {
-        // Keep existing image URL if no new file uploaded
-        submitData.append('existingImg', imagePreview);
+        const uploadFormData = new FormData();
+        uploadFormData.append('file', imageFile);
+        uploadFormData.append('folder', 'products');
+
+        const uploadResponse = await fetch('/api/upload', {
+          method: 'POST',
+          body: uploadFormData,
+        });
+
+        if (!uploadResponse.ok) {
+          throw new Error('Failed to upload image');
+        }
+
+        const uploadResult = await uploadResponse.json();
+        imageUrl = uploadResult.data?.url || null;
       }
 
-      // Call the API to update product
+      // Update product with JSON data
+      const productData = {
+        name: formData.name,
+        price: parseFloat(formData.price),
+        categoryId: parseInt(formData.categoryId),
+        description: formData.description || undefined,
+        image: imageUrl,
+        items: cleanedItems,
+      };
+
       const response = await fetch(`/api/products/${product.slug}`, {
         method: 'PUT',
-        body: submitData,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(productData),
       });
 
       if (!response.ok) {
-        throw new Error('Failed to update product');
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to update product');
       }
 
-      const responseData = await response.json();
-      onProductUpdated?.({ ...formData, items: cleanedItems, img: responseData.img || formData.img });
+      onProductUpdated?.();
       setOpen(false);
-    } catch (error) {
-      console.error('Error updating product:', error);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An error occurred');
+      console.error('Error updating product:', err);
     } finally {
       setIsSubmitting(false);
     }
@@ -191,39 +230,31 @@ export function EditProductDialog({ product, children, onProductUpdated }: EditP
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit}>
+          {error && (
+            <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-red-600 text-sm">
+              {error}
+            </div>
+          )}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 py-4">
             {/* Left Column */}
             <div className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="edit-name">Product Name</Label>
-                  <Input
-                    id="edit-name"
-                    name="name"
-                    placeholder="e.g., Rose Whisper"
-                    value={formData.name}
-                    onChange={handleInputChange}
-                    required
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="edit-slug">Slug</Label>
-                  <Input
-                    id="edit-slug"
-                    name="slug"
-                    placeholder="e.g., rose-whisper"
-                    value={formData.slug}
-                    onChange={handleInputChange}
-                    required
-                  />
-                </div>
+              <div className="space-y-2">
+                <Label htmlFor="edit-name">Product Name</Label>
+                <Input
+                  id="edit-name"
+                  name="name"
+                  placeholder="e.g., Rose Whisper"
+                  value={formData.name}
+                  onChange={handleInputChange}
+                  required
+                />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="edit-category">Category</Label>
                   <Select
-                    value={formData.category}
+                    value={formData.categoryId}
                     onValueChange={handleCategoryChange}
                     required
                   >
@@ -231,18 +262,21 @@ export function EditProductDialog({ product, children, onProductUpdated }: EditP
                       <SelectValue placeholder="Select category" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="small">Small</SelectItem>
-                      <SelectItem value="medium">Medium</SelectItem>
-                      <SelectItem value="large">Large</SelectItem>
+                      {categories.map((category) => (
+                        <SelectItem key={category.id} value={category.id.toString()}>
+                          {category.name}
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="edit-price">Price</Label>
+                  <Label htmlFor="edit-price">Price (IDR)</Label>
                   <Input
                     id="edit-price"
                     name="price"
-                    placeholder="e.g., 50 Euro"
+                    type="number"
+                    placeholder="e.g., 85000"
                     value={formData.price}
                     onChange={handleInputChange}
                     required
@@ -254,7 +288,7 @@ export function EditProductDialog({ product, children, onProductUpdated }: EditP
                 <Label>Product Image</Label>
                 <div className="space-y-3">
                   {imagePreview ? (
-                    <div className="relative w-full aspect-video rounded-xl overflow-hidden bg-neutral-100">
+                    <div className="relative w-full aspect-video rounded-xl overflow-hidden bg-muted">
                       <Image
                         src={imagePreview}
                         alt="Preview"
@@ -264,7 +298,7 @@ export function EditProductDialog({ product, children, onProductUpdated }: EditP
                       <button
                         type="button"
                         onClick={removeImage}
-                        className="absolute top-2 right-2 p-1.5 bg-white/90 rounded-full hover:bg-white text-neutral-600 hover:text-neutral-800 transition-colors"
+                        className="absolute top-2 right-2 p-1.5 bg-background/90 rounded-full hover:bg-background text-muted-foreground hover:text-foreground transition-colors"
                       >
                         <X className="h-4 w-4" />
                       </button>
@@ -272,14 +306,14 @@ export function EditProductDialog({ product, children, onProductUpdated }: EditP
                   ) : (
                     <label
                       htmlFor="edit-image-upload"
-                      className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-neutral-300 rounded-xl cursor-pointer bg-neutral-50 hover:bg-neutral-100 transition-colors"
+                      className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-border rounded-xl cursor-pointer bg-muted hover:bg-muted/80 transition-colors"
                     >
                       <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                        <ImageIcon className="h-8 w-8 text-neutral-400 mb-2" />
-                        <p className="text-sm text-neutral-500">
-                          <span className="font-medium text-neutral-700">Click to upload</span> or drag and drop
+                        <ImageIcon className="h-8 w-8 text-muted-foreground mb-2" />
+                        <p className="text-sm text-muted-foreground">
+                          <span className="font-medium text-foreground">Click to upload</span> or drag and drop
                         </p>
-                        <p className="text-xs text-neutral-400 mt-1">PNG, JPG up to 5MB</p>
+                        <p className="text-xs text-muted-foreground mt-1">PNG, JPG up to 5MB</p>
                       </div>
                     </label>
                   )}

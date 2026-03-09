@@ -104,8 +104,8 @@ export default function CategoriesPage() {
       {/* Page Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-semibold font-mono text-neutral-900">Categories</h1>
-          <p className="text-sm text-neutral-500 mt-1">
+          <h1 className="text-2xl font-semibold font-mono text-foreground">Categories</h1>
+          <p className="text-sm text-muted-foreground mt-1">
             Manage your product categories
           </p>
         </div>
@@ -116,16 +116,16 @@ export default function CategoriesPage() {
 
       {/* Error State */}
       {error && (
-        <div className="p-4 text-sm text-red-600 bg-red-50 rounded-lg border border-red-200">
+        <div className="p-4 text-sm text-destructive bg-destructive/10 rounded-lg border border-destructive/20">
           {error}
         </div>
       )}
 
       {/* Categories Table */}
-      <div className="bg-white rounded-xl border border-neutral-200 overflow-hidden">
+      <div className="bg-card rounded-xl border overflow-hidden">
         <Table>
           <TableHeader>
-            <TableRow className="bg-neutral-50 hover:bg-neutral-50">
+            <TableRow className="bg-muted hover:bg-muted">
               <TableHead className="w-12">
                 <Checkbox
                   checked={
@@ -139,7 +139,7 @@ export default function CategoriesPage() {
               <TableHead>
                 <button
                   onClick={() => handleSort('name')}
-                  className="flex items-center gap-1 hover:text-neutral-900"
+                  className="flex items-center gap-1 hover:text-foreground"
                 >
                   Name
                   <ArrowUpDown className="h-3.5 w-3.5" />
@@ -148,7 +148,7 @@ export default function CategoriesPage() {
               <TableHead>
                 <button
                   onClick={() => handleSort('slug')}
-                  className="flex items-center gap-1 hover:text-neutral-900"
+                  className="flex items-center gap-1 hover:text-foreground"
                 >
                   Slug
                   <ArrowUpDown className="h-3.5 w-3.5" />
@@ -157,7 +157,7 @@ export default function CategoriesPage() {
               <TableHead>
                 <button
                   onClick={() => handleSort('productCount')}
-                  className="flex items-center gap-1 hover:text-neutral-900"
+                  className="flex items-center gap-1 hover:text-foreground"
                 >
                   Products
                   <ArrowUpDown className="h-3.5 w-3.5" />
@@ -170,7 +170,7 @@ export default function CategoriesPage() {
             {isLoading ? (
               <TableRow>
                 <TableCell colSpan={6} className="h-32 text-center">
-                  <div className="flex items-center justify-center gap-2 text-neutral-500">
+                  <div className="flex items-center justify-center gap-2 text-muted-foreground">
                     <RefreshCw className="h-4 w-4 animate-spin" />
                     Loading categories...
                   </div>
@@ -179,7 +179,7 @@ export default function CategoriesPage() {
             ) : sortedCategories.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={6} className="h-32 text-center">
-                  <p className="text-neutral-500">No categories found</p>
+                  <p className="text-muted-foreground">No categories found</p>
                 </TableCell>
               </TableRow>
             ) : (
@@ -188,7 +188,7 @@ export default function CategoriesPage() {
                   key={category.id}
                   className={
                     selectedCategories.includes(category.id)
-                      ? 'bg-neutral-50'
+                      ? 'bg-muted'
                       : ''
                   }
                 >
@@ -201,7 +201,7 @@ export default function CategoriesPage() {
                     />
                   </TableCell>
                   <TableCell>
-                    <div className="relative w-12 h-12 rounded-lg overflow-hidden bg-neutral-100">
+                    <div className="relative w-12 h-12 rounded-lg overflow-hidden bg-muted">
                       {category.image ? (
                         <Image
                           src={category.image}
@@ -211,18 +211,18 @@ export default function CategoriesPage() {
                         />
                       ) : (
                         <div className="w-full h-full flex items-center justify-center">
-                          <Package className="h-5 w-5 text-neutral-300" />
+                          <Package className="h-5 w-5 text-muted-foreground" />
                         </div>
                       )}
                     </div>
                   </TableCell>
                   <TableCell>
-                    <span className="font-medium text-neutral-900">
+                    <span className="font-medium text-foreground">
                       {category.name}
                     </span>
                   </TableCell>
                   <TableCell>
-                    <span className="font-mono text-sm text-neutral-600">
+                    <span className="font-mono text-sm text-muted-foreground">
                       {category.slug}
                     </span>
                   </TableCell>
@@ -255,7 +255,7 @@ export default function CategoriesPage() {
                         <Button
                           variant="outline"
                           size="sm"
-                          className="h-8 px-4 text-xs rounded-full shadow-none bg-destructive text-primary-foreground hover:text-destructive-foreground hover:bg-destructive-50 border"
+                          className="h-8 px-4 text-xs rounded-full shadow-none bg-destructive text-primary-foreground dark:text-destructive hover:text-destructive-foreground hover:bg-destructive-50 border"
                         >
                           Delete
                         </Button>
@@ -269,8 +269,8 @@ export default function CategoriesPage() {
         </Table>
 
         {/* Table Footer */}
-        <div className="flex items-center justify-between px-4 py-3 border-t border-neutral-200 bg-neutral-50">
-          <p className="text-sm text-neutral-500">
+        <div className="flex items-center justify-between px-4 py-3 border-t bg-muted">
+          <p className="text-sm text-muted-foreground">
             Showing <span className="font-medium">{sortedCategories.length}</span> categories
           </p>
         </div>

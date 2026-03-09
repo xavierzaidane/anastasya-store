@@ -1,18 +1,33 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
 import { motion, AnimatePresence } from 'framer-motion';
-import { XIcon, MessageCircle, Share2, Bookmark, ShoppingCart } from 'lucide-react';
+import { XIcon, Share2, ShoppingCart } from 'lucide-react';
 import { orderViaWhatsApp } from '@/lib/whatsapp';
 import { SiWhatsapp } from "react-icons/si";
 import { useSavedItems } from '@/hooks/use-saved-items';
-import { Product } from '@/data/products';
+import { mapApiProductToStorefront } from '@/lib/storefront-products';
+import { StorefrontApiResponse, StorefrontProduct } from '@/types/storefront';
 
 interface ProductDetailDialogProps {
-  product: Product;
+  product: StorefrontProduct;
   open: boolean;
   onOpenChange: (open: boolean) => void;
+}
+
+interface ProductDetailData {
+  id: number;
+  slug: string;
+  name: string;
+  price: number | string;
+  image: string | null;
+  description?: string | null;
+  items?: string[];
+  category?: {
+    slug: string;
+    name: string;
+  };
 }
 
 export function ProductDetailDialogAdvanced({
@@ -20,27 +35,71 @@ export function ProductDetailDialogAdvanced({
   open,
   onOpenChange,
 }: ProductDetailDialogProps) {
+  const [liveProduct, setLiveProduct] = useState<StorefrontProduct>(product);
   const [quantity, setQuantity] = useState(1);
   const [isOrdering, setIsOrdering] = useState(false);
+  const [isFetchingProduct, setIsFetchingProduct] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   
   const { isItemSaved, toggleItem, addItem } = useSavedItems();
-  const isBookmarked = isItemSaved(product.id);
+  const isBookmarked = isItemSaved(liveProduct.id);
+
+  useEffect(() => {
+    setLiveProduct(product);
+    setImageLoaded(false);
+    setImageError(false);
+    setQuantity(1);
+  }, [product]);
+
+  useEffect(() => {
+    if (!open || !product?.slug) return;
+
+    let isMounted = true;
+
+    const fetchProductDetail = async () => {
+      try {
+        setIsFetchingProduct(true);
+
+        const response = await fetch(`/api/products/${product.slug}`, {
+          cache: 'no-store',
+        });
+
+        const result: StorefrontApiResponse<ProductDetailData> = await response.json();
+
+        if (!response.ok || !result.success || !result.data || !isMounted) {
+          return;
+        }
+
+        setLiveProduct(mapApiProductToStorefront(result.data, product.category));
+      } catch {
+      } finally {
+        if (isMounted) {
+          setIsFetchingProduct(false);
+        }
+      }
+    };
+
+    fetchProductDetail();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [open, product.slug, product.category]);
 
   const handleToggleBookmark = () => {
     if (isBookmarked) {
-      toggleItem(product);
+      toggleItem(liveProduct);
     } else {
-      addItem(product, quantity);
+      addItem(liveProduct, quantity);
     }
   };
 
   const handleOrderViaWhatsApp = () => {
     setIsOrdering(true);
     try {
-      orderViaWhatsApp(product, quantity);
+      orderViaWhatsApp(liveProduct, quantity);
       setTimeout(() => {
         setIsOrdering(false);
       }, 500);
@@ -85,7 +144,7 @@ export function ProductDetailDialogAdvanced({
     visible: { opacity: 1, scale: 1, y: 0 },
     exit: { opacity: 0, scale: 0.95, y: 10 },
   };
-  const priceDisplay = product.price;
+  const priceDisplay = liveProduct.price;
 
   return (
     <AnimatePresence mode="wait">
@@ -137,8 +196,8 @@ export function ProductDetailDialogAdvanced({
                     </div>
                   ) : (
                     <img
-                      src={product.img}
-                      alt={product.name}
+                      src={liveProduct.img}
+                      alt={liveProduct.name}
                       className={`w-full h-full object-cover transition-opacity duration-300 ${
                         imageLoaded ? 'opacity-100' : 'opacity-0'
                       }`}
@@ -165,8 +224,8 @@ export function ProductDetailDialogAdvanced({
                       </div>
                     ) : (
                       <img
-                        src={product.img}
-                        alt={product.name}
+                        src={liveProduct.img}
+                        alt={liveProduct.name}
                         className={`w-full h-48 object-contain transition-opacity duration-300 ${
                           imageLoaded ? 'opacity-100' : 'opacity-0'
                         }`}
@@ -182,12 +241,16 @@ export function ProductDetailDialogAdvanced({
                     className="flex-1 overflow-y-auto pr-4 md:pr-0 no-scrollbar"
                   >
                     <p className="text-sm text-zinc-500 mb-2">
-                      {product.category || 'Product'} · {product.category || 'General'}
+                      {liveProduct.category || 'Product'} 
                     </p>
 
                     <Dialog.Title className="text-3xl font-medium font-mono text-zinc-900 mb-4 tracking-tight">
-                      {product.name}
+                      {liveProduct.name}
                     </Dialog.Title>
+
+                    {isFetchingProduct && (
+                      <p className="text-xs text-zinc-500 mb-3">Updating product details...</p>
+                    )}
 
                     <div className="mb-6">
                       <p className="text-4xl font-mono font-semibold text-zinc-900 tracking-tight">{priceDisplay}</p>
@@ -197,12 +260,8 @@ export function ProductDetailDialogAdvanced({
                       <h3 className="text-sm font-semibold text-zinc-900 mb-3">Product Details</h3>
                       <div className="space-y-2 text-sm text-zinc-600">
                         <div className="flex justify-between">
-                          <span className="text-zinc-500">Brand:</span>
-                          <span className="font-medium text-zinc-900">{product.category || 'Brand'}</span>
-                        </div>
-                        <div className="flex justify-between">
                           <span className="text-zinc-500">Category:</span>
-                          <span className="font-medium text-zinc-900">{product.category || 'General'}</span>
+                          <span className="font-medium text-zinc-900">{liveProduct.category || 'General'}</span>
                         </div>
                         <div className="flex justify-between">
                           <span className="text-zinc-500">Price:</span>
@@ -214,16 +273,16 @@ export function ProductDetailDialogAdvanced({
                         </div>
                         <div className="flex flex-col gap-2 -mt-3">
                           <span className="text-zinc-500">Description:</span>
-                          <span className="font-medium text-zinc-700">{product.description}</span>
+                          <span className="font-medium text-zinc-700">{liveProduct.description}</span>
                         </div>
                       </div>
                     </div>
 
-                    {product.items.length > 0 && (
+                    {liveProduct.items.length > 0 && (
                       <div className="py-6 border-t border-zinc-200">
                         <h3 className="text-sm font-semibold text-zinc-900 mb-3">What's Included</h3>
                         <ul className="space-y-2">
-                          {product.items.map((item, index) => (
+                          {liveProduct.items.map((item, index) => (
                             <li key={index} className="flex items-start gap-2 text-sm text-zinc-700">
                               <span className="text-zinc-400 mt-0.5">✓</span>
                               <span>{item}</span>

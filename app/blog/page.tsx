@@ -1,8 +1,11 @@
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import StoreNavbar from '@/components/navigations/StoreNavbar';
 import Footer from '@/components/navigations/Footer';
-import { blogPosts } from '@/data/blog';
+import { Skeleton } from '@/components/ui/skeleton';
+import { ApiBlog, BlogApiResponse, StorefrontBlog } from '@/types/blog';
+import { mapApiBlogsToStorefront } from '@/lib/storefront-blogs';
 
 // Clock icon component
 function ClockIcon() {
@@ -24,7 +27,25 @@ function ClockIcon() {
 	);
 }
 
-export default function BlogPage() {
+async function fetchBlogPosts(): Promise<StorefrontBlog[]> {
+	try {
+		const res = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/api/blogs`, {
+			cache: 'no-store',
+		});
+		const result: BlogApiResponse<ApiBlog[]> = await res.json();
+
+		if (!res.ok || !result.success || !result.data) {
+			return [];
+		}
+
+		return mapApiBlogsToStorefront(result.data);
+	} catch {
+		return [];
+	}
+}
+
+export default async function BlogPage() {
+	const blogPosts = await fetchBlogPosts();
 	return (
 		<section className="w-full min-h-screen ">
 			<StoreNavbar />
@@ -42,6 +63,10 @@ export default function BlogPage() {
 
 				{/* Blog Grid */}
 				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 min-h-100 items-stretch pb-16">
+					{blogPosts.length === 0 && (
+						<p className="text-sm text-zinc-500 col-span-full">No blog posts available.</p>
+					)}
+
 					{blogPosts.map((post) => (
 						<article
 							key={post.id}
@@ -53,25 +78,14 @@ export default function BlogPage() {
 								aria-label={`Read ${post.title}`}
 							>
 								<div className="rounded-xl overflow-hidden border border-zinc-200/80 bg-white h-full flex flex-col">
-									{/* Image Placeholder */}
+									{/* Image */}
 									<div className="aspect-video bg-pink-700 flex items-center justify-center relative overflow-hidden">
-										{/* Decorative flower icon */}
-										<svg
-											xmlns="http://www.w3.org/2000/svg"
-											width="48"
-											height="48"
-											viewBox="0 0 24 24"
-											fill="none"
-											stroke="currentColor"
-											strokeWidth="1"
-											strokeLinecap="round"
-											strokeLinejoin="round"
-											className="text-gray-300"
-										>
-											<path d="M12 7.5a4.5 4.5 0 1 1 4.5 4.5M12 7.5A4.5 4.5 0 1 0 7.5 12M12 7.5V9m-4.5 3a4.5 4.5 0 1 0 4.5 4.5M7.5 12H9m7.5 0a4.5 4.5 0 1 1-4.5 4.5m4.5-4.5H15m-3 4.5V15" />
-											<circle cx="12" cy="12" r="3" />
-										</svg>
-									
+										<Image
+											src={post.image}
+											alt={post.title}
+											fill
+											className="object-cover"
+										/>
 									</div>
 
 									{/* Content */}

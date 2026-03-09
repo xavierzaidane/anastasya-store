@@ -13,8 +13,11 @@ import {
 // GET /api/blogs - List all blog posts (public can see published, admin can see all)
 export async function GET() {
   try {
+    const authResult = await requireAdmin();
+    const isAdmin = isAuthenticated(authResult);
+
     const blogs = await prisma.blog.findMany({
-      where: { published: true },
+      where: isAdmin ? {} : { published: true },
       orderBy: { createdAt: "desc" },
     });
 
@@ -56,7 +59,7 @@ export async function POST(request: NextRequest) {
         readTime: readTime || 5,
         author: author || null,
         image: image || null,
-        published: published || false,
+        published: published || true,
       },
     });
 

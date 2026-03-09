@@ -1,8 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
-import { blogPosts, BlogPost } from '@/data/blog';
+import { Blog, ApiResponse } from '@/types/api';
 import {
   Table,
   TableBody,
@@ -18,6 +18,7 @@ import {
   ArrowUpDown,
   ImageIcon,
   Clock,
+  Loader2,
 } from 'lucide-react';
 import { ViewBlogDialog } from '@/components/admin/blog/ViewBlogDialog';
 import { EditBlogDialog } from '@/components/admin/blog/EditBlogDialog';
@@ -25,12 +26,49 @@ import { DeleteBlogDialog } from '@/components/admin/blog/DeleteBlogDialog';
 import { CreateBlogDialog } from '@/components/admin/blog/CreateBlogDialog';
 
 export default function BlogPage() {
+  const [posts, setPosts] = useState<Blog[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [selectedPosts, setSelectedPosts] = useState<number[]>([]);
-  const [sortField, setSortField] = useState<keyof BlogPost | null>(null);
+  const [sortField, setSortField] = useState<keyof Blog | null>(null);
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
 
+  const fetchPosts = useCallback(async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const response = await fetch('/api/blogs');
+      if (!response.ok) {
+        throw new Error('Failed to fetch blog posts');
+      }
+      
+      const result: ApiResponse<Blog[]> = await response.json();
+      setPosts(result.data);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An error occurred');
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchPosts();
+  }, [fetchPosts]);
+
+  const handlePostCreated = () => {
+    fetchPosts();
+  };
+
+  const handlePostUpdated = () => {
+    fetchPosts();
+  };
+
+  const handlePostDeleted = () => {
+    fetchPosts();
+  };
+
   // Sort posts
-  const sortedPosts = [...blogPosts].sort((a, b) => {
+  const sortedPosts = [...posts].sort((a, b) => {
     if (!sortField) return 0;
     const aVal = a[sortField];
     const bVal = b[sortField];
@@ -45,7 +83,7 @@ export default function BlogPage() {
     return 0;
   });
 
-  const handleSort = (field: keyof BlogPost) => {
+  const handleSort = (field: keyof Blog) => {
     if (sortField === field) {
       setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
     } else {
@@ -70,8 +108,8 @@ export default function BlogPage() {
     }
   };
 
-  const getCategoryBadgeVariant = (category: string) => {
-    switch (category.toLowerCase()) {
+  const getCategoryBadgeVariant = (category: string | null) => {
+    switch (category?.toLowerCase()) {
       case 'tips & tricks':
         return 'secondary';
       case 'guides':
@@ -89,24 +127,42 @@ export default function BlogPage() {
     }
   };
 
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    });
+  };
+
   return (
     <div className="space-y-6">
       {/* Page Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-semibold font-mono text-neutral-900">Blog Posts</h1>
-          <p className="text-sm text-neutral-500 mt-1">
+          <h1 className="text-2xl font-semibold font-mono text-foreground">Blog Posts</h1>
+          <p className="text-sm text-muted-foreground mt-1">
             Manage your blog content and articles
           </p>
         </div>
-        <CreateBlogDialog />
+        <CreateBlogDialog onPostCreated={handlePostCreated} />
       </div>
 
+      {/* Error State */}
+      {error && (
+        <div className="bg-destructive/10 border border-destructive/20 rounded-xl p-4">
+          <p className="text-destructive">{error}</p>
+          <Button variant="outline" size="sm" onClick={fetchPosts} className="mt-2">
+            Try Again
+          </Button>
+        </div>
+      )}
+
       {/* Blog Table */}
-      <div className="bg-white rounded-xl border border-neutral-200 overflow-hidden">
+      <div className="bg-card rounded-xl border overflow-hidden">
         <Table>
           <TableHeader>
-            <TableRow className="bg-neutral-50 hover:bg-neutral-50">
+            <TableRow className="bg-muted hover:bg-muted">
               <TableHead className="w-12">
                 <Checkbox
                   checked={
@@ -120,7 +176,7 @@ export default function BlogPage() {
               <TableHead>
                 <button
                   onClick={() => handleSort('title')}
-                  className="flex items-center gap-1 hover:text-neutral-900"
+                  className="flex items-center gap-1 hover:text-foreground"
                 >
                   Title
                   <ArrowUpDown className="h-3.5 w-3.5" />
@@ -129,7 +185,7 @@ export default function BlogPage() {
               <TableHead>
                 <button
                   onClick={() => handleSort('category')}
-                  className="flex items-center gap-1 hover:text-neutral-900"
+                  className="flex items-center gap-1 hover:text-foreground"
                 >
                   Category
                   <ArrowUpDown className="h-3.5 w-3.5" />
@@ -138,8 +194,8 @@ export default function BlogPage() {
               <TableHead>Author</TableHead>
               <TableHead>
                 <button
-                  onClick={() => handleSort('date')}
-                  className="flex items-center gap-1 hover:text-neutral-900"
+                  onClick={() => handleSort('createdAt')}
+                  className="flex items-center gap-1 hover:text-foreground"
                 >
                   Date
                   <ArrowUpDown className="h-3.5 w-3.5" />
@@ -148,7 +204,7 @@ export default function BlogPage() {
               <TableHead>
                 <button
                   onClick={() => handleSort('readTime')}
-                  className="flex items-center gap-1 hover:text-neutral-900"
+                  className="flex items-center gap-1 hover:text-foreground"
                 >
                   Read Time
                   <ArrowUpDown className="h-3.5 w-3.5" />
@@ -158,10 +214,19 @@ export default function BlogPage() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {sortedPosts.length === 0 ? (
+            {isLoading ? (
               <TableRow>
                 <TableCell colSpan={8} className="h-32 text-center">
-                  <p className="text-neutral-500">No blog posts found</p>
+                  <div className="flex items-center justify-center gap-2">
+                    <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+                    <span className="text-muted-foreground">Loading blog posts...</span>
+                  </div>
+                </TableCell>
+              </TableRow>
+            ) : sortedPosts.length === 0 ? (
+              <TableRow>
+                <TableCell colSpan={8} className="h-32 text-center">
+                  <p className="text-muted-foreground">No blog posts found</p>
                 </TableCell>
               </TableRow>
             ) : (
@@ -170,7 +235,7 @@ export default function BlogPage() {
                   key={post.id}
                   className={
                     selectedPosts.includes(post.id)
-                      ? 'bg-neutral-50'
+                      ? 'bg-muted'
                       : ''
                   }
                 >
@@ -183,7 +248,7 @@ export default function BlogPage() {
                     />
                   </TableCell>
                   <TableCell>
-                    <div className="relative w-12 h-12 rounded-lg overflow-hidden bg-neutral-100 flex items-center justify-center">
+                    <div className="relative w-12 h-12 rounded-lg overflow-hidden bg-muted flex items-center justify-center">
                       {post.image ? (
                         <Image
                           src={post.image}
@@ -195,41 +260,45 @@ export default function BlogPage() {
                           }}
                         />
                       ) : null}
-                      <ImageIcon className="w-5 h-5 text-neutral-400 absolute" />
+                      <ImageIcon className="w-5 h-5 text-muted-foreground absolute" />
                     </div>
                   </TableCell>
                   <TableCell>
                     <div className="flex flex-col max-w-xs">
-                      <span className="font-medium text-neutral-900 truncate">
+                      <span className="font-medium text-foreground truncate">
                         {post.title}
                       </span>
-                      <span className="text-xs text-neutral-500 truncate">
-                        {post.excerpt.substring(0, 60)}...
+                      <span className="text-xs text-muted-foreground truncate">
+                        {post.excerpt ? `${post.excerpt.substring(0, 60)}...` : 'No excerpt'}
                       </span>
                     </div>
                   </TableCell>
                   <TableCell>
-                    <Badge variant={getCategoryBadgeVariant(post.category)}>
-                      {post.category}
-                    </Badge>
+                    {post.category ? (
+                      <Badge variant={getCategoryBadgeVariant(post.category)}>
+                        {post.category}
+                      </Badge>
+                    ) : (
+                      <span className="text-muted-foreground text-sm">-</span>
+                    )}
                   </TableCell>
                   <TableCell>
                     <div className="flex items-center gap-2">
-                      <div className="w-7 h-7 rounded-full bg-neutral-200 flex items-center justify-center text-xs font-medium text-neutral-600">
-                        {post.author.initial}
+                      <div className="w-7 h-7 rounded-full bg-muted flex items-center justify-center text-xs font-medium text-muted-foreground">
+                        {post.author ? post.author.charAt(0).toUpperCase() : 'A'}
                       </div>
-                      <span className="text-sm text-neutral-700">
-                        {post.author.name}
+                      <span className="text-sm text-foreground">
+                        {post.author || 'Unknown'}
                       </span>
                     </div>
                   </TableCell>
                   <TableCell>
-                    <span className="text-sm text-neutral-600">
-                      {post.date}
+                    <span className="text-sm text-muted-foreground">
+                      {formatDate(post.createdAt)}
                     </span>
                   </TableCell>
                   <TableCell>
-                    <div className="flex items-center gap-1 text-neutral-500">
+                    <div className="flex items-center gap-1 text-muted-foreground">
                       <Clock className="w-3.5 h-3.5" />
                       <span className="text-sm">{post.readTime} min</span>
                     </div>
@@ -245,7 +314,7 @@ export default function BlogPage() {
                           View
                         </Button>
                       </ViewBlogDialog>
-                      <EditBlogDialog post={post}>
+                      <EditBlogDialog post={post} onPostUpdated={handlePostUpdated}>
                         <Button
                           variant="outline"
                           size="sm"
@@ -254,11 +323,11 @@ export default function BlogPage() {
                           Edit
                         </Button>
                       </EditBlogDialog>
-                      <DeleteBlogDialog post={post}>
+                      <DeleteBlogDialog post={post} onPostDeleted={handlePostDeleted}>
                         <Button
                           variant="outline"
                           size="sm"
-                          className="h-8 px-4 text-xs rounded-full shadow-none text-red-600 hover:text-red-700 hover:bg-red-50 border-red-200"
+                          className="h-8 px-4 text-xs rounded-full shadow-none text-destructive hover:text-destructive hover:bg-destructive/10 border-destructive/20"
                         >
                           Delete
                         </Button>
@@ -272,10 +341,10 @@ export default function BlogPage() {
         </Table>
 
         {/* Table Footer / Pagination */}
-        <div className="flex items-center justify-between px-4 py-3 border-t border-neutral-200 bg-neutral-50">
-          <p className="text-sm text-neutral-500">
+        <div className="flex items-center justify-between px-4 py-3 border-t bg-muted">
+          <p className="text-sm text-muted-foreground">
             Showing <span className="font-medium">{sortedPosts.length}</span> of{' '}
-            <span className="font-medium">{blogPosts.length}</span> posts
+            <span className="font-medium">{posts.length}</span> posts
           </p>
           <div className="flex items-center gap-2">
             <Button variant="outline" size="sm" disabled>

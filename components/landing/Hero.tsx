@@ -1,8 +1,20 @@
 "use client";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Search } from "lucide-react";
 import { motion } from "framer-motion";
 
 export default function Hero() {
+  const router = useRouter();
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      router.push(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+    }
+  };
+
   return (
     <motion.section
       className="text-center py-20 sm:py-28"
@@ -21,11 +33,16 @@ export default function Hero() {
           fragrances.
         </p>
 
-        <form className="mt-8 max-w-md mx-auto flex items-center bg-white border border-zinc-200/80 rounded-full  pr-2">
+        <form 
+          onSubmit={handleSearch}
+          className="mt-8 max-w-md mx-auto flex items-center bg-white border border-zinc-200/80 rounded-full pr-2"
+        >
           <input
             placeholder="Search products..."
             className="grow bg-transparent px-5 py-3 text-sm text-zinc-900 placeholder-zinc-400 focus:outline-none"
             type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
           />
           <button
             type="submit"

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import {
   Dialog,
   DialogContent,
@@ -12,12 +13,12 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { BlogPost } from '@/data/blog';
-import { Eye, ExternalLink, Clock, User } from 'lucide-react';
+import { Blog } from '@/types/api';
+import { Eye, ExternalLink, Clock, User, ImageIcon } from 'lucide-react';
 import Link from 'next/link';
 
 interface ViewBlogDialogProps {
-  post: BlogPost;
+  post: Blog;
   children?: React.ReactNode;
 }
 
@@ -74,8 +75,8 @@ export function ViewBlogDialog({ post, children }: ViewBlogDialogProps) {
               </div>
               <div className="border rounded-lg p-3">
                 <p className="text-sm text-neutral-500">Category</p>
-                <Badge variant={getCategoryBadgeVariant(post.category)} className="mt-1">
-                  {post.category}
+                <Badge variant={getCategoryBadgeVariant(post.category || '')} className="mt-1">
+                  {post.category || 'Uncategorized'}
                 </Badge>
               </div>
             </div>
@@ -90,7 +91,7 @@ export function ViewBlogDialog({ post, children }: ViewBlogDialogProps) {
               </div>
               <div className="border rounded-lg p-3">
                 <p className="text-sm text-neutral-500">Date</p>
-                <p className="font-medium text-neutral-900">{post.date}</p>
+                <p className="font-medium text-neutral-900">{new Date(post.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
               </div>
             </div>
 
@@ -101,14 +102,32 @@ export function ViewBlogDialog({ post, children }: ViewBlogDialogProps) {
                 Author
               </div>
               <div className="flex items-center gap-2">
-                <span className="font-medium text-neutral-900">{post.author.name}</span>
+                <span className="font-medium text-neutral-900">{post.author || 'Unknown'}</span>
               </div>
             </div>
 
             {/* Excerpt */}
             <div className="border rounded-lg p-3">
               <p className="text-sm text-neutral-500 mb-2">Excerpt</p>
-              <p className="text-neutral-700 text-sm">{post.excerpt}</p>
+              <p className="text-neutral-700 text-sm">{post.excerpt || 'No excerpt available'}</p>
+            </div>
+
+            {/* Featured Image */}
+            <div className="border rounded-lg p-3">
+              <p className="text-sm text-neutral-500 mb-2">Featured Image</p>
+              {post.image ? (
+                <Image
+                  src={post.image}
+                  alt={post.title}
+                  width={300}
+                  height={200}
+                  className="rounded-lg object-cover w-full max-h-40"
+                />
+              ) : (
+                <div className="flex items-center justify-center h-32 bg-neutral-100 rounded-lg">
+                  <ImageIcon className="h-8 w-8 text-neutral-400" />
+                </div>
+              )}
             </div>
           </div>
 

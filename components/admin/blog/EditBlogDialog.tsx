@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -21,29 +21,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { BlogPost } from '@/data/blog';
-import { Pencil } from 'lucide-react';
+import { Blog, UpdateBlogInput } from '@/types/api';
+import { Pencil, X, ImageIcon } from 'lucide-react';
 
 interface EditBlogDialogProps {
-  post: BlogPost;
+  post: Blog;
   children?: React.ReactNode;
-  onPostUpdated?: (post: BlogFormData) => void;
-}
-
-interface BlogFormData {
-  id: number;
-  title: string;
-  slug: string;
-  category: string;
-  excerpt: string;
-  content: string;
-  readTime: number;
-  author: {
-    name: string;
-    initial: string;
-  };
-  date: string;
-  image: string;
+  onPostUpdated?: () => void;
 }
 
 const categories = [
@@ -57,35 +41,40 @@ const categories = [
 
 export function EditBlogDialog({ post, children, onPostUpdated }: EditBlogDialogProps) {
   const [open, setOpen] = useState(false);
-  const [formData, setFormData] = useState<BlogFormData>({
-    id: post.id,
+  const [formData, setFormData] = useState<UpdateBlogInput & { slug: string }>({
     title: post.title,
     slug: post.slug,
-    category: post.category,
-    excerpt: post.excerpt,
+    category: post.category || '',
+    excerpt: post.excerpt || '',
     content: post.content,
     readTime: post.readTime,
-    author: { ...post.author },
-    date: post.date,
-    image: post.image,
+    author: post.author || '',
+    image: post.image || '',
+    published: post.published,
   });
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(post.image || null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Reset form when post changes or dialog opens
   useEffect(() => {
     if (open) {
       setFormData({
-        id: post.id,
         title: post.title,
         slug: post.slug,
-        category: post.category,
-        excerpt: post.excerpt,
+        category: post.category || '',
+        excerpt: post.excerpt || '',
         content: post.content,
         readTime: post.readTime,
-        author: { ...post.author },
-        date: post.date,
-        image: post.image,
+        author: post.author || '',
+        image: post.image || '',
+        published: post.published,
       });
+      setImageFile(null);
+      setImagePreview(post.image || null);
+      setError(null);
     }
   }, [open, post]);
 
@@ -100,34 +89,77 @@ export function EditBlogDialog({ post, children, onPostUpdated }: EditBlogDialog
     setFormData((prev) => ({ ...prev, category: value }));
   };
 
-  const handleAuthorChange = (field: 'name' | 'initial', value: string) => {
-    setFormData((prev) => ({
-      ...prev,
-      author: { ...prev.author, [field]: value },
-    }));
+  const handleAuthorChange = (value: string) => {
+    setFormData((prev) => ({ ...prev, author: value }));
+  };
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setImageFile(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const removeImage = () => {
+    setImageFile(null);
+    setImagePreview(null);
+    setFormData((prev) => ({ ...prev, image: '' }));
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setError(null);
 
     try {
+      // Upload new image if exists
+      let imageUrl: string | null = formData.image || null;
+      if (imageFile) {
+        const uploadFormData = new FormData();
+        uploadFormData.append('file', imageFile);
+        uploadFormData.append('folder', 'blogs');
+
+        const uploadResponse = await fetch('/api/upload', {
+          method: 'POST',
+          body: uploadFormData,
+        });
+
+        if (!uploadResponse.ok) {
+          throw new Error('Failed to upload image');
+        }
+
+        const uploadResult = await uploadResponse.json();
+        imageUrl = uploadResult.data?.url || null;
+      }
+
       const response = await fetch(`/api/blogs/${post.slug}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          ...formData,
+          image: imageUrl,
+        }),
       });
 
       if (!response.ok) {
-        throw new Error('Failed to update blog post');
+        const data = await response.json();
+        throw new Error(data.message || 'Failed to update blog post');
       }
 
-      onPostUpdated?.(formData);
+      onPostUpdated?.();
       setOpen(false);
-    } catch (error) {
-      console.error('Error updating blog post:', error);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An error occurred');
     } finally {
       setIsSubmitting(false);
     }
@@ -150,6 +182,11 @@ export function EditBlogDialog({ post, children, onPostUpdated }: EditBlogDialog
             Update the details for &quot;{post.title}&quot;
           </DialogDescription>
         </DialogHeader>
+        {error && (
+          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
+            {error}
+          </div>
+        )}
         <form onSubmit={handleSubmit}>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 py-4">
             {/* Left Column */}
@@ -195,8 +232,7 @@ export function EditBlogDialog({ post, children, onPostUpdated }: EditBlogDialog
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
+              <div className="space-y-2">
                   <Label htmlFor="edit-readTime">Read Time (min)</Label>
                   <Input
                     id="edit-readTime"
@@ -211,30 +247,16 @@ export function EditBlogDialog({ post, children, onPostUpdated }: EditBlogDialog
                     required
                   />
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="edit-date">Date</Label>
-                  <Input
-                    id="edit-date"
-                    name="date"
-                    placeholder="February 20, 2026"
-                    value={formData.date}
-                    onChange={handleInputChange}
-                    required
-                  />
-                </div>
-              </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="edit-authorName">Author Name</Label>
-                  <Input
-                    id="edit-authorName"
-                    placeholder="Author name"
-                    value={formData.author.name}
-                    onChange={(e) => handleAuthorChange('name', e.target.value)}
-                    required
-                  />
-                </div>
+              <div className="space-y-2">
+                <Label htmlFor="edit-authorName">Author Name</Label>
+                <Input
+                  id="edit-authorName"
+                  name="author"
+                  placeholder="Author name"
+                  value={formData.author || ''}
+                  onChange={(e) => handleAuthorChange(e.target.value)}
+                />
               </div>
 
               <div className="space-y-2">
@@ -248,6 +270,50 @@ export function EditBlogDialog({ post, children, onPostUpdated }: EditBlogDialog
                   onChange={handleInputChange}
                   required
                 />
+              </div>
+
+              {/* Image Upload */}
+              <div className="space-y-2">
+                <Label>Featured Image</Label>
+                <div className="border-2 border-dashed border-neutral-200 rounded-lg p-4 text-center hover:border-neutral-300 transition-colors">
+                  {imagePreview ? (
+                    <div className="relative">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={imagePreview}
+                        alt="Preview"
+                        className="mx-auto rounded-lg object-cover max-h-40 cursor-pointer"
+                        onClick={() => fileInputRef.current?.click()}
+                      />
+                      <Button
+                        type="button"
+                        variant="destructive"
+                        size="icon"
+                        className="absolute top-2 right-2 h-6 w-6"
+                        onClick={removeImage}
+                      >
+                        <X className="h-4 w-4" />
+                      </Button>
+                      <p className="text-xs text-neutral-400 mt-2">Click image to change</p>
+                    </div>
+                  ) : (
+                    <div
+                      className="cursor-pointer py-4"
+                      onClick={() => fileInputRef.current?.click()}
+                    >
+                      <ImageIcon className="h-10 w-10 mx-auto text-neutral-400 mb-2" />
+                      <p className="text-sm text-neutral-500">Click to upload image</p>
+                      <p className="text-xs text-neutral-400 mt-1">PNG, JPG up to 5MB</p>
+                    </div>
+                  )}
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageChange}
+                    className="hidden"
+                  />
+                </div>
               </div>
             </div>
 

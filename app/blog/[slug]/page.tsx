@@ -1,9 +1,11 @@
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import StoreNavbar from '@/components/navigations/StoreNavbar';
 import Footer from '@/components/navigations/Footer';
-import { getBlogPostBySlug, getRelatedPosts, BlogPost } from '@/data/blog';
+import { ApiBlog, BlogApiResponse, StorefrontBlog } from '@/types/blog';
+import { mapApiBlogToStorefront, mapApiBlogsToStorefront, getRelatedBlogs } from '@/lib/storefront-blogs';
 
 // Clock icon component
 function ClockIcon({ size = 16 }: { size?: number }) {
@@ -45,7 +47,7 @@ function ArrowLeftIcon() {
 }
 
 // Blog card component for related posts
-function BlogCard({ post }: { post: BlogPost }) {
+function BlogCard({ post }: { post: StorefrontBlog }) {
   return (
     <article className="group cursor-pointer focus-visible:outline-none h-full flex flex-col">
       <Link
@@ -54,24 +56,14 @@ function BlogCard({ post }: { post: BlogPost }) {
         aria-label={`Read ${post.title}`}
       >
         <div className="rounded-xl overflow-hidden border bg-white border-zinc-200/80   transition-shadow duration-300 h-full flex flex-col">
-          {/* Image Placeholder */}
-          <div className="aspect-video bg-linear-to-br from-pink-50 to-pink-100 flex items-center justify-center relative overflow-hidden">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="40"
-              height="40"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="text-pink-300"
-            >
-              <path d="M12 7.5a4.5 4.5 0 1 1 4.5 4.5M12 7.5A4.5 4.5 0 1 0 7.5 12M12 7.5V9m-4.5 3a4.5 4.5 0 1 0 4.5 4.5M7.5 12H9m7.5 0a4.5 4.5 0 1 1-4.5 4.5m4.5-4.5H15m-3 4.5V15" />
-              <circle cx="12" cy="12" r="3" />
-            </svg>
-       
+          {/* Image */}
+          <div className="aspect-video bg-pink-700 flex items-center justify-center relative overflow-hidden">
+            <Image
+              src={post.image}
+              alt={post.title}
+              fill
+              className="object-cover"
+            />
           </div>
 
           {/* Content */}
@@ -193,15 +185,52 @@ interface PageProps {
   params: Promise<{ slug: string }>;
 }
 
+async function fetchBlogBySlug(slug: string): Promise<StorefrontBlog | null> {
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/api/blogs/${slug}`,
+      { cache: 'no-store' }
+    );
+    const result: BlogApiResponse<ApiBlog> = await res.json();
+
+    if (!res.ok || !result.success || !result.data) {
+      return null;
+    }
+
+    return mapApiBlogToStorefront(result.data);
+  } catch {
+    return null;
+  }
+}
+
+async function fetchAllBlogs(): Promise<StorefrontBlog[]> {
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/api/blogs`,
+      { cache: 'no-store' }
+    );
+    const result: BlogApiResponse<ApiBlog[]> = await res.json();
+
+    if (!res.ok || !result.success || !result.data) {
+      return [];
+    }
+
+    return mapApiBlogsToStorefront(result.data);
+  } catch {
+    return [];
+  }
+}
+
 export default async function BlogDetailPage({ params }: PageProps) {
   const { slug } = await params;
-  const post = getBlogPostBySlug(slug);
+  const post = await fetchBlogBySlug(slug);
 
   if (!post) {
     notFound();
   }
 
-  const relatedPosts = getRelatedPosts(slug, 3);
+  const allBlogs = await fetchAllBlogs();
+  const relatedPosts = getRelatedBlogs(allBlogs, slug, 3);
 
   return (
     <section className="w-full min-h-screen">
@@ -220,26 +249,15 @@ export default async function BlogDetailPage({ params }: PageProps) {
 
         {/* Article */}
         <article className="bg-white rounded-xl border border-zinc-200/80 overflow-hidden">
-          {/* Header Image Placeholder */}
-          <div className="aspect-video bg-linear-to-br from-pink-50 to-pink-100 flex items-center justify-center relative overflow-hidden">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="64"
-              height="64"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="text-pink-300"
-            >
-              <path d="M12 7.5a4.5 4.5 0 1 1 4.5 4.5M12 7.5A4.5 4.5 0 1 0 7.5 12M12 7.5V9m-4.5 3a4.5 4.5 0 1 0 4.5 4.5M7.5 12H9m7.5 0a4.5 4.5 0 1 1-4.5 4.5m4.5-4.5H15m-3 4.5V15" />
-              <circle cx="12" cy="12" r="3" />
-            </svg>
-            <span className="absolute top-4 left-4 text-6xl font-bold text-pink-200/60">
-              {post.title.charAt(0)}
-            </span>
+          {/* Header Image */}
+          <div className="aspect-video bg-pink-700 flex items-center justify-center relative overflow-hidden">
+            <Image
+              src={post.image}
+              alt={post.title}
+              fill
+              className="object-cover"
+              priority
+            />
           </div>
 
           {/* Content */}

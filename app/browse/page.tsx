@@ -1,69 +1,74 @@
 'use client';
 
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
 import StoreNavbar from '@/components/navigations/StoreNavbar';
 import Footer from '@/components/navigations/Footer';
+import { Skeleton } from '@/components/ui/skeleton';
 
 interface Category {
   id: number;
   slug: string;
   name: string;
-  img: string;
+  image: string | null;
   itemCount: number;
   icon?: React.ReactNode;
 }
 
-const categories: Category[] = [
-  {
-    id: 1,
-    slug: 'small',
-    name: 'Small Bouquet',
-    img: '/bunga1.jpg',
-    itemCount: 24,
-  },
-  {
-    id: 2,
-    slug: 'money',
-    name: 'Money Bouquet',
-    img: '/bunga2.jpeg',
-    itemCount: 18,
-  },
-  {
-    id: 3,
-    slug: 'large',
-    name: 'Large Bouquet',
-    img: '/bunga3.jpg',
-    itemCount: 31,
-  },
-  {
-    id: 4,
-    slug: 'round',
-    name: 'Round Bouquet',
-    img: '/bunga4.jpg',
-    itemCount: 22,
-  },
-  {
-    id: 5,
-    slug: 'medium',
-    name: 'Medium Bouquet',
-    img: '/bunga2.jpg',
-    itemCount: 27,
-  },
-  {
-    id: 6,
-    slug: 'custom',
-    name: 'Custom Bouquet',
-    img: '/bunga1.jpg',
-    itemCount: 15,
-  },
-];
+interface CategoriesApiResponse {
+  success: boolean;
+  message: string;
+  data: Array<{
+    id: number;
+    slug: string;
+    name: string;
+    image: string | null;
+    productCount: number;
+  }> | null;
+}
 
 export default function BrowsePage() {
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        setIsLoading(true);
+        setError(null);
+
+        const response = await fetch('/api/categories', { cache: 'no-store' });
+        const result: CategoriesApiResponse = await response.json();
+
+        if (!response.ok || !result.success || !result.data) {
+          throw new Error(result.message || 'Failed to load categories');
+        }
+
+        const mappedCategories: Category[] = result.data.map((category) => ({
+          id: category.id,
+          slug: category.slug,
+          name: category.name,
+          image: category.image,
+          itemCount: category.productCount,
+        }));
+
+        setCategories(mappedCategories);
+      } catch (fetchError) {
+        const message = fetchError instanceof Error ? fetchError.message : 'Failed to load categories';
+        setError(message);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
   return (
     <section className="w-full">
       <StoreNavbar />
       <div className="w-full max-w-6xl mx-auto px-4 sm:px-8 mt-23">
-        {/* Header */}
         <div className="mb-8 py-8">
           <h1 className="text-3xl font-semibold font-mono text-zinc-900 tracking-tight mb-2">
             Browse by Category
@@ -71,12 +76,31 @@ export default function BrowsePage() {
           <p className="text-zinc-600">Explore our curated collection organized by category</p>
         </div>
 
-        {/* Categories Grid */}
         <div className="pb-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 min-h-100">
-          {categories.map(({ id, slug, name, img, itemCount }) => (
+          {isLoading && (
+            Array.from({ length: 6 }).map((_, index) => (
+              <div key={`category-skeleton-${index}`} className="pointer-events-none">
+                <Skeleton className="rounded-xl aspect-4/3 w-full" />
+                <div className="pt-3 space-y-2">
+                  <Skeleton className="h-3 w-20" />
+                  <Skeleton className="h-4 w-32" />
+                </div>
+              </div>
+            ))
+          )}
+
+          {!isLoading && error && (
+            <p className="text-sm text-red-500">{error}</p>
+          )}
+
+          {!isLoading && !error && categories.length === 0 && (
+            <p className="text-sm text-zinc-500">No categories available.</p>
+          )}
+
+          {!isLoading && !error && categories.map(({ id, slug, name, image, itemCount }) => (
             <Link
               key={id}
-              href={`/catalog/${slug}`}
+              href={`/browse/${slug}`}
               className="group cursor-pointer focus-visible:outline-none"
               role="button"
               tabIndex={0}
@@ -86,7 +110,7 @@ export default function BrowsePage() {
                 <img
                   alt={name}
                   className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                  src={img}
+                  src={image}
                 />
                 <div
                   className="absolute top-2 right-2 p-2 bg-white/50 backdrop-blur-sm rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
@@ -114,7 +138,7 @@ export default function BrowsePage() {
           ))}
         </div>
       </div>
-        <Footer />
+      <Footer />
     </section>
 
   );

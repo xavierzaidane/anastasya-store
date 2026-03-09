@@ -2,17 +2,44 @@
 
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
-import { getProductsByCategory } from '@/data/products';
+import { useEffect, useMemo, useState } from 'react';
 import StoreNavbar from '@/components/navigations/StoreNavbar';
 import Footer from '@/components/navigations/Footer';
 import { useProductDialogs } from '@/hooks/use-product-dialogs';
 import { ProductDetailDialogAdvanced } from '@/components/products';
+import { mapApiProductToStorefront } from '@/lib/storefront-products';
+import { StorefrontApiResponse, StorefrontProduct } from '@/types/storefront';
+import { Skeleton } from '@/components/ui/skeleton';
+
+interface CategoryDetailData {
+  id: number;
+  slug: string;
+  name: string;
+  image: string | null;
+  productCount: number;
+  products: Array<{
+    id: number;
+    slug: string;
+    name: string;
+    price: number | string;
+    image: string | null;
+    description?: string | null;
+    items?: string[];
+  }>;
+}
 
 export default function CategoryPage() {
   const params = useParams();
-  const category = params?.category as string;
-  const products = getProductsByCategory(category);
-  const categoryName = category.charAt(0).toUpperCase() + category.slice(1);
+  const categorySlug = params?.products as string;
+  const [products, setProducts] = useState<StorefrontProduct[]>([]);
+  const [categoryName, setCategoryName] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const fallbackCategoryName = useMemo(() => {
+    if (!categorySlug) return '';
+    return categorySlug.charAt(0).toUpperCase() + categorySlug.slice(1);
+  }, [categorySlug]);
 
   const {
     selectedProduct,
@@ -21,14 +48,78 @@ export default function CategoryPage() {
     closeProductDialog,
   } = useProductDialogs();
 
-  if (products.length === 0) {
+  useEffect(() => {
+    const fetchCategory = async () => {
+      if (!categorySlug) return;
+
+      try {
+        setIsLoading(true);
+        setError(null);
+
+        const response = await fetch(`/api/categories/${categorySlug}`, {
+          cache: 'no-store',
+        });
+
+        const result: StorefrontApiResponse<CategoryDetailData> = await response.json();
+
+        if (!response.ok || !result.success || !result.data) {
+          throw new Error(result.message || 'Failed to load category');
+        }
+
+        const mappedProducts: StorefrontProduct[] = result.data.products.map((product) =>
+          mapApiProductToStorefront(product, result.data?.slug || categorySlug)
+        );
+
+        setCategoryName(result.data.name || fallbackCategoryName);
+        setProducts(mappedProducts);
+      } catch (fetchError) {
+        const message = fetchError instanceof Error ? fetchError.message : 'Failed to load category';
+        setError(message);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchCategory();
+  }, [categorySlug, fallbackCategoryName]);
+
+  if (isLoading) {
+    return (
+      <section className="w-full">
+        <StoreNavbar />
+        <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mt-25">
+          <div className="mb-8">
+            <Skeleton className="h-4 w-32 mb-4" />
+            <Skeleton className="h-10 w-64 mb-3" />
+            <Skeleton className="h-4 w-72" />
+          </div>
+
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-3 sm:gap-4 lg:gap-6 min-h-100 pb-16">
+            {Array.from({ length: 6 }).map((_, index) => (
+              <div key={`product-skeleton-${index}`} className="pointer-events-none">
+                <Skeleton className="rounded-lg sm:rounded-xl aspect-4/3 w-full" />
+                <div className="pt-2 sm:pt-3 space-y-2">
+                  <Skeleton className="h-3 w-20" />
+                  <Skeleton className="h-4 w-28" />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+        <Footer />
+      </section>
+    );
+  }
+
+  if (error || products.length === 0) {
     return (
       <div className="w-full min-h-screen flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-2xl font-['KoPub_Batang'] text-zinc-800 mb-4">
-            Category not found
+            {error ? 'Unable to load category' : 'Category not found'}
           </h1>
-          <Link href="/catalog" className="text-orange-600 hover:text-orange-700">
+          {error && <p className="text-zinc-500 mb-4">{error}</p>}
+          <Link href="/browse" className="text-orange-600 hover:text-orange-700">
             Back to Catalog
           </Link>
         </div>
@@ -43,7 +134,7 @@ export default function CategoryPage() {
       {/* Breadcrumbs */}
       <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mt-25">
         <nav className="flex items-center gap-2 text-sm text-zinc-600 mb-8 pointer-coarse:">
-          <Link href="/catalog" className="hover:text-zinc-900 transition-colors">
+          <Link href="/browse" className="hover:text-zinc-900 transition-colors">
             Browse
           </Link>
           <span className="text-zinc-400">/</span>

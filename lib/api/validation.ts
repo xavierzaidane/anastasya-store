@@ -61,6 +61,7 @@ export const updateProductSchema = z.object({
   categoryId: z.number().int().positive("Category ID is required").optional(),
   description: z.string().optional(),
   image: z.string().optional().nullable(),
+  items: z.array(z.string()).optional(),
 });
 
 export type CreateProductInput = z.infer<typeof createProductSchema>;
@@ -104,7 +105,7 @@ export const createBlogSchema = z.object({
   readTime: z.number().int().positive("Read time must be positive").optional().default(5),
   author: z.string().max(100, "Author name is too long").optional().nullable(),
   image: z.string().optional().nullable(),
-  published: z.boolean().optional().default(false),
+  published: z.boolean().optional().default(true),
 });
 
 export const updateBlogSchema = z.object({
