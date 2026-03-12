@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
+import { toast } from 'sonner';
 import {
   Dialog,
   DialogContent,
@@ -38,10 +39,13 @@ export function DeleteProductDialog({ product, children, onProductDeleted }: Del
         throw new Error(errorData.message || 'Failed to delete product');
       }
 
+      toast.error('Product deleted successfully');
       onProductDeleted?.();
       setOpen(false);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
+      const errorMessage = err instanceof Error ? err.message : 'An error occurred';
+      setError(errorMessage);
+      toast.error('Failed to delete product', { description: errorMessage });
       console.error('Error deleting product:', err);
     } finally {
       setIsDeleting(false);
@@ -71,25 +75,25 @@ export function DeleteProductDialog({ product, children, onProductDeleted }: Del
           </Button>
         )}
       </DialogTrigger>
-      <DialogContent className="sm:max-w-sm p-6 gap-0">
+      <DialogContent className="sm:max-w-lg p-6 gap-0 border-border">
         <DialogHeader className="space-y-4 pb-4">
-          <div className="mx-auto h-12 w-12 rounded-full bg-destructive/10 flex items-center justify-center">
-            <Trash2 className="h-5 w-5 text-destructive" />
+          <div className="mx-auto h-12 w-12 flex items-center justify-center">
+            <Trash2 className="h-6 w-6 text-destructive" />
           </div>
-          <DialogTitle className="text-center text-lg font-semibold text-foreground">
-            Delete Product
+          <DialogTitle className="text-center text-lg font-semibold text-neutral-900 dark:text-white -mt-5">
+            Delete Product ?
           </DialogTitle>
         </DialogHeader>
 
         {error && (
-          <div className="mb-4 p-3 bg-destructive/10 border border-destructive/20 rounded-lg text-destructive text-sm">
+          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm mb-4">
             {error}
           </div>
         )}
 
         {/* Product Preview */}
-        <div className="flex items-center gap-3 p-3 bg-muted rounded-lg border mb-4">
-          <div className="relative w-12 h-12 rounded-md overflow-hidden bg-muted shrink-0">
+        <div className="flex items-center gap-3 p-3 bg-neutral-50 dark:bg-background rounded-lg border mb-4">
+          <div className="relative w-12 h-12 rounded-md overflow-hidden bg-neutral-100 dark:bg-muted shrink-0">
             {product.image ? (
               <Image
                 src={product.image}
@@ -104,12 +108,12 @@ export function DeleteProductDialog({ product, children, onProductDeleted }: Del
             )}
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium text-foreground truncate">{product.name}</p>
-            <p className="text-xs text-muted-foreground">{formatPrice(product.price)}</p>
+            <p className="text-sm font-medium text-neutral-900 dark:text-white truncate">{product.name}</p>
+            <p className="text-xs text-neutral-500">{formatPrice(product.price)}</p>
           </div>
         </div>
 
-        <p className="text-sm text-muted-foreground text-center mb-6">
+        <p className="text-sm text-neutral-500 text-center mb-6">
           This action cannot be undone.
         </p>
 
@@ -118,7 +122,7 @@ export function DeleteProductDialog({ product, children, onProductDeleted }: Del
             variant="outline"
             onClick={() => setOpen(false)}
             disabled={isDeleting}
-            className="flex-1 h-10"
+            className="flex-1 h-10 border-neutral-200 hover:bg-neutral-50"
           >
             Cancel
           </Button>

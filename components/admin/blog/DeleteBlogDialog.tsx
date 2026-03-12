@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { toast } from 'sonner';
 import {
   Dialog,
   DialogContent,
@@ -37,10 +38,13 @@ export function DeleteBlogDialog({ post, children, onPostDeleted }: DeleteBlogDi
         throw new Error(data.message || 'Failed to delete blog post');
       }
 
+      toast.success('Blog post deleted successfully');
       onPostDeleted?.();
       setOpen(false);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
+      const errorMessage = err instanceof Error ? err.message : 'An error occurred';
+      setError(errorMessage);
+      toast.error('Failed to delete blog post', { description: errorMessage });
     } finally {
       setIsDeleting(false);
     }
@@ -60,20 +64,20 @@ export function DeleteBlogDialog({ post, children, onPostDeleted }: DeleteBlogDi
           </Button>
         )}
       </DialogTrigger>
-      <DialogContent className="sm:max-w-lg p-6 gap-0 border-neutral-200/80">
+      <DialogContent className="sm:max-w-lg p-6 gap-0 border-border">
         <DialogHeader className="space-y-4 pb-4">
-          <div className="mx-auto h-12 w-12 rounded-full bg-red-50 flex items-center justify-center">
-            <Trash2 className="h-5 w-5 text-destructive" />
+          <div className="mx-auto h-12 w-12 flex items-center justify-center ">
+            <Trash2 className="h-6 w-6 text-destructive" />
           </div>
-          <DialogTitle className="text-center text-lg font-semibold text-neutral-900">
-            Delete Blog Post
+          <DialogTitle className="text-center text-lg font-semibold text-neutral-900 dark:text-white -mt-5">
+            Delete Blog Post ?
           </DialogTitle>
         </DialogHeader>
 
         {/* Post Preview */}
-        <div className="flex items-center gap-3 p-3 bg-neutral-50 rounded-lg border mb-4">
+        <div className="flex items-center gap-3 p-3 bg-neutral-50 dark:bg-background rounded-lg border mb-4">
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium text-neutral-900 truncate">{post.title}</p>
+            <p className="text-sm font-medium text-neutral-900 dark:text-white truncate">{post.title}</p>
             <p className="text-xs text-neutral-500">{post.category || 'Uncategorized'} . {post.author || 'Unknown'}</p>
           </div>
         </div>

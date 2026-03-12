@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef } from 'react';
+import { toast } from 'sonner';
 import {
   Dialog,
   DialogContent,
@@ -140,11 +141,14 @@ export function CreateBlogDialog({ children, onPostCreated }: CreateBlogDialogPr
         throw new Error(data.message || 'Failed to create blog post');
       }
 
+      toast.success('Blog post created successfully');
       onPostCreated?.();
       setOpen(false);
       resetForm();
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
+      const errorMessage = err instanceof Error ? err.message : 'An error occurred';
+      setError(errorMessage);
+      toast.error('Failed to create blog post', { description: errorMessage });
     } finally {
       setIsSubmitting(false);
     }

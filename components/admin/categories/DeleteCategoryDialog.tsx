@@ -11,6 +11,7 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Trash2, Package, AlertTriangle } from 'lucide-react';
+import { toast } from 'sonner';
 
 interface Category {
   id: number;
@@ -46,10 +47,17 @@ export function DeleteCategoryDialog({ category, children, onCategoryDeleted }: 
         throw new Error(data.message || 'Failed to delete category');
       }
 
+      toast.error('Category deleted', {
+        description: `"${category.name}" has been deleted successfully.`,
+      });
       onCategoryDeleted?.();
       setOpen(false);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
+      const errorMessage = err instanceof Error ? err.message : 'An error occurred';
+      setError(errorMessage);
+      toast.error('Failed to delete category', {
+        description: errorMessage,
+      });
     } finally {
       setIsDeleting(false);
     }
@@ -69,25 +77,25 @@ export function DeleteCategoryDialog({ category, children, onCategoryDeleted }: 
           </Button>
         )}
       </DialogTrigger>
-      <DialogContent className="sm:max-w-sm p-6 gap-0 border-neutral-200/80">
+      <DialogContent className="sm:max-w-lg p-6 gap-0 border-border">
         <DialogHeader className="space-y-4 pb-4">
-          <div className="mx-auto h-12 w-12 rounded-full bg-red-50 flex items-center justify-center">
-            <Trash2 className="h-5 w-5 text-destructive" />
+          <div className="mx-auto h-12 w-12 flex items-center justify-center">
+            <Trash2 className="h-6 w-6 text-destructive" />
           </div>
-          <DialogTitle className="text-center text-lg font-semibold text-neutral-900">
-            Delete Category
+          <DialogTitle className="text-center text-lg font-semibold text-neutral-900 dark:text-white -mt-5">
+            Delete Categories ?
           </DialogTitle>
         </DialogHeader>
 
         {error && (
-          <div className="p-3 text-sm text-red-600 bg-red-50 rounded-lg mb-4">
+          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm mb-4">
             {error}
           </div>
         )}
 
         {/* Category Preview */}
-        <div className="flex items-center gap-3 p-3 bg-neutral-50 rounded-lg border mb-4">
-          <div className="relative w-12 h-12 rounded-md overflow-hidden bg-neutral-100 shrink-0">
+        <div className="flex items-center gap-3 p-3 bg-neutral-50 dark:bg-background rounded-lg border mb-4">
+          <div className="relative w-12 h-12 rounded-md overflow-hidden bg-neutral-100 dark:bg-muted shrink-0">
             {category.image ? (
               <Image
                 src={category.image}
@@ -102,15 +110,15 @@ export function DeleteCategoryDialog({ category, children, onCategoryDeleted }: 
             )}
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium text-neutral-900 truncate">{category.name}</p>
+            <p className="text-sm font-medium text-neutral-900 dark:text-white truncate">{category.name}</p>
             <p className="text-xs text-neutral-500">{category.productCount} products</p>
           </div>
         </div>
 
         {category.productCount > 0 && (
-          <div className="flex items-start gap-2 p-3 bg-amber-50 rounded-lg border border-amber-200 mb-4">
-            <AlertTriangle className="h-4 w-4 text-amber-600 shrink-0 mt-0.5" />
-            <p className="text-xs text-amber-700">
+          <div className="flex items-start gap-2 p-3 bg-amber-50 dark:bg-amber-950/30 rounded-lg border border-amber-200 dark:border-amber-800 mb-4">
+            <AlertTriangle className="h-4 w-4 text-amber-600 dark:text-amber-500 shrink-0 mt-0.5" />
+            <p className="text-xs text-amber-700 dark:text-amber-400">
               This category has {category.productCount} product(s). You may need to reassign them first.
             </p>
           </div>
@@ -133,7 +141,7 @@ export function DeleteCategoryDialog({ category, children, onCategoryDeleted }: 
             variant="destructive"
             onClick={handleDelete}
             disabled={isDeleting}
-            className="flex-1 h-10"
+            className="flex-1 h-10 bg-destructive hover:bg-red-700"
           >
             {isDeleting ? 'Deleting...' : 'Delete'}
           </Button>

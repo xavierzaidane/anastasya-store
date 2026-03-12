@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import { toast } from 'sonner';
 import {
   Dialog,
   DialogContent,
@@ -156,10 +157,13 @@ export function EditBlogDialog({ post, children, onPostUpdated }: EditBlogDialog
         throw new Error(data.message || 'Failed to update blog post');
       }
 
+      toast.success('Blog post updated successfully');
       onPostUpdated?.();
       setOpen(false);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
+      const errorMessage = err instanceof Error ? err.message : 'An error occurred';
+      setError(errorMessage);
+      toast.error('Failed to update blog post', { description: errorMessage });
     } finally {
       setIsSubmitting(false);
     }

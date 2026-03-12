@@ -5,6 +5,7 @@ import { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import { useForm } from '@tanstack/react-form';
 import { z } from 'zod';
+import { toast } from 'sonner';
 import {
   Dialog,
   DialogContent,
@@ -140,11 +141,14 @@ export function CreateProductDialog({ children, onProductCreated }: CreateProduc
           throw new Error(errorData.message || 'Failed to create product');
         }
 
+        toast.success('Product created successfully');
         onProductCreated?.();
         setOpen(false);
         resetForm();
       } catch (err) {
-        setSubmitError(err instanceof Error ? err.message : 'An error occurred');
+        const errorMessage = err instanceof Error ? err.message : 'An error occurred';
+        setSubmitError(errorMessage);
+        toast.error('Failed to create product', { description: errorMessage });
         console.error('Error creating product:', err);
       } finally {
         setIsSubmitting(false);

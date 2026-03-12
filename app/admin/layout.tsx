@@ -2,6 +2,7 @@
 
 import { usePathname } from 'next/navigation';
 import { SidebarProvider } from '@/components/ui/sidebar';
+import { Toaster } from '@/components/ui/sonner';
 import { AdminSidebar, AdminHeader, AdminThemeProvider } from '@/components/admin';
 
 // Pages that should not show the sidebar (auth pages)
@@ -20,6 +21,7 @@ export default function AdminRootLayout({
     return (
       <AdminThemeProvider>
         <div className="min-h-screen bg-background">{children}</div>
+        <Toaster position="bottom-right" richColors/>
       </AdminThemeProvider>
     );
   }
@@ -37,6 +39,7 @@ export default function AdminRootLayout({
           </div>
         </main>
       </SidebarProvider>
+      <Toaster position="bottom-right" richColors />
     </AdminThemeProvider>
   );
 }

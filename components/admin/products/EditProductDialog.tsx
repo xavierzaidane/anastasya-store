@@ -5,6 +5,7 @@ import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import { useForm } from '@tanstack/react-form';
 import { z } from 'zod';
+import { toast } from 'sonner';
 import {
   Dialog,
   DialogContent,
@@ -144,10 +145,13 @@ export function EditProductDialog({ product, children, onProductUpdated }: EditP
           throw new Error(errorData.message || 'Failed to update product');
         }
 
+        toast.info('Product updated successfully');
         onProductUpdated?.();
         setOpen(false);
       } catch (err) {
-        setSubmitError(err instanceof Error ? err.message : 'An error occurred');
+        const errorMessage = err instanceof Error ? err.message : 'An error occurred';
+        setSubmitError(errorMessage);
+        toast.error('Failed to update product', { description: errorMessage });
         console.error('Error updating product:', err);
       } finally {
         setIsSubmitting(false);
