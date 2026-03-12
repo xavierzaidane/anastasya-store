@@ -253,25 +253,13 @@ export default function ProductsPage() {
               <TableHead>             
                   Items    
               </TableHead>
-              <TableHead>
-                <button
-                  onClick={() => handleSort('category')}
-                  className="flex items-center gap-1 hover:text-foreground"
-                >
-                  Category
-                  <ArrowUpDown className="h-3.5 w-3.5" />
-                </button>
+              <TableHead>              
+                  Category      
               </TableHead>
-              <TableHead>
-                <button
-                  onClick={() => handleSort('price')}
-                  className="flex items-center gap-1 hover:text-foreground"
-                >
+              <TableHead>            
                   Price
                   <ArrowUpDown className="h-3.5 w-3.5" />
-                </button>
               </TableHead>
-
               <TableHead className="text-center pr-4">Manage</TableHead>
             </TableRow>
           </TableHeader>
