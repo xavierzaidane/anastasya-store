@@ -70,9 +70,13 @@ export function mapApiProductToStorefront(
   fallbackCategorySlug = 'general'
 ): StorefrontProduct {
   const imageUrl = product.image || '/bunga1.jpg';
-  const gallery = product.gallery && product.gallery.length > 0 
-    ? product.gallery 
-    : [imageUrl];
+  
+  // Filter out empty/null/undefined gallery items
+  const filteredGallery = product.gallery 
+    ? product.gallery.filter((img): img is string => Boolean(img && img.trim()))
+    : [];
+  
+  const gallery = filteredGallery.length > 0 ? filteredGallery : [];
   
   return {
     id: product.id,

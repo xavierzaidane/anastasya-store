@@ -9,7 +9,7 @@ import { SiWhatsapp } from "react-icons/si";
 import { useSavedItems } from '@/hooks/use-saved-items';
 import { mapApiProductToStorefront } from '@/lib/storefront-products';
 import { StorefrontApiResponse, StorefrontProduct } from '@/types/storefront';
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
+
 
 interface ProductDetailDialogProps {
   product: StorefrontProduct | null;
@@ -43,6 +43,7 @@ export function ProductDetailDialogAdvanced({
   const [isFetchingProduct, setIsFetchingProduct] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
+  const [currentGalleryIndex, setCurrentGalleryIndex] = useState(0);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   
   const { isItemSaved, toggleItem, addItem } = useSavedItems();
@@ -54,6 +55,7 @@ export function ProductDetailDialogAdvanced({
       setImageLoaded(false);
       setImageError(false);
       setQuantity(1);
+      setCurrentGalleryIndex(0);
     }
   }, [product]);
 
@@ -120,6 +122,26 @@ export function ProductDetailDialogAdvanced({
 
   const increaseQuantity = () => setQuantity((q) => q + 1);
   const decreaseQuantity = () => setQuantity((q) => (q > 1 ? q - 1 : 1));
+
+  const getCurrentImage = () => {
+    if (currentGalleryIndex === 0) {
+      return liveProduct.img;
+    }
+    const galleryImage = liveProduct.gallery?.[currentGalleryIndex - 1];
+    return (galleryImage && galleryImage.trim()) ? galleryImage : liveProduct.img;
+  };
+
+  const handleNextImage = () => {
+    const maxIndex = (liveProduct.gallery?.length || 0) + 1;
+    setCurrentGalleryIndex((prev) => (prev + 1) % maxIndex);
+    setImageLoaded(false);
+  };
+
+  const handlePrevImage = () => {
+    const maxIndex = (liveProduct.gallery?.length || 0) + 1;
+    setCurrentGalleryIndex((prev) => (prev - 1 + maxIndex) % maxIndex);
+    setImageLoaded(false);
+  };
 
   const handleWheel = (e: React.WheelEvent<HTMLDivElement>) => {
     if (scrollContainerRef.current) {
@@ -205,7 +227,7 @@ export function ProductDetailDialogAdvanced({
                     </div>
                   ) : (
                     <img
-                      src={liveProduct.img}
+                      src={getCurrentImage()}
                       alt={liveProduct.name}
                       className={`w-full h-full object-cover transition-opacity duration-300 ${
                         imageLoaded ? 'opacity-100' : 'opacity-0'
@@ -213,6 +235,30 @@ export function ProductDetailDialogAdvanced({
                       onLoad={handleImageLoad}
                       onError={handleImageError}
                     />
+                  )}
+                  
+                  {(liveProduct.gallery?.length || 0) > 0 && (
+                    <>
+                      <button
+                        onClick={handlePrevImage}
+                        className="absolute left-4 p-2 bg-white rounded-full hover:bg-zinc-200 transition-colors z-10 shadow-lg"
+                        aria-label="Previous image"
+                      >
+                        <ChevronLeft className="w-5 h-5 text-zinc-900" />
+                      </button>
+                      <button
+                        onClick={handleNextImage}
+                        className="absolute right-4 p-2 bg-white rounded-full hover:bg-zinc-200 transition-colors z-10 shadow-lg"
+                        aria-label="Next image"
+                      >
+                        <ChevronRight className="w-5 h-5 text-zinc-900" />
+                      </button>
+                      <div className="absolute bottom-4 flex gap-1">
+                        <div className="bg-white px-3 py-1 rounded-full text-xs font-medium text-zinc-900">
+                          {currentGalleryIndex + 1} / {(liveProduct.gallery?.length || 0) + 1}
+                        </div>
+                      </div>
+                    </>
                   )}
                 </div>
 
@@ -223,7 +269,7 @@ export function ProductDetailDialogAdvanced({
 
                   <div className="h-8" />
 
-                  <div className="md:hidden mb-6">
+                  <div className="md:hidden mb-6 relative">
                     {!imageLoaded && !imageError && (
                       <div className="w-full aspect-square max-h-[40vh] bg-zinc-200 animate-pulse rounded-lg" />
                     )}
@@ -233,7 +279,7 @@ export function ProductDetailDialogAdvanced({
                       </div>
                     ) : (
                       <img
-                        src={liveProduct.img}
+                        src={getCurrentImage()}
                         alt={liveProduct.name}
                         className={`w-full aspect-square max-h-[40vh] object-cover rounded-lg transition-opacity duration-300 ${
                           imageLoaded ? 'opacity-100' : 'opacity-0'
@@ -241,6 +287,28 @@ export function ProductDetailDialogAdvanced({
                         onLoad={handleImageLoad}
                         onError={handleImageError}
                       />
+                    )}
+                    
+                    {(liveProduct.gallery?.length || 0) > 0 && (
+                      <>
+                        <button
+                          onClick={handlePrevImage}
+                          className="absolute left-2 top-1/2 -translate-y-1/2 p-2 bg-white rounded-full hover:bg-zinc-200 transition-colors z-10 shadow-lg"
+                          aria-label="Previous image"
+                        >
+                          <ChevronLeft className="w-4 h-4 text-zinc-900" />
+                        </button>
+                        <button
+                          onClick={handleNextImage}
+                          className="absolute right-2 top-1/2 -translate-y-1/2 p-2 bg-white rounded-full hover:bg-zinc-200 transition-colors z-10 shadow-lg"
+                          aria-label="Next image"
+                        >
+                          <ChevronRight className="w-4 h-4 text-zinc-900" />
+                        </button>
+                        <div className="absolute bottom-2 left-1/2 -translate-x-1/2 bg-white px-2 py-1 rounded-full text-xs font-medium text-zinc-900">
+                          {currentGalleryIndex + 1} / {(liveProduct.gallery?.length || 0) + 1}
+                        </div>
+                      </>
                     )}
                   </div>
 
@@ -257,9 +325,6 @@ export function ProductDetailDialogAdvanced({
                       {liveProduct.name}
                     </Dialog.Title>
 
-                    {isFetchingProduct && (
-                      <p className="text-xs text-zinc-500 mb-3">Updating product details...</p>
-                    )}
 
                     <div className="mb-6">
                       <p className="text-4xl font-mono font-semibold text-zinc-900 tracking-tight">{priceDisplay}</p>
