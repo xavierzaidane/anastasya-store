@@ -129,6 +129,19 @@ export const createColumns = ({
     enableSorting: false,
   },
   {
+    accessorKey: 'gallery',
+    header: 'Gallery',
+    cell: ({ row }) => {
+      const gallery = row.getValue('gallery') as string[];
+      return (
+        <span className="text-xs text-muted-foreground">
+          {gallery?.length > 0 ? `${gallery.length} image${gallery.length !== 1 ? 's' : ''}` : 'No images'}
+        </span>
+      );
+    },
+    enableSorting: false,
+  },
+  {
     accessorKey: 'category',
     header: 'Category',
     cell: ({ row }) => {

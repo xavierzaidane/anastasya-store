@@ -6,6 +6,7 @@ export interface StorefrontProduct {
   price: string;
   image: string;
   img: string;
+  gallery: string[];
   description: string;
   items: string[];
   categoryName?: string;
@@ -18,6 +19,7 @@ export interface StorefrontApiProduct {
   name: string;
   price: number | string;
   image: string | null;
+  gallery?: string[];
   description?: string | null;
   items?: string[];
   category?: {

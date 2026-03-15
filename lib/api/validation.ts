@@ -52,6 +52,7 @@ export const createProductSchema = z.object({
   categoryId: z.number().int().positive("Category ID is required"),
   description: z.string().optional(),
   img: z.string().optional().nullable(),
+  gallery: z.array(z.string()).optional().default([]),
   items: z.array(z.string()).optional().default([]),
 });
 
@@ -61,6 +62,7 @@ export const updateProductSchema = z.object({
   categoryId: z.number().int().positive("Category ID is required").optional(),
   description: z.string().optional(),
   image: z.string().optional().nullable(),
+  gallery: z.array(z.string()).optional(),
   items: z.array(z.string()).optional(),
 });
 

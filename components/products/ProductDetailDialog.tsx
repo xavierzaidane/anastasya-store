@@ -3,12 +3,13 @@
 import { useState, useRef, useEffect } from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
 import { motion, AnimatePresence } from 'framer-motion';
-import { XIcon, Share2, ShoppingCart } from 'lucide-react';
+import { XIcon, Share2, ShoppingCart, ChevronLeft, ChevronRight } from 'lucide-react';
 import { orderViaWhatsApp } from '@/lib/whatsapp';
 import { SiWhatsapp } from "react-icons/si";
 import { useSavedItems } from '@/hooks/use-saved-items';
 import { mapApiProductToStorefront } from '@/lib/storefront-products';
 import { StorefrontApiResponse, StorefrontProduct } from '@/types/storefront';
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 
 interface ProductDetailDialogProps {
   product: StorefrontProduct | null;
@@ -22,6 +23,7 @@ interface ProductDetailData {
   name: string;
   price: number | string;
   image: string | null;
+  gallery?: string[];
   description?: string | null;
   items?: string[];
   category?: {

@@ -32,6 +32,7 @@ export interface Product {
   items: string[];
   price: string; // Decimal from Prisma
   image: string | null;
+  gallery: string[];
   isActive: boolean;
   isStaffPick: boolean;
   createdAt: string;

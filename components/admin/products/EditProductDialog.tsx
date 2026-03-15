@@ -75,9 +75,12 @@ export function EditProductDialog({ product, children, onProductUpdated }: EditP
   const [categories, setCategories] = useState<Category[]>([]);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(product.image || null);
+  const [galleryFiles, setGalleryFiles] = useState<File[]>([]);
+  const [galleryPreviews, setGalleryPreviews] = useState<string[]>(product.gallery || []);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const galleryInputRef = useRef<HTMLInputElement>(null);
 
   const form = useForm({
     defaultValues: {
@@ -122,6 +125,26 @@ export function EditProductDialog({ product, children, onProductUpdated }: EditP
           imageUrl = uploadResult.data?.url || null;
         }
 
+        // Upload gallery images
+        const galleryUrls: string[] = [...galleryPreviews.slice(0, product.gallery?.length || 0)];
+        for (const galleryFile of galleryFiles) {
+          const uploadFormData = new FormData();
+          uploadFormData.append('file', galleryFile);
+          uploadFormData.append('folder', 'gallery');
+
+          const uploadResponse = await fetch('/api/upload', {
+            method: 'POST',
+            body: uploadFormData,
+          });
+
+          if (!uploadResponse.ok) {
+            throw new Error('Failed to upload gallery image');
+          }
+
+          const uploadResult = await uploadResponse.json();
+          galleryUrls.push(uploadResult.data?.url);
+        }
+
         // Update product with JSON data
         const productData = {
           name: value.name,
@@ -129,6 +152,7 @@ export function EditProductDialog({ product, children, onProductUpdated }: EditP
           categoryId: parseInt(value.categoryId),
           description: value.description || undefined,
           image: imageUrl,
+          gallery: galleryUrls,
           items: cleanedItems,
         };
 
@@ -194,9 +218,14 @@ export function EditProductDialog({ product, children, onProductUpdated }: EditP
       );
       setImageFile(null);
       setImagePreview(product.image || null);
+      setGalleryFiles([]);
+      setGalleryPreviews(product.gallery || []);
       setSubmitError(null);
       if (fileInputRef.current) {
         fileInputRef.current.value = '';
+      }
+      if (galleryInputRef.current) {
+        galleryInputRef.current.value = '';
       }
     }
   }, [open, product, form]);
@@ -221,6 +250,39 @@ export function EditProductDialog({ product, children, onProductUpdated }: EditP
     }
   };
 
+  const handleGalleryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (files) {
+      const newGalleryFiles = Array.from(files);
+      setGalleryFiles([...galleryFiles, ...newGalleryFiles]);
+
+      // Create previews
+      newGalleryFiles.forEach((file) => {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setGalleryPreviews((prev) => [...prev, reader.result as string]);
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+  };
+
+  const removeGalleryImage = (index: number, isExisting: boolean) => {
+    if (isExisting) {
+      // Remove from existing gallery
+      const updatedGallery = galleryPreviews.filter((_, i) => i !== index);
+      setGalleryPreviews(updatedGallery);
+    } else {
+      // Remove from new gallery files
+      const newIndex = index - (product.gallery?.length || 0);
+      setGalleryFiles((prev) => prev.filter((_, i) => i !== newIndex));
+      setGalleryPreviews((prev) => prev.filter((_, i) => i !== index));
+    }
+    if (galleryInputRef.current) {
+      galleryInputRef.current.value = '';
+    }
+  };
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
@@ -231,7 +293,7 @@ export function EditProductDialog({ product, children, onProductUpdated }: EditP
           </Button>
         )}
       </DialogTrigger>
-      <DialogContent className="sm:max-w-4xl">
+      <DialogContent className="sm:max-w-6xl">
         <DialogHeader>
           <DialogTitle>Edit Product</DialogTitle>
           <DialogDescription>
@@ -250,7 +312,7 @@ export function EditProductDialog({ product, children, onProductUpdated }: EditP
               {submitError}
             </div>
           )}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 py-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 py-2">
             {/* Left Column */}
             <FieldGroup>
               {/* Product Name */}
@@ -276,7 +338,7 @@ export function EditProductDialog({ product, children, onProductUpdated }: EditP
                 }}
               />
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-3">
                 {/* Category */}
                 <form.Field
                   name="categoryId"
@@ -471,6 +533,53 @@ export function EditProductDialog({ product, children, onProductUpdated }: EditP
                 );
               }}
             />
+
+            {/* Gallery */}
+            <Field>
+              <FieldLabel>Product Gallery</FieldLabel>
+              <FieldDescription>Upload additional product images (PNG, JPG up to 5MB each)</FieldDescription>
+              <FieldContent>
+                <div className="grid grid-cols-3 gap-2 mb-2">
+                  {galleryPreviews.map((preview, index) => (
+                    <div key={index} className="relative aspect-square rounded-lg overflow-hidden bg-muted">
+                      <Image
+                        src={preview}
+                        alt={`Gallery ${index + 1}`}
+                        fill
+                        className="object-cover"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => removeGalleryImage(index, index < (product.gallery?.length || 0))}
+                        className="absolute top-1 right-1 p-1 bg-background/90 rounded-full hover:bg-background text-muted-foreground hover:text-foreground transition-colors"
+                      >
+                        <X className="h-3 w-3" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+                <label
+                  htmlFor="edit-gallery-upload"
+                  className="flex flex-col items-center justify-center w-full h-20 border-2 border-dashed border-border rounded-lg cursor-pointer bg-muted hover:bg-muted/80 transition-colors"
+                >
+                  <div className="flex flex-col items-center justify-center py-3">
+                    <Plus className="h-5 w-5 text-muted-foreground mb-1" />
+                    <p className="text-xs text-muted-foreground text-center">
+                      Click to add gallery images
+                    </p>
+                  </div>
+                </label>
+                <input
+                  ref={galleryInputRef}
+                  id="edit-gallery-upload"
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  onChange={handleGalleryChange}
+                  className="hidden"
+                />
+              </FieldContent>
+            </Field>
           </div>
         </form>
         <DialogFooter>

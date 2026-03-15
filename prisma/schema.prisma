@@ -37,6 +37,7 @@ model Product {
   items       String[]
   price       Decimal  @db.Decimal(10, 2)
   image       String?
+  gallery     String[] @default([])
   isActive    Boolean  @default(true)
   isStaffPick Boolean  @default(false)
   createdAt   DateTime @default(now())

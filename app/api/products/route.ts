@@ -62,7 +62,7 @@ export async function POST(request: NextRequest) {
       return authResult.response;
     }
 
-    const { name, price, categoryId, description, img, items } = await validateBody(
+    const { name, price, categoryId, description, img, gallery, items } = await validateBody(
       request,
       createProductSchema
     );
@@ -82,6 +82,7 @@ export async function POST(request: NextRequest) {
         description,
         items: items ?? [],
         image: img,
+        gallery: gallery ?? [],
         category: {
           connect: { id: categoryId },
         },
