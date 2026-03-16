@@ -132,7 +132,7 @@ export default function CategoryPage() {
       <StoreNavbar />
 
       {/* Breadcrumbs */}
-      <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mt-25">
+      <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mt-1">
         <nav className="flex items-center gap-2 text-sm text-zinc-600 mb-8 pointer-coarse:">
           <Link href="/browse" className="hover:text-zinc-900 transition-colors">
             Browse

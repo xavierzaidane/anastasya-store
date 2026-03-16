@@ -216,6 +216,9 @@ export function ProductDetailDialogAdvanced({
                   md:grid md:grid-cols-2
                 "
               >
+                <Dialog.Description className="sr-only">
+                  Product details for {liveProduct.name}
+                </Dialog.Description>
 
                 <div className="hidden md:flex bg-zinc-100 items-center justify-center p-0 relative min-h-full">
                   {!imageLoaded && !imageError && (

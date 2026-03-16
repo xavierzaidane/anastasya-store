@@ -31,7 +31,7 @@ export default async function BlogPage() {
 		<section className="w-full min-h-screen ">
 			<StoreNavbar />
 
-			<div className="px-4 sm:px-6 lg:px-8 py-8 max-w-6xl mx-auto mt-20">
+		<div className="px-4 sm:px-6 lg:px-8 py-8 max-w-6xl mx-auto mt-1">
 				{/* Header */}
 				<div className="mb-10">
 					<h1 className="text-3xl sm:text-4xl font-semibold font-mono text-zinc-900 tracking-tight mb-3">

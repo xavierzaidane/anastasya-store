@@ -65,9 +65,9 @@ export default function Footer() {
             </div>
 
             <p className="text-sm text-zinc-600 mb-auto">
-              I built this because I was inspired by UI designs I&apos;ve seen on the internet, with some of my own tweaks and creativity. This page currently serves no purpose other than an experiment.
+              We craft beautiful floral arrangements for every occasion. From intimate moments to grand celebrations, our fresh flowers and expert designs bring joy and elegance to your special days.
             </p>
-            <p className="text-sm text-zinc-500 mt-auto pt-8">© 2025 Curated Supply. All rights reserved.</p>
+            <p className="text-sm text-zinc-500 mt-auto pt-8">© 2025 Flower Bliss. All rights reserved.</p>
           </div>
 
           <div className="flex flex-col">
@@ -75,81 +75,79 @@ export default function Footer() {
               <div>
                 <h3 className="font-medium text-zinc-600 mb-4 tracking-tight">Navigation</h3>
                 <ul className="space-y-1">
-                  <li><a href="/discover" className="text-zinc-600 hover:text-zinc-900 transition-colors duration-200 text-sm">Discover</a></li>
-                  <li><a href="/lists" className="text-zinc-600 hover:text-zinc-900 transition-colors duration-200 text-sm">Lists</a></li>
-                  <li><a href="/brands" className="text-zinc-600 hover:text-zinc-900 transition-colors duration-200 text-sm">Brands</a></li>
-                  <li><a href="/categories" className="text-zinc-600 hover:text-zinc-900 transition-colors duration-200 text-sm">Categories</a></li>
-                  <li><a href="/index" className="text-zinc-600 hover:text-zinc-900 transition-colors duration-200 text-sm">Index</a></li>
+                  <li><a href="/" className="text-zinc-600 hover:text-zinc-900 transition-colors duration-200 text-sm">Discover</a></li>
+                  <li><a href="/browse" className="text-zinc-600 hover:text-zinc-900 transition-colors duration-200 text-sm">Browse</a></li>
+                  <li><a href="/blog" className="text-zinc-600 hover:text-zinc-900 transition-colors duration-200 text-sm">Blog</a></li>
+                  <li><a href="#" className="text-zinc-600 hover:text-zinc-900 transition-colors duration-200 text-sm">Care Guide</a></li>
+                  <li><a href="#" className="text-zinc-600 hover:text-zinc-900 transition-colors duration-200 text-sm">Contact</a></li>
                 </ul>
               </div>
               <div>
                 <h3 className="font-medium text-zinc-600 mb-4 tracking-tight">About</h3>
                 <ul className="space-y-1">
-                  <li><a href="/info" className="text-zinc-600 hover:text-zinc-900 transition-colors duration-200 text-sm">Info</a></li>
+                  <li><a href="#" className="text-zinc-600 hover:text-zinc-900 transition-colors duration-200 text-sm">About Us</a></li>
                   <li><Link href="/blog" className="text-zinc-600 hover:text-zinc-900 transition-colors duration-200 text-sm">Blog</Link></li>
-                  <li><a href="/legal" className="text-zinc-600 hover:text-zinc-900 transition-colors duration-200 text-sm">Legal</a></li>
+                  <li><a href="#" className="text-zinc-600 hover:text-zinc-900 transition-colors duration-200 text-sm">Shipping Info</a></li>
                 </ul>
               </div>
               <div>
                 <h3 className="font-medium text-zinc-600 mb-4 tracking-tight">Contact</h3>
                 <ul className="space-y-1">
-                  <li><a href="https://twitter.com/mantha_dev" className="text-zinc-600 hover:text-zinc-900 transition-colors duration-200 text-sm">Twitter</a></li>
-                  <li><a href="mailto:" className="text-zinc-600 hover:text-zinc-900 transition-colors duration-200 text-sm">Email</a></li>
+                  <li><a href="https://wa.me/62" className="text-zinc-600 hover:text-zinc-900 transition-colors duration-200 text-sm">WhatsApp</a></li>
+                  <li><a href="mailto:hello@flowerbliss.com" className="text-zinc-600 hover:text-zinc-900 transition-colors duration-200 text-sm">Email</a></li>
                 </ul>
               </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-auto">
               <div>
-                <h3 className="font-medium text-zinc-600 mb-4 tracking-tight">Categories</h3>
+                <h3 className="font-medium text-zinc-600 mb-4 tracking-tight">Flower Types</h3>
                 <ul className="space-y-1">
-                  <li><a href="/categories/tech" className="text-zinc-600 hover:text-zinc-900 transition-colors duration-200 text-sm">Tech</a></li>
-                  <li><a href="/categories/home" className="text-zinc-600 hover:text-zinc-900 transition-colors duration-200 text-sm">Home</a></li>
-                  <li><a href="/categories/workspace" className="text-zinc-600 hover:text-zinc-900 transition-colors duration-200 text-sm">Workspace</a></li>
-                  <li><a href="/categories/carry" className="text-zinc-600 hover:text-zinc-900 transition-colors duration-200 text-sm">Carry</a></li>
-                  <li><a href="/categories/lifestyle" className="text-zinc-600 hover:text-zinc-900 transition-colors duration-200 text-sm">Lifestyle</a></li>
-                  <li><a href="/categories/personal" className="text-zinc-600 hover:text-zinc-900 transition-colors duration-200 text-sm">Personal</a></li>
-                  <li><a href="/categories/books" className="text-zinc-600 hover:text-zinc-900 transition-colors duration-200 text-sm">Books</a></li>
-                  <li><a href="/categories/travel" className="text-zinc-600 hover:text-zinc-900 transition-colors duration-200 text-sm">Travel</a></li>
+                  <li><a href="/browse?type=roses" className="text-zinc-600 hover:text-zinc-900 transition-colors duration-200 text-sm">Roses</a></li>
+                  <li><a href="/browse?type=tulips" className="text-zinc-600 hover:text-zinc-900 transition-colors duration-200 text-sm">Tulips</a></li>
+                  <li><a href="/browse?type=lilies" className="text-zinc-600 hover:text-zinc-900 transition-colors duration-200 text-sm">Lilies</a></li>
+                  <li><a href="/browse?type=daisies" className="text-zinc-600 hover:text-zinc-900 transition-colors duration-200 text-sm">Daisies</a></li>
+                  <li><a href="/browse?type=sunflowers" className="text-zinc-600 hover:text-zinc-900 transition-colors duration-200 text-sm">Sunflowers</a></li>
+                  <li><a href="/browse?type=orchids" className="text-zinc-600 hover:text-zinc-900 transition-colors duration-200 text-sm">Orchids</a></li>
+                  <li><a href="/browse?type=carnations" className="text-zinc-600 hover:text-zinc-900 transition-colors duration-200 text-sm">Carnations</a></li>
+                  <li><a href="/browse?type=mixed" className="text-zinc-600 hover:text-zinc-900 transition-colors duration-200 text-sm">Mixed Bouquets</a></li>
                 </ul>
               </div>
               <div>
-                <h3 className="font-medium text-zinc-600 mb-4 tracking-tight">Brands</h3>
+                <h3 className="font-medium text-zinc-600 mb-4 tracking-tight">Occasions</h3>
                 <ul className="space-y-1">
-                  <li><a href="/brands/apple" className="text-zinc-600 hover:text-zinc-900 transition-colors duration-200 text-sm">Apple</a></li>
-                  <li><a href="/brands/nomad" className="text-zinc-600 hover:text-zinc-900 transition-colors duration-200 text-sm">Nomad</a></li>
-                  <li><a href="/brands/grovemade" className="text-zinc-600 hover:text-zinc-900 transition-colors duration-200 text-sm">Grovemade</a></li>
-                  <li><a href="/brands/dyson" className="text-zinc-600 hover:text-zinc-900 transition-colors duration-200 text-sm">Dyson</a></li>
-                  <li><a href="/brands/herman-miller" className="text-zinc-600 hover:text-zinc-900 transition-colors duration-200 text-sm">Herman Miller</a></li>
-                  <li><a href="/brands/ferrari" className="text-zinc-600 hover:text-zinc-900 transition-colors duration-200 text-sm">Ferrari</a></li>
-                  <li><a href="/brands/omega" className="text-zinc-600 hover:text-zinc-900 transition-colors duration-200 text-sm">Omega</a></li>
-                  <li><a href="/brands/rolex" className="text-zinc-600 hover:text-zinc-900 transition-colors duration-200 text-sm">Rolex</a></li>
+                  <li><a href="/browse?occasion=birthday" className="text-zinc-600 hover:text-zinc-900 transition-colors duration-200 text-sm">Birthday</a></li>
+                  <li><a href="/browse?occasion=wedding" className="text-zinc-600 hover:text-zinc-900 transition-colors duration-200 text-sm">Wedding</a></li>
+                  <li><a href="/browse?occasion=anniversary" className="text-zinc-600 hover:text-zinc-900 transition-colors duration-200 text-sm">Anniversary</a></li>
+                  <li><a href="/browse?occasion=congratulations" className="text-zinc-600 hover:text-zinc-900 transition-colors duration-200 text-sm">Congratulations</a></li>
+                  <li><a href="/browse?occasion=sympathy" className="text-zinc-600 hover:text-zinc-900 transition-colors duration-200 text-sm">Sympathy</a></li>
+                  <li><a href="/browse?occasion=get-well" className="text-zinc-600 hover:text-zinc-900 transition-colors duration-200 text-sm">Get Well</a></li>
+                  <li><a href="/browse?occasion=love" className="text-zinc-600 hover:text-zinc-900 transition-colors duration-200 text-sm">Love & Romance</a></li>
+                  <li><a href="/browse?occasion=just-because" className="text-zinc-600 hover:text-zinc-900 transition-colors duration-200 text-sm">Just Because</a></li>
                 </ul>
               </div>
               <div>
-                <h3 className="font-medium text-zinc-600 mb-4 tracking-tight">Lists</h3>
+                <h3 className="font-medium text-zinc-600 mb-4 tracking-tight">Collections</h3>
                 <ul className="space-y-1">
-                  <li><a href="/lists/brutalist-picks" className="text-zinc-600 hover:text-zinc-900 transition-colors duration-200 text-sm">Brutalist Picks</a></li>
-                  <li><a href="/lists/cult-of-coffee" className="text-zinc-600 hover:text-zinc-900 transition-colors duration-200 text-sm">Cult of Coffee</a></li>
-                  <li><a href="/lists/for-your-coffee-table" className="text-zinc-600 hover:text-zinc-900 transition-colors duration-200 text-sm">For Your Coffee Table</a></li>
-                  <li><a href="/lists/minimalist-objects" className="text-zinc-600 hover:text-zinc-900 transition-colors duration-200 text-sm">Minimalist Objects</a></li>
-                  <li><a href="/lists/audiophile-core" className="text-zinc-600 hover:text-zinc-900 transition-colors duration-200 text-sm">Audiophile Core</a></li>
-                  <li><a href="/lists/home-office-goals" className="text-zinc-600 hover:text-zinc-900 transition-colors duration-200 text-sm">Home Office Goals</a></li>
-                  <li><a href="/lists/black-only" className="text-zinc-600 hover:text-zinc-900 transition-colors duration-200 text-sm">Black Only</a></li>
-                  <li><a href="/lists/deskworthy" className="text-zinc-600 hover:text-zinc-900 transition-colors duration-200 text-sm">Deskworthy</a></li>
+                  <li><a href="#" className="text-zinc-600 hover:text-zinc-900 transition-colors duration-200 text-sm">Romantic Bliss</a></li>
+                  <li><a href="#" className="text-zinc-600 hover:text-zinc-900 transition-colors duration-200 text-sm">Vibrant Garden</a></li>
+                  <li><a href="#" className="text-zinc-600 hover:text-zinc-900 transition-colors duration-200 text-sm">Elegant Arrangement</a></li>
+                  <li><a href="#" className="text-zinc-600 hover:text-zinc-900 transition-colors duration-200 text-sm">Minimalist Chic</a></li>
+                  <li><a href="#" className="text-zinc-600 hover:text-zinc-900 transition-colors duration-200 text-sm">Luxury Premium</a></li>
+                  <li><a href="#" className="text-zinc-600 hover:text-zinc-900 transition-colors duration-200 text-sm">Pastel Dreams</a></li>
+                  <li><a href="#" className="text-zinc-600 hover:text-zinc-900 transition-colors duration-200 text-sm">Bold & Beautiful</a></li>
+                  <li><a href="#" className="text-zinc-600 hover:text-zinc-900 transition-colors duration-200 text-sm">Seasonal Picks</a></li>
                 </ul>
               </div>
             </div>
 
             <div className="flex items-center gap-1.5 text-sm text-zinc-500 mt-auto pt-8 justify-center md:justify-end">
-              <span>Made by</span>
+              <span>Crafted with precision by</span>
               <a
-                href="https://mantha.vercel.app/"
+                href="#"
                 className="hover:text-zinc-900 transition-colors duration-200 font-medium tracking-tight"
-                target="_blank"
-                rel="noopener noreferrer"
               >
-                @xavierzdn
+                xavierzdn
               </a>
              
             </div>

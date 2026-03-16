@@ -156,7 +156,7 @@ export default function ProductGrid() {
 
   return (
     <div>
-      <div className="py-2 mt-[-1rem]">
+      <div className="py-2 mt-5">
         <div className="w-full max-w-6xl mx-auto px-4 sm:px-8">
           <div className="flex flex-nowrap items-center gap-2 overflow-x-auto pb-2 -mb-2 sm:flex-wrap sm:overflow-x-visible sm:pb-0 sm:-mb-0 max-w-[85vw]">
             {filterButtons.map((filter) => (

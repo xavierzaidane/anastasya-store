@@ -68,7 +68,7 @@ export default function BrowsePage() {
   return (
     <section className="w-full">
       <StoreNavbar />
-      <div className="w-full max-w-6xl mx-auto px-4 sm:px-8 mt-23">
+      <div className="w-full max-w-6xl mx-auto px-4 sm:px-8 mt-1">
         <div className="mb-8 py-8">
           <h1 className="text-3xl font-semibold font-mono text-zinc-900 tracking-tight mb-2">
             Browse by Category
