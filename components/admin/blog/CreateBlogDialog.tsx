@@ -175,7 +175,7 @@ export function CreateBlogDialog({ children, onPostCreated }: CreateBlogDialogPr
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         {children || (
-          <Button className="gap-2 rounded-xl">
+          <Button className="gap-2 rounded-lg">
             <Plus className="h-4 w-4" />
             Add Post
           </Button>

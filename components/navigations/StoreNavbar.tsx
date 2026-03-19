@@ -18,20 +18,18 @@ export default function StoreNavbar() {
     return false;
   };
 
-  const isHero = pathname === '/';
   const navItems = [
     { href: '/', label: 'Discover' },
     { href: '/browse', label: 'Browse' }, 
     { href: '/blog', label: 'Blog' },
-
   ];
 
   return (
-    <nav className={`w-full z-50 py-4 sm:py-6 ${isHero ? 'absolute top-0' : 'sticky top-0  '}`}>
+    <nav className={`w-full z-50 py-4 sm:py-6 ${pathname === '/' ? 'absolute top-0' : 'sticky top-0'}`}>
       <div className="w-full max-w-6xl mx-auto px-4 sm:px-2">
         <div className="flex items-center justify-between gap-4">
           <div className="flex-1 flex items-center justify-start">
-            <Link href="/" className={`p-2 rounded-full transition-colors duration-200 ${isHero ? 'hover:bg-white/10' : 'hover:bg-zinc-100'}`}>
+            <Link href="/" className="p-2 rounded-full transition-colors duration-200 hover:bg-zinc-100">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="24"
@@ -39,7 +37,7 @@ export default function StoreNavbar() {
               viewBox="0 0 24 24"
               fill="none"
               color="currentColor"
-              className={`${isHero ? 'text-white' : 'text-zinc-900'}`}
+              className="text-zinc-900"
             >
               <path
                 d="M12 7.5V16.5M15.8971 9.75L8.10289 14.25M15.897 14.25L8.10275 9.75"
@@ -60,15 +58,15 @@ export default function StoreNavbar() {
           </div>
 
           <div className="shrink-0">
-            <div className={`flex items-center rounded-full p-1 gap-1 ${isHero ? 'border border-zinc-200/10' : 'bg-white border border-zinc-200/80'}`}>
+            <div className="flex items-center rounded-full p-1 gap-1 bg-white border border-zinc-200/80">
               {navItems.map((item) => (
                 <Link
                   key={item.href}
                   href={item.href}
                   className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-sm font-medium transition-all duration-200 ${
                     isActive(item.href)
-                      ? isHero ? 'bg-white/20 text-white' : 'bg-zinc-100 text-zinc-900'
-                      : isHero ? 'text-white/70 hover:text-white' : 'text-zinc-500 hover:text-zinc-900'
+                      ? 'bg-zinc-100 text-zinc-900'
+                      : 'text-zinc-500 hover:text-zinc-900'
                   }`}
                 >
                   {item.label}
@@ -78,18 +76,18 @@ export default function StoreNavbar() {
           </div>
 
           <div className="flex-1 flex items-center justify-end gap-1 sm:gap-2">
-            <button className={`p-2 rounded-full transition-colors duration-200 ${isHero ? 'hover:bg-white/10' : 'hover:bg-zinc-100'}`} aria-label="Search">
-              <SearchIcon className={`w-5 h-5 ${isHero ? 'text-white/70' : 'text-zinc-500'}`} />
+            <button className="p-2 rounded-full transition-colors duration-200 hover:bg-zinc-100" aria-label="Search">
+              <SearchIcon className="w-5 h-5 text-zinc-500" />
             </button>
             
             <button 
               onClick={() => setSavedItemsSheetOpen(true)}
-              className={`relative p-2 rounded-full transition-colors duration-200 ${isHero ? 'hover:bg-white/10' : 'hover:bg-zinc-100'}`} 
+              className="relative p-2 rounded-full transition-colors duration-200 hover:bg-zinc-100" 
               aria-label="Saved items"
             >
-              <Handbag className={`w-5 h-5 ${isHero ? 'text-white/70' : 'text-zinc-500'}`} />
+              <Handbag className="w-5 h-5 text-zinc-500" />
               {totalItems > 0 && (
-                <span className={`absolute -top-0.5 -right-0.5 min-w-4.5 h-4.5 flex items-center justify-center px-1 text-[10px] font-semibold rounded-full ${isHero ? 'text-black bg-white' : 'text-white bg-zinc-900'}`}>
+                <span className="absolute -top-0.5 -right-0.5 min-w-4.5 h-4.5 flex items-center justify-center px-1 text-[10px] font-semibold rounded-full text-white bg-zinc-900">
                   {totalItems > 99 ? '99+' : totalItems}
                 </span>
               )}

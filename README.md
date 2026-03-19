@@ -68,13 +68,7 @@ public/              # Static Assets
    npm run dev
    ```
 
-## 🎨 Theme & Design System
-The project uses a centralized theme defined in [app/globals.css](app/globals.css):
-- **Primary Color**: `#7c9082` (Sage Green)
-- **Typography**: 
-  - `font-mono`: Data, technical labels, and headers.
-  - `font-serif`: Editorial titles and article content.
-  - `font-sans`: Utility UI elements.
+
 
 ## 📄 License
 Private project. All rights reserved.

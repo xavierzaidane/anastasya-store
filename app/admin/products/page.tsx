@@ -117,27 +117,25 @@ export default function ProductsPage() {
             Manage your flower bouquet inventory
           </p>
         </div>
-        <CreateProductDialog onProductCreated={handleProductCreated} />
-      </div>
-
-      <div className="flex items-center gap-2">
-        <label className="text-sm font-medium text-foreground">Filter by Category:</label>
-        <Select value={selectedCategory} onValueChange={(value) => {
-          setSelectedCategory(value === 'all' ? '' : value);
-          setPage(1);
-        }}>
-          <SelectTrigger className="w-48">
-            <SelectValue placeholder="All Categories" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Categories</SelectItem>
-            {categories.map((category) => (
-              <SelectItem key={category.id} value={category.id.toString()}>
-                {category.name}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        <div className="flex items-center gap-2">
+          <CreateProductDialog onProductCreated={handleProductCreated} />
+          <Select value={selectedCategory} onValueChange={(value) => {
+            setSelectedCategory(value === 'all' ? '' : value);
+            setPage(1);
+          }}>
+            <SelectTrigger className="w-48">
+              <SelectValue placeholder="All Categories" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Categories</SelectItem>
+              {categories.map((category) => (
+                <SelectItem key={category.id} value={category.id.toString()}>
+                  {category.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
       </div>
 
       {error && (

@@ -263,7 +263,7 @@ export function CreateProductDialog({ children, onProductCreated }: CreateProduc
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         {children || (
-          <Button className="gap-2 rounded-xl">
+          <Button className="gap-2 rounded-lg">
             <Plus className="h-4 w-4" />
             Add Product
           </Button>

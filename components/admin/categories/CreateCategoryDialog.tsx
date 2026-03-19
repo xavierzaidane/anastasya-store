@@ -181,7 +181,7 @@ export function CreateCategoryDialog({ children, onCategoryCreated }: CreateCate
     }}>
       <DialogTrigger asChild>
         {children || (
-          <Button className="gap-2">
+          <Button className="gap-2 rounded-lg">
             <Plus className="h-4 w-4" />
             Add Category
           </Button>
