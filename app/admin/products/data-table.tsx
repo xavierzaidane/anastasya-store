@@ -34,7 +34,6 @@ interface DataTableProps<TData, TValue> {
   data: TData[];
   isLoading?: boolean;
   searchPlaceholder?: string;
-  // Server-side pagination props
   page: number;
   totalPages: number;
   total: number;

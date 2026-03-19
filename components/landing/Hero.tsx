@@ -1,63 +1,48 @@
 "use client";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { Search } from "lucide-react";
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
 
 export default function Hero() {
-  const router = useRouter();
-  const [searchQuery, setSearchQuery] = useState("");
-
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (searchQuery.trim()) {
-      router.push(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
-    }
-  };
-
   return (
-    <section
-      className="text-left min-h-screen relative flex items-center justify-start"
-      style={{
-        backgroundImage: "url('/bungahero.jpg')",
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        backgroundAttachment: "fixed",
-      }}
-    >
-      <div className="absolute inset-0 bg-black/20"></div>
-      <motion.div
-        className="px-4 sm:px-6 lg:px-8 relative z-10"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
-      >
-        <h1 className="text-2xl sm:text-3xl lg:text-8xl font-heading tracking-tight text-white max-w-3xl">
-          Discover Our Flower Shop&apos;s Delightful Collection
-        </h1>
-
-
-
-        <form 
-          onSubmit={handleSearch}
-          className="mt-8 max-w-md flex items-center backdrop-blur-sm border border-zinc-200/10 rounded-full pr-3"
+    <section className="relative min-h-screen flex items-center bg-[#0e1b08]">
+      <div className="w-full max-w-7xl mx-auto px-6 sm:px-12 lg:px-20 py-20">
+        <motion.div
+          className="max-w-5xl"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1, ease: "easeOut" }}
         >
-          <input
-            placeholder="Search products..."
-            className="grow bg-transparent px-5 py-3 text-sm text-zinc-900 placeholder-zinc-400 focus:outline-none"
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-          <button
-            type="submit"
-            className="px-3 flex items-center text-zinc-400 hover:text-zinc-600 transition-colors"
-            aria-label="Search"
+      
+
+          {/* Bold headline with refined typography */}
+          <motion.h1
+            className="text-5xl sm:text-7xl lg:text-[7rem] xl:text-[10rem] font-heading font-medium leading-[0.85] tracking-tight text-white"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.3 }}
           >
-            <Search className="w-5 h-5" />
-          </button>
-        </form>
-      </motion.div>
+            Where Nature
+            <br />
+            <span className="text-[#c8deb0] italic font-['Playfair_Display']">Meets Art</span>
+          </motion.h1>
+
+          {/* Supporting text with better contrast */}
+          <motion.div
+            className="mt-10 sm:mt-14 max-w-xl space-y-5"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.5 }}
+          >
+            <p className="text-white/90 text-lg sm:text-xl font-light leading-relaxed">
+              Every bloom tells a story. We handpick the finest flowers from local growers to create arrangements that transform moments into memories.
+            </p>
+   
+          </motion.div>
+
+       
+        </motion.div> 
+      </div>
     </section>
   );
 }

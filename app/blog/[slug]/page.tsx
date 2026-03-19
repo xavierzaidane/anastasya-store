@@ -56,14 +56,14 @@ function BlogCard({ post }: { post: StorefrontBlog }) {
         className="w-full h-full text-left focus-visible:outline-none"
         aria-label={`Read ${post.title}`}
       >
-        <div className="rounded-xl overflow-hidden border bg-white border-zinc-200/80   transition-shadow duration-300 h-full flex flex-col">
+        <div className="rounded-xl overflow-hidden border bg-card border-border/80 transition-all duration-300 h-full flex flex-col hover:border-primary/40 hover:shadow-xl hover:shadow-primary/5">
           {/* Image */}
-          <div className="aspect-video bg-pink-700 flex items-center justify-center relative overflow-hidden">
+          <div className="aspect-video bg-muted flex items-center justify-center relative overflow-hidden">
             <Image
               src={post.image}
               alt={post.title}
               fill
-              className="object-cover"
+              className="object-cover transition-transform duration-500 group-hover:scale-105"
             />
           </div>
 
@@ -71,38 +71,38 @@ function BlogCard({ post }: { post: StorefrontBlog }) {
           <div className="p-5 sm:p-6 flex flex-col grow">
             {/* Category & Read Time */}
             <div className="flex items-center gap-3 mb-3">
-              <span className="px-3 py-1  text-pink-700 text-xs font-medium rounded-full">
+              <span className="px-3 py-1 bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider rounded-full font-mono">
                 {post.category}
               </span>
-              <div className="flex items-center gap-1.5 text-xs text-zinc-500">
+              <div className="flex items-center gap-1.5 text-xs text-muted-foreground font-mono">
                 <ClockIcon size={14} />
                 <span>{post.readTime} min read</span>
               </div>
             </div>
 
             {/* Title */}
-            <h3 className="text-lg sm:text-xl font-semibold text-zinc-900 mb-2 group-hover:text-pink-600 transition-colors duration-200 line-clamp-2 min-h-12 sm:min-h-14">
+            <h3 className="text-lg sm:text-xl font-semibold text-foreground mb-2 group-hover:text-primary transition-colors duration-200 line-clamp-2 min-h-12 sm:min-h-14 font-serif">
               {post.title}
             </h3>
 
    
             {/* Author & Date */}
-            <div className="flex items-center justify-between pt-4 border-t border-zinc-100 mt-auto">
+            <div className="flex items-center justify-between pt-4 border-t border-border/40 mt-auto">
               <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-full flex items-center justify-center">
-                  <span className="text-xs font-medium text-pink-700">
+                <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+                  <span className="text-[10px] font-bold text-primary">
                     {post.author.initial}
                   </span>
                 </div>
                 <div>
-                  <p className="text-xs font-medium text-zinc-900">
+                  <p className="text-[10px] font-bold text-foreground uppercase tracking-tight">
                     {post.author.name}
                   </p>
-                  <p className="text-xs text-zinc-500">{post.date}</p>
+                  <p className="text-[10px] text-muted-foreground uppercase">{post.date}</p>
                 </div>
               </div>
-              <span className="text-xs font-medium text-pink-600 group-hover:text-pink-700 transition-colors duration-200">
-                Read →
+              <span className="text-xs font-bold text-primary group-hover:translate-x-1 transition-transform duration-300 font-mono">
+                READ →
               </span>
             </div>
           </div>
@@ -130,7 +130,7 @@ function BlogContent({ content }: { content: string }) {
       elements.push(
         <h2
           key={index}
-          className="text-2xl font-bold text-zinc-900 mt-8 mb-4 first:mt-0"
+          className="text-2xl font-bold text-foreground mt-8 mb-4 first:mt-0 font-serif"
         >
           {trimmedLine.slice(3)}
         </h2>
@@ -149,7 +149,7 @@ function BlogContent({ content }: { content: string }) {
       elements.push(
         <li
           key={index}
-          className="text-zinc-700 leading-relaxed ml-4"
+          className="text-muted-foreground leading-relaxed ml-4"
           dangerouslySetInnerHTML={{ __html: formattedLine.slice(2) }}
         />
       );
@@ -162,7 +162,7 @@ function BlogContent({ content }: { content: string }) {
       elements.push(
         <li
           key={index}
-          className="text-zinc-700 leading-relaxed ml-4 list-decimal"
+          className="text-muted-foreground leading-relaxed ml-4 list-decimal"
           dangerouslySetInnerHTML={{ __html: numberedMatch[2].replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') }}
         />
       );
@@ -173,7 +173,7 @@ function BlogContent({ content }: { content: string }) {
     elements.push(
       <p
         key={index}
-        className="text-base text-zinc-700 leading-relaxed mb-4"
+        className="text-base text-muted-foreground leading-relaxed mb-4"
         dangerouslySetInnerHTML={{ __html: formattedLine }}
       />
     );
@@ -201,21 +201,21 @@ export default async function BlogDetailPage({ params }: PageProps) {
     <section className="w-full min-h-screen">
       <StoreNavbar />
 
-      <div className="px-8 sm:px-6 lg:px-8 py-8 max-w-6xl mx-auto mt-20">
+      <div className="px-4 sm:px-6 lg:px-8 py-8 max-w-6xl mx-auto mt-20">
         {/* Back Button */}
         <Link
           href="/blog"
-          className="inline-flex items-center gap-2 text-zinc-600 hover:text-zinc-900 mb-6 transition-colors group"
+          className="inline-flex items-center gap-2 text-muted-foreground hover:text-primary mb-6 transition-all group font-mono text-xs font-bold uppercase tracking-widest"
           aria-label="Back to blog"
         >
           <ArrowLeftIcon />
-          <span className="font-medium">Back to Blog</span>
+          <span>Back to Blog</span>
         </Link>
 
         {/* Article */}
-        <article className="bg-white rounded-xl border border-zinc-200/80 overflow-hidden">
+        <article className="bg-card rounded-xl border border-border/80 overflow-hidden shadow-sm">
           {/* Header Image */}
-          <div className="aspect-video bg-pink-700 flex items-center justify-center relative overflow-hidden">
+          <div className="aspect-video bg-muted flex items-center justify-center relative overflow-hidden">
             <Image
               src={post.image}
               alt={post.title}
@@ -229,32 +229,32 @@ export default async function BlogDetailPage({ params }: PageProps) {
           <div className="p-6 sm:p-8 md:p-12">
             {/* Category & Read Time */}
             <div className="flex items-center gap-3 mb-6">
-              <span className="px-3 py-1 bg-pink-50 text-pink-700 text-sm font-medium rounded-full">
+              <span className="px-3 py-1 bg-primary/10 text-primary text-sm font-bold uppercase tracking-wider rounded-full font-mono">
                 {post.category}
               </span>
-              <div className="flex items-center gap-1.5 text-sm text-zinc-500">
+              <div className="flex items-center gap-1.5 text-sm text-muted-foreground font-mono">
                 <ClockIcon />
                 <span>{post.readTime} min read</span>
               </div>
             </div>
 
             {/* Title */}
-            <h1 className="text-3xl md:text-4xl font-bold text-zinc-900 mb-4 leading-tight">
+            <h1 className="text-3xl md:text-5xl font-bold text-foreground mb-6 leading-tight font-serif tracking-tight">
               {post.title}
             </h1>
 
             {/* Author Info */}
-            <div className="flex items-center gap-3 mb-8 pb-8 border-b border-zinc-200">
-              <div className="w-10 h-10 rounded-full bg-pink-100 flex items-center justify-center">
-                <span className="text-sm font-medium text-pink-700">
+            <div className="flex items-center gap-4 mb-10 pb-10 border-b border-border/40">
+              <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
+                <span className="text-sm font-bold text-primary">
                   {post.author.initial}
                 </span>
               </div>
               <div>
-                <p className="text-sm font-medium text-zinc-900">
+                <p className="text-sm font-bold text-foreground uppercase tracking-tight">
                   {post.author.name}
                 </p>
-                <p className="text-sm text-zinc-500">{post.date}</p>
+                <p className="text-[10px] text-muted-foreground uppercase opacity-60">{post.date}</p>
               </div>
             </div>
 
@@ -267,8 +267,8 @@ export default async function BlogDetailPage({ params }: PageProps) {
 
         {/* Related Articles */}
         {relatedPosts.length > 0 && (
-          <div className="mt-16 pb-16">
-            <h2 className="text-2xl font-bold text-zinc-900 mb-8">
+          <div className="mt-20 pb-20">
+            <h2 className="text-2xl font-bold text-foreground mb-10 font-serif">
               Suggested Articles
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">

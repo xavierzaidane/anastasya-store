@@ -73,7 +73,7 @@ export function AdminSidebar() {
       <SidebarHeader className="px-4 py-5 border-b h-15 ">
         <Link href="/admin" className="flex items-center gap-3">
           <div className="flex flex-col">
-            <span className="text-base font-semibold font-mono text-foreground tracking-tight">Anastasya Bouquet</span> 
+            <span className="text-base font-bold font-mono text-foreground tracking-tight">Anastasya Inc.</span> 
           </div>
         </Link>
       </SidebarHeader>
