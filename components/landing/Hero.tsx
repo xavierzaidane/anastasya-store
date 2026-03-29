@@ -1,6 +1,4 @@
 "use client";
-import Link from "next/link";
-import { ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
 
 export default function Hero() {
@@ -29,7 +27,7 @@ export default function Hero() {
           >
             Where Nature
             <br />
-            <span className="text-zinc-500 italic font-['Playfair_Display']">Meets Art.</span>
+            <span className="text-zinc-900 italic font-['Playfair_Display']">Meets Art.</span>
           </motion.h1>
 
           {/* Supporting text with better contrast */}

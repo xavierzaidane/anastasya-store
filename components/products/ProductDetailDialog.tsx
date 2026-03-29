@@ -272,26 +272,25 @@ export function ProductDetailDialogAdvanced({
 
                   <div className="h-8" />
 
-                  <div className="md:hidden mb-6 relative">
+                  <div className="md:hidden mb-6 relative w-full h-[50vh]">
                     {!imageLoaded && !imageError && (
-                      <div className="w-full aspect-square max-h-[40vh] bg-zinc-200 animate-pulse rounded-lg" />
+                      <div className="w-full h-full bg-zinc-200 animate-pulse rounded-lg" />
                     )}
                     {imageError ? (
-                      <div className="w-full aspect-square max-h-[40vh] flex items-center justify-center bg-zinc-100 text-zinc-500 text-sm rounded-lg">
+                      <div className="w-full h-full flex items-center justify-center bg-zinc-100 text-zinc-500 text-sm rounded-lg">
                         Image not available
                       </div>
                     ) : (
                       <img
                         src={getCurrentImage()}
                         alt={liveProduct.name}
-                        className={`w-full aspect-square max-h-[40vh] object-cover rounded-lg transition-opacity duration-300 ${
+                        className={`w-full h-full object-cover rounded-lg transition-opacity duration-300 ${
                           imageLoaded ? 'opacity-100' : 'opacity-0'
                         }`}
                         onLoad={handleImageLoad}
                         onError={handleImageError}
                       />
                     )}
-                    
                     {(liveProduct.gallery?.length || 0) > 0 && (
                       <>
                         <button
