@@ -8,10 +8,14 @@ export interface ApiResponse<T> {
 
 export interface PaginatedData<T> {
   items: T[];
-  page: number;
-  limit: number;
-  total: number;
-  totalPages: number;
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+    hasNext: boolean;
+    hasPrev: boolean;
+  };
 }
 
 // Category Types

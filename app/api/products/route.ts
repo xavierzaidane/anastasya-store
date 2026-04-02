@@ -18,20 +18,26 @@ export async function GET(request: NextRequest) {
     const url = request.url;
     const { page, limit, skip } = parsePaginationParams(url);
     const { searchParams } = new URL(url);
-    
+
     const search = searchParams.get("search") || "";
     const category = searchParams.get("category");
 
-    // Build where clause
     const where = {
-      name: {
-        contains: search,
-        mode: "insensitive" as const,
-      },
-      ...(category && { category: { slug: category } }),
+      ...(search && {
+        name: {
+          contains: search,
+          mode: "insensitive" as const,
+        },
+      }),
+      ...(category && {
+        category: {
+          is: {
+            slug: category,
+          },
+        },
+      }),
     };
 
-    // Execute queries in parallel
     const [products, total] = await Promise.all([
       prisma.product.findMany({
         where,
@@ -45,7 +51,11 @@ export async function GET(request: NextRequest) {
       prisma.product.count({ where }),
     ]);
 
-    const result = createPaginatedResult(products, total, { page, limit, skip });
+    const result = createPaginatedResult(products, total, {
+      page,
+      limit,
+      skip,
+    });
 
     return successResponse(result, "Products retrieved successfully");
   } catch (error) {

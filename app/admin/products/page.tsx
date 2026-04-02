@@ -24,6 +24,7 @@ export default function ProductsPage() {
   const [pageSize, setPageSize] = useState(10);
   const [totalPages, setTotalPages] = useState(1);
   const [total, setTotal] = useState(0);
+  const [search, setSearch] = useState('');
 
   const fetchCategories = useCallback(async () => {
     try {
@@ -52,6 +53,7 @@ export default function ProductsPage() {
         page: page.toString(),
         limit: pageSize.toString(),
         ...(categorySlug && { category: categorySlug }),
+        ...(search && { search }), 
       });
       
       const response = await fetch(`/api/products?${params}`);
@@ -60,15 +62,21 @@ export default function ProductsPage() {
       }
       
       const result: ApiResponse<PaginatedData<Product>> = await response.json();
-      setProducts(result.data.items);
-      setTotalPages(result.data.totalPages);
-      setTotal(result.data.total);
+      
+      if (result.data && Array.isArray(result.data.items)) {
+        setProducts(result.data.items);
+        setTotalPages(result.data.pagination?.totalPages || 1);
+        setTotal(result.data.pagination?.total || 0);
+      } else {
+        throw new Error('Unexpected API response format');
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
+      console.error('Error fetching products:', err);
     } finally {
       setIsLoading(false);
     }
-  }, [page, pageSize, selectedCategory, categories]);
+  }, [page, pageSize, selectedCategory, categories, search]);
 
   useEffect(() => {
     fetchCategories();
@@ -96,7 +104,7 @@ export default function ProductsPage() {
 
   const handlePageSizeChange = (newPageSize: number) => {
     setPageSize(newPageSize);
-    setPage(1); 
+    setPage(1);
   };
 
   const columns = useMemo(
@@ -157,6 +165,8 @@ export default function ProductsPage() {
         pageSize={pageSize}
         onPageChange={handlePageChange}
         onPageSizeChange={handlePageSizeChange}
+        globalFilter={search}
+        onGlobalFilterChange={setSearch}
       />
     </div>
   );
