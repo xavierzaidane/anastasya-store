@@ -8,6 +8,7 @@ import {
 const DEFAULT_PRODUCT_LIMIT = 24;
 
 export interface FetchStorefrontProductsParams {
+  page?: number;
   limit?: number;
   category?: string;
   search?: string;
@@ -22,8 +23,11 @@ export interface StorefrontProductsResult {
 export async function fetchStorefrontProducts(
   params: FetchStorefrontProductsParams = {}
 ): Promise<StorefrontProductsResult> {
-  const { limit = DEFAULT_PRODUCT_LIMIT, category, search, signal } = params;
-  const searchParams = new URLSearchParams({ limit: String(limit) });
+  const { page = 1, limit = DEFAULT_PRODUCT_LIMIT, category, search, signal } = params;
+  const searchParams = new URLSearchParams({ 
+    page: String(page),
+    limit: String(limit) 
+  });
 
   if (category) {
     searchParams.append('category', category);

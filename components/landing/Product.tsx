@@ -6,6 +6,15 @@ import { fetchStorefrontProducts } from '@/lib/storefront-products';
 import { StorefrontProduct } from '@/types/storefront';
 import { ProductDetailDialogAdvanced } from '@/components/products';
 import { useProductDialogs } from '@/hooks/use-product-dialogs';
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from '@/components/ui/pagination';
 
 interface FilterOption {
   id: string;
@@ -35,7 +44,9 @@ const formatCategoryLabel = (value?: string, fallback = 'Uncategorized') => {
 
 export default function ProductGrid() {
   const [activeFilter, setActiveFilter] = useState('all');
+  const [currentPage, setCurrentPage] = useState(1);
   const [products, setProducts] = useState<StorefrontProduct[]>([]);
+  const [totalPages, setTotalPages] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [reloadKey, setReloadKey] = useState(0);
@@ -56,8 +67,13 @@ export default function ProductGrid() {
       setError(null);
 
       try {
+        // For category filters, pass to API. For "all" or "picks", we'll filter client-side after fetching
+        const shouldPassCategory = activeFilter !== 'all' && activeFilter !== 'picks';
+
         const result = await fetchStorefrontProducts({
-          limit: 30,
+          page: currentPage,
+          limit: 12,
+          category: shouldPassCategory ? activeFilter : undefined,
           signal: controller.signal,
         });
 
@@ -66,6 +82,9 @@ export default function ProductGrid() {
         }
 
         setProducts(result.items);
+        if (result.pagination) {
+          setTotalPages(result.pagination.totalPages);
+        }
       } catch (err) {
         if (isAbortError(err)) {
           return;
@@ -91,7 +110,7 @@ export default function ProductGrid() {
       isMounted = false;
       controller.abort();
     };
-  }, [reloadKey]);
+  }, [reloadKey, currentPage, activeFilter]);
 
   const staffPickCount = useMemo(
     () => products.reduce((count, product) => (product.isStaffPick ? count + 1 : count), 0),
@@ -154,6 +173,11 @@ export default function ProductGrid() {
     setReloadKey((value) => value + 1);
   };
 
+  const handleFilterChange = (filterId: string) => {
+    setActiveFilter(filterId);
+    setCurrentPage(1); // Reset to first page when filter changes
+  };
+
   return (
     <div>
       <div className="py-2 mt-5">
@@ -163,7 +187,7 @@ export default function ProductGrid() {
               <button
                 key={filter.id}
                 type="button"
-                onClick={() => setActiveFilter(filter.id)}
+                onClick={() => handleFilterChange(filter.id)}
                 className={`flex-shrink-0 flex items-center gap-2 px-4 py-2 text-sm font-medium border rounded-full transition-colors duration-200 whitespace-nowrap ${
                   activeFilter === filter.id
                     ? 'bg-zinc-900 text-white border-zinc-900'
@@ -284,6 +308,82 @@ export default function ProductGrid() {
           <p className="pt-6 text-center text-sm text-zinc-500">No products found for this filter.</p>
         )}
       </div>
+
+      {/* Pagination Component */}
+      {!loading && totalPages > 1 && (
+        <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <Pagination>
+            <PaginationContent>
+              {/* Previous Button */}
+              <PaginationItem>
+                <PaginationPrevious
+                  href="#"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    if (currentPage > 1) {
+                      setCurrentPage(currentPage - 1);
+                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }
+                  }}
+                  className={currentPage === 1 ? 'pointer-events-none opacity-50' : ''}
+                />
+              </PaginationItem>
+
+              {/* Page Numbers */}
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => {
+                // Show limited page numbers with ellipsis
+                const isVisible =
+                  page === 1 ||
+                  page === totalPages ||
+                  (page >= currentPage - 1 && page <= currentPage + 1);
+
+                if (!isVisible) {
+                  // Show ellipsis between page ranges
+                  if (page === currentPage - 2 || page === currentPage + 2) {
+                    return (
+                      <PaginationItem key={`ellipsis-${page}`}>
+                        <PaginationEllipsis />
+                      </PaginationItem>
+                    );
+                  }
+                  return null;
+                }
+
+                return (
+                  <PaginationItem key={page}>
+                    <PaginationLink
+                      href="#"
+                      isActive={page === currentPage}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setCurrentPage(page);
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                      }}
+                    >
+                      {page}
+                    </PaginationLink>
+                  </PaginationItem>
+                );
+              })}
+
+              {/* Next Button */}
+              <PaginationItem>
+                <PaginationNext
+                  href="#"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    if (currentPage < totalPages) {
+                      setCurrentPage(currentPage + 1);
+                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }
+                  }}
+                  className={currentPage === totalPages ? 'pointer-events-none opacity-50' : ''}
+                />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
+        </div>
+      )}
 
       <ProductDetailDialogAdvanced
         product={selectedProduct}
