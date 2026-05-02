@@ -1,2 +1,0 @@
-export { ProductDetailDialogAdvanced } from './ProductDetailDialog';
-

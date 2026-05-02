@@ -1,6 +1,5 @@
 "use client";
 import Hero from '@/components/landing/Hero'
-import ProductGrid from '@/components/landing/Product';
 
 function LandingPage() {
 
