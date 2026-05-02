@@ -9,7 +9,7 @@ function LandingPage() {
 
       <div className="relative z-10">
         <Hero />
-        <ProductGrid />
+
       </div>
     </div>
   )

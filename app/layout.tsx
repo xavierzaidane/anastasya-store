@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { ABeeZee, Merriweather, Fira_Code, Playfair_Display } from "next/font/google";
 import "./globals.css";
-import { DialogProvider } from "@/components/products/DialogProvider";
 import { SavedItemsProvider } from "@/hooks/use-saved-items";
 
 const fontSans = ABeeZee({
@@ -40,9 +39,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={`${fontSans.variable} ${fontSerif.variable} ${fontMono.variable} ${fontDisplay.variable} antialiased`}>
         <SavedItemsProvider>
-          <DialogProvider>
             {children}
-          </DialogProvider>
         </SavedItemsProvider>
       </body>
     </html>

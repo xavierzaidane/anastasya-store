@@ -5,8 +5,7 @@ import { useParams } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 import StoreNavbar from '@/components/navigations/StoreNavbar';
 import Footer from '@/components/navigations/Footer';
-import { useProductDialogs } from '@/hooks/use-product-dialogs';
-import { ProductDetailDialogAdvanced } from '@/components/products';
+// product detail now routed to standalone page
 import { mapApiProductToStorefront } from '@/lib/storefront-products';
 import { StorefrontApiResponse, StorefrontProduct } from '@/types/storefront';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -41,12 +40,7 @@ export default function CategoryPage() {
     return categorySlug.charAt(0).toUpperCase() + categorySlug.slice(1);
   }, [categorySlug]);
 
-  const {
-    selectedProduct,
-    isProductDialogOpen,
-    openProductDialog,
-    closeProductDialog,
-  } = useProductDialogs();
+  // product detail now navigates to standalone page; no dialogs here
 
   useEffect(() => {
     const fetchCategory = async () => {
@@ -85,9 +79,9 @@ export default function CategoryPage() {
 
   if (isLoading) {
     return (
-      <section className="w-full">
+      <section className="w-full ">
         <StoreNavbar />
-        <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mt-25">
+        <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mb-8">
             <Skeleton className="h-4 w-32 mb-4" />
             <Skeleton className="h-10 w-64 mb-3" />
@@ -131,26 +125,26 @@ export default function CategoryPage() {
     <section className="w-full">
       <StoreNavbar />
 
-      {/* Breadcrumbs */}
-      <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mt-1">
-        <nav className="flex items-center gap-2 text-sm text-zinc-600 mb-8 pointer-coarse:">
-          <Link href="/browse" className="hover:text-zinc-900 transition-colors">
-            Browse
-          </Link>
-          <span className="text-zinc-400">/</span>
-          <span className="text-zinc-900 font-medium">{categoryName}</span>
-        </nav>
+      {/* Category Header */}
+      <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mb-8 py-8 sm:py-10 lg:py-12">
+        <div className="-mb-10 py-35">
+          <h1 className="text-3xl sm:text-4xl lg:text-4xl font-medium text-neutral-900 tracking-tight mb-3 text-center">
+            {categoryName}
+          </h1>
+
+        </div>
       </div>
 
-      {/* Category Header */}
-      <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mb-6 py-6 -mt-12 flex justify-between items-start">
-        <div>
-          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-semibold font-mono text-zinc-900 tracking-tight mb-2">
-            {categoryName} Collection
-          </h1>
-          <p className="text-sm sm:text-base text-zinc-600">
-            Explore our {products.length} beautiful {categoryName.toLowerCase()} arrangements
-          </p>
+      {/* Products Header Bar */}
+      <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="transition-all duration-700 z-30 w-full flex items-center justify-between text-neutral-600 h-10 md:h-14 font-light text-sm px-0 md:mb-12 mb-6 backdrop-blur-xl border-b border-t border-neutral-200">
+          <p className="font-medium text-neutral-900">Products ({products.length})</p>
+          <div className="h-full flex items-center justify-center select-none cursor-pointer gap-2">
+            <svg stroke="currentColor" fill="none" strokeWidth="2" viewBox="0 0 24 24" aria-hidden="true" className="opacity-70 w-4 h-4 text-neutral-600" xmlns="http://www.w3.org/2000/svg">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            <p className="hidden md:block text-neutral-600 text-sm font-medium">More products available</p>
+          </div>
         </div>
       </div>
 
@@ -158,22 +152,14 @@ export default function CategoryPage() {
       <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-2 mt-2">
         <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-3 sm:gap-4 lg:gap-6 min-h-100 pb-16">
           {products.map((product) => (
-            <div
+            <Link
               key={product.id}
-              onClick={() => openProductDialog(product)}
-              className="group cursor-pointer focus-visible:outline-none"
-              role="button"
-              tabIndex={0}
+              href={`/browse/${categorySlug}/${product.slug}`}
+              className="group focus-visible:outline-none"
               aria-label={`View details for ${product.name}`}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                  e.preventDefault();
-                  openProductDialog(product);
-                }
-              }}
             >
               {/* Image Container */}
-              <div className="relative bg-zinc-100 rounded-lg sm:rounded-xl overflow-hidden aspect-4/3">
+              <div className="relative bg-zinc-100 rounded-lg sm:rounded-lg overflow-hidden aspect-4/4">
                 <img
                   src={product.img}
                   alt={product.name}
@@ -228,21 +214,11 @@ export default function CategoryPage() {
                   {product.name}
                 </h3>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       </div>
-
-      {/* Dialogs */}
-      {selectedProduct && (
-        <ProductDetailDialogAdvanced
-          product={selectedProduct}
-          open={isProductDialogOpen}
-          onOpenChange={(open: boolean) => {
-            if (!open) closeProductDialog();
-          }}
-        />
-      )}
+      
 
       <Footer />
     </section>

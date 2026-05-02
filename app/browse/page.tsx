@@ -68,15 +68,23 @@ export default function BrowsePage() {
   return (
     <section className="w-full">
       <StoreNavbar />
-      <div className="w-full max-w-6xl mx-auto px-4 sm:px-8 mt-1">
-        <div className="mb-8 py-8">
-          <h1 className="text-3xl font-semibold font-mono text-zinc-900 tracking-tight mb-2">
+      <div className="w-full max-w-6xl mx-auto px-4 sm:px-8 mt-15">
+        <div className="mb-8 py-35">
+          <h1 className="text-3xl font-normal text-zinc-900 tracking-tight mb-2 text-center">
             Browse by Category
           </h1>
-          <p className="text-zinc-600">Explore our curated collection organized by category</p>
+        </div>
+        <div className="transition-all duration-700 z-30 w-full flex items-center justify-between text-neutral-600 h-10 md:h-14 font-light text-sm px-4 md:px-8 md:mb-12 mb-6 bg-background backdrop-blur-xl border-b border-t border-neutral-200 border-opacity-60">
+          <p className="font-medium text-neutral-900">Categories ({categories.length})</p>
+          <div className="h-full flex items-center justify-center select-none cursor-pointer gap-2">
+            <svg stroke="currentColor" fill="none" strokeWidth="2" viewBox="0 0 24 24" aria-hidden="true" className="opacity-70 w-4 h-4 text-neutral-600" xmlns="http://www.w3.org/2000/svg">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            <p className="hidden md:block text-neutral-600 text-sm font-medium">More products available</p>
+          </div>
         </div>
 
-        <div className="pb-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 min-h-100">
+        <div className="pb-8 grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6 min-h-100">
           {isLoading && (
             Array.from({ length: 6 }).map((_, index) => (
               <div key={`category-skeleton-${index}`} className="pointer-events-none">
@@ -106,7 +114,7 @@ export default function BrowsePage() {
               tabIndex={0}
               aria-label={`Browse ${name} category`}
             >
-              <div className="relative bg-zinc-100 rounded-xl overflow-hidden aspect-4/3">
+              <div className="relative bg-zinc-100 rounded-lg overflow-hidden aspect-4/5 sm:aspect-square">
                 <img
                   alt={name}
                   className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
@@ -130,9 +138,9 @@ export default function BrowsePage() {
                   </svg>
                 </div>
               </div>
-              <div className="pt-3">
-                <p className="text-xs text-zinc-500">{itemCount} items</p>
-                <h3 className="text-sm font-medium text-zinc-900">{name}</h3>
+              <div className="pt-2 sm:pt-3">
+                <p className="text-[11px] sm:text-xs text-zinc-500">{itemCount} items</p>
+                <h3 className="text-xs sm:text-sm font-medium text-zinc-900 leading-tight">{name}</h3>
               </div>
             </Link>
           ))}
