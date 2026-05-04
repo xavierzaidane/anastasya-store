@@ -114,11 +114,11 @@ export default function BrowsePage() {
               tabIndex={0}
               aria-label={`Browse ${name} category`}
             >
-              <div className="relative bg-zinc-100 rounded-lg overflow-hidden aspect-4/5 sm:aspect-square">
+              <div className="relative bg-zinc-100 overflow-hidden aspect-4/5 sm:aspect-square">
                 <img
                   alt={name}
                   className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                  src={image}
+                  src={image || '/bunga1.jpg'}
                 />
                 <div
                   className="absolute top-2 right-2 p-2 bg-white/50 backdrop-blur-sm rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"

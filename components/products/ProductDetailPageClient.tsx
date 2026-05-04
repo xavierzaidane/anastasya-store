@@ -1,9 +1,11 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { XIcon, Share2, ShoppingCart, ChevronLeft, ChevronRight } from "lucide-react";
 import { SiWhatsapp } from "react-icons/si";
+import { motion } from "motion/react";
+import { Button } from "../ui/button";
 import { orderViaWhatsApp } from "@/lib/whatsapp";
 import { useSavedItems } from "@/hooks/use-saved-items";
 import { StorefrontProduct } from "@/types/storefront";
@@ -20,32 +22,40 @@ export default function ProductDetailPageClient({ initialProduct }: Props) {
   const [isOrdering, setIsOrdering] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
-  const [currentGalleryIndex, setCurrentGalleryIndex] = useState(0);
-  const desktopImageRef = useRef<HTMLImageElement>(null);
-  const mobileImageRef = useRef<HTMLImageElement>(null);
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   const { isItemSaved, toggleItem, addItem } = useSavedItems();
   const isBookmarked = liveProduct ? isItemSaved(liveProduct.id) : false;
+  const images = useMemo(() => {
+    const galleryImages = (liveProduct.gallery || []).filter((image): image is string => Boolean(image && image.trim()));
+    return [liveProduct.img, ...galleryImages.filter((image) => image !== liveProduct.img)];
+  }, [liveProduct.gallery, liveProduct.img]);
 
-  const getCurrentImage = () => {
-    if (currentGalleryIndex === 0) return liveProduct.img;
-    const galleryImage = liveProduct.gallery?.[currentGalleryIndex - 1];
-    return galleryImage && galleryImage.trim() ? galleryImage : liveProduct.img;
-  };
+  useEffect(() => {
+    let cancelled = false;
 
-  const currentImageSrc = getCurrentImage();
+    queueMicrotask(() => {
+      if (cancelled) return;
+      setCurrentImageIndex(0);
+      setImageLoaded(false);
+      setImageError(false);
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [liveProduct.id]);
+
+  const currentImageSrc = images[currentImageIndex] || liveProduct.img;
 
   const handleNextImage = () => {
-    const maxIndex = (liveProduct.gallery?.length || 0) + 1;
-    setCurrentGalleryIndex((prev) => (prev + 1) % maxIndex);
+    setCurrentImageIndex((prev) => (prev + 1) % images.length);
     setImageLoaded(false);
     setImageError(false);
   };
 
   const handlePrevImage = () => {
-    const maxIndex = (liveProduct.gallery?.length || 0) + 1;
-    setCurrentGalleryIndex((prev) => (prev - 1 + maxIndex) % maxIndex);
+    setCurrentImageIndex((prev) => (prev - 1 + images.length) % images.length);
     setImageLoaded(false);
     setImageError(false);
   };
@@ -76,78 +86,92 @@ export default function ProductDetailPageClient({ initialProduct }: Props) {
 
   const handleBack = () => router.back();
 
+  const renderGallery = () => (
+    <div className="group relative aspect-3/4 overflow-hidden ">
+      {!imageLoaded && !imageError && <div className="absolute inset-0 animate-pulse" />}
+
+      {imageError ? (
+        <div className="flex h-full w-full items-center justify-center text-sm text-zinc-500">
+          Image not available
+        </div>
+      ) : (
+        <motion.img
+          key={currentImageIndex}
+          src={currentImageSrc}
+          alt={`${liveProduct.name} - View ${currentImageIndex + 1}`}
+          className="object-cover w-full h-full overflow-hidden"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.3 }}
+          onLoad={() => setImageLoaded(true)}
+          onError={() => setImageError(true)}
+          loading="eager"
+        />
+      )}
+
+      {images.length > 1 && (
+        <div className="absolute inset-0 flex items-center justify-between p-2 opacity-0 transition-opacity group-hover:opacity-100">
+          <Button
+            type="button"
+            variant="secondary"
+            size="icon-sm"
+            className="h-8 w-8 rounded-full bg-background/80 backdrop-blur-sm shadow-sm"
+            onClick={handlePrevImage}
+            aria-label="Previous image"
+          >
+            <ChevronLeft className="h-4 w-4" />
+          </Button>
+          <Button
+            type="button"
+            variant="secondary"
+            size="icon-sm"
+            className="h-8 w-8 rounded-full bg-background/80 backdrop-blur-sm shadow-sm"
+            onClick={handleNextImage}
+            aria-label="Next image"
+          >
+            <ChevronRight className="h-4 w-4" />
+          </Button>
+        </div>
+      )}
+
+      {images.length > 1 && (
+        <div className="absolute bottom-3 left-0 right-0 flex justify-center gap-1.5">
+          {images.map((_, index) => (
+            <button
+              key={index}
+              type="button"
+              className={`h-1.5 rounded-full transition-all ${
+                index === currentImageIndex ? "w-4 bg-gray-200" : "w-1.5 bg-gray-200/30"
+              }`}
+              onClick={() => {
+                setCurrentImageIndex(index);
+                setImageLoaded(false);
+                setImageError(false);
+              }}
+              aria-label={`View image ${index + 1}`}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+
   return (
     <main className="w-full">
       <div className="grid gap-8 lg:grid-cols-2 items-start">
         {/* Left: image area */}
-        <div className="hidden md:flex bg-zinc-100 items-center justify-center p-0 relative aspect-square lg:aspect-4/5 overflow-hidden rounded-lg">
-          {!imageLoaded && !imageError && <div className="w-full h-full bg-zinc-200 animate-pulse" />}
-          {imageError ? (
-            <div className="w-full h-full flex items-center justify-center bg-zinc-100 text-zinc-500 text-sm">
-              Image not available
-            </div>
-          ) : (
-            <img
-              ref={desktopImageRef}
-              key={currentImageSrc}
-              src={currentImageSrc}
-              alt={liveProduct.name}
-              className={`w-full h-full object-cover rounded-lg transition-opacity duration-300 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
-              onLoad={handleImageLoad}
-              onError={handleImageError}
-              loading="eager"
-            />
-          )}
-
-          {(liveProduct.gallery?.length || 0) > 0 && (
-            <>
-              <button onClick={handlePrevImage} className="absolute left-4 p-2 bg-white rounded-full hover:bg-zinc-200 transition-colors z-10 shadow-lg" aria-label="Previous image">
-                <ChevronLeft className="w-5 h-5 text-zinc-900" />
-              </button>
-              <button onClick={handleNextImage} className="absolute right-4 p-2 bg-white rounded-full hover:bg-zinc-200 transition-colors z-10 shadow-lg" aria-label="Next image">
-                <ChevronRight className="w-5 h-5 text-zinc-900" />
-              </button>
-              <div className="absolute bottom-4 flex gap-1">
-                <div className="bg-white px-3 py-1 rounded-full text-xs font-medium text-zinc-900">{currentGalleryIndex + 1} / {(liveProduct.gallery?.length || 0) + 1}</div>
-              </div>
-            </>
-          )}
+        <div className="hidden md:block  overflow-hidden lg:aspect-3/4">
+          {renderGallery()}
         </div>
 
         {/* Right: details */}
         <div className="flex flex-col md:p-9 p-2 -mt-10">
 
-          <div className="md:hidden mb-6 relative w-screen -mx-6 h-150">
-            {!imageLoaded && !imageError && <div className="w-full h-full bg-zinc-200 animate-pulse" />}
-            {imageError ? (
-                <div className="w-full h-full flex items-center justify-center bg-zinc-100 text-zinc-500 text-sm">Image not available</div>
-              ) : (
-                <img
-                  ref={mobileImageRef}
-                  key={currentImageSrc}
-                  src={currentImageSrc}
-                  alt={liveProduct.name}
-                  className={`w-full h-full object-cover transition-opacity duration-300 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
-                  onLoad={handleImageLoad}
-                  onError={handleImageError}
-                  loading="eager"
-                />
-              )}
-
-              {(liveProduct.gallery?.length || 0) > 0 && (
-                <>
-                  <button onClick={handlePrevImage} className="absolute left-2 top-1/2 -translate-y-1/2 p-2 bg-white rounded-full hover:bg-zinc-200 transition-colors z-10 shadow-lg" aria-label="Previous image">
-                    <ChevronLeft className="w-4 h-4 text-zinc-900" />
-                  </button>
-                  <button onClick={handleNextImage} className="absolute right-2 top-1/2 -translate-y-1/2 p-2 bg-white rounded-full hover:bg-zinc-200 transition-colors z-10 shadow-lg" aria-label="Next image">
-                    <ChevronRight className="w-4 h-4 text-zinc-900" />
-                  </button>
-                  <div className="absolute bottom-2 left-1/2 -translate-x-1/2 bg-white px-2 py-1 rounded-full text-xs font-medium text-zinc-900">{currentGalleryIndex + 1} / {(liveProduct.gallery?.length || 0) + 1}</div>
-                </>
-              )}
+          <div className="md:hidden mb-6 overflow-hidden rounded-none">
+            {renderGallery()}
           </div>
 
-          <div ref={scrollContainerRef} className="pr-4 md:pr-0 no-scrollbar">
+          <div className="pr-4 md:pr-0 no-scrollbar">
             <p className="text-md text-zinc-500 mb-2">{liveProduct.category || 'Product'}</p>
 
             <h1 className="text-3xl font-normal text-zinc-900 mb-4 tracking-tight">{liveProduct.name}</h1>
@@ -161,15 +185,15 @@ export default function ProductDetailPageClient({ initialProduct }: Props) {
            
           </div>
 
-          <div className="pt-6  mt-16">
+          <div className="pt-6  mt-1">
             <div className="flex flex-col gap-4 ">
               <div className="flex justify-between items-end gap-6 mb-10">
                 <div className="flex items-center gap-4">
                   <label htmlFor="quantity" className="text-md font-normal">Quantity:</label>
                   <div className="flex items-center gap-2 border border-zinc-300 rounded-lg overflow-hidden">
-                    <button onClick={decreaseQuantity} disabled={quantity <= 1} className="p-2 hover:bg-zinc-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200" aria-label="Decrease quantity">-</button>
+                    <button onClick={decreaseQuantity} disabled={quantity <= 1} className="p-2 hover: disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200" aria-label="Decrease quantity">-</button>
                     <span id="quantity" className="w-12 text-center text-base font-medium text-zinc-900" aria-live="polite">{quantity}</span>
-                    <button onClick={increaseQuantity} className="p-2 hover:bg-zinc-100 transition-colors duration-200" aria-label="Increase quantity">+</button>
+                    <button onClick={increaseQuantity} className="p-2 hover: transition-colors duration-200" aria-label="Increase quantity">+</button>
                   </div>
                 </div>
 
@@ -196,7 +220,7 @@ export default function ProductDetailPageClient({ initialProduct }: Props) {
                   className={`p-3 rounded-lg transition-colors duration-200 ${
                     isBookmarked 
                       ? 'bg-zinc-900 text-white hover:bg-zinc-800' 
-                      : 'bg-foreground/20 hover:bg-zinc-100 text-zinc-600 hover:text-zinc-800'
+                      : 'bg-foreground/20 hover: text-zinc-600 hover:text-zinc-800'
                   }`}
                 >
                   <ShoppingCart className="w-5 h-5" fill={isBookmarked ? 'currentColor' : 'none'} />

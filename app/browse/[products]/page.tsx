@@ -159,7 +159,7 @@ export default function CategoryPage() {
               aria-label={`View details for ${product.name}`}
             >
               {/* Image Container */}
-              <div className="relative bg-zinc-100 rounded-lg sm:rounded-lg overflow-hidden aspect-4/4">
+              <div className="relative bg-zinc-100 overflow-hidden aspect-4/4">
                 <img
                   src={product.img}
                   alt={product.name}

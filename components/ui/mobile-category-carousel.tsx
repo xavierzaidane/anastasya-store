@@ -1,11 +1,11 @@
 "use client";
 
-import { motion } from "framer-motion";
+import Link from "next/link";
 import React, { useEffect, useState } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
 
 type CategoryItem = {
   id: number;
+  slug: string;
   title: string;
   imageUrl: string;
 };
@@ -15,16 +15,17 @@ type CategoriesApiResponse = {
   message: string;
   data: Array<{
     id: number;
+    slug: string;
     name: string;
     image: string | null;
   }> | null;
 };
 
 // Mobile carousel card component
-const CarouselCard = ({ item, onClick }: { item: CategoryItem; onClick: () => void }) => {
+const CarouselCard = ({ item }: { item: CategoryItem }) => {
   return (
-    <button
-      onClick={onClick}
+    <Link
+      href={`/browse/${item.slug}`}
       className="relative shrink-0 w-48 h-56 rounded-lg overflow-hidden cursor-pointer group"
     >
       {/* Background Image */}
@@ -41,7 +42,7 @@ const CarouselCard = ({ item, onClick }: { item: CategoryItem; onClick: () => vo
       <span className="absolute bottom-4 left-4 right-4 text-white text-sm font-medium line-clamp-2">
         {item.title}
       </span>
-    </button>
+    </Link>
   );
 };
 
@@ -61,13 +62,12 @@ export function MobileCategoryCarousel() {
         const result: CategoriesApiResponse = await response.json();
         if (!result.success || !result.data || !isMounted) return;
 
-        const items = result.data
-          .filter((category) => Boolean(category.image))
-          .map((category) => ({
-            id: category.id,
-            title: category.name,
-            imageUrl: category.image as string,
-          }));
+        const items = result.data.map((category) => ({
+          id: category.id,
+          slug: category.slug,
+          title: category.name,
+          imageUrl: category.image || "/bunga1.jpg",
+        }));
 
         setCarouselItems(items);
       } catch {
@@ -111,14 +111,7 @@ export function MobileCategoryCarousel() {
           className="flex gap-4 overflow-x-auto snap-x snap-mandatory scroll-smooth pb-2 no-scrollbar"
         >
           {carouselItems.map((item) => (
-            <CarouselCard
-              key={item.id}
-              item={item}
-              onClick={() => {
-                // Handle category selection if needed
-                console.log("Selected category:", item.title);
-              }}
-            />
+            <CarouselCard key={item.id} item={item} />
           ))}
         </div>
       </div>

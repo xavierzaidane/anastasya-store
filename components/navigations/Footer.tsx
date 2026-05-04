@@ -10,7 +10,7 @@ const Footer: React.FC = () => {
           
           {/* Brand & Contact Info */}
           <div className="lg:w-1/3">
-            <h2 className="text-5xl text-gray-900  font-medium tracking-tight mb-55">Jadi <span className="text-chart-2">Juragan</span> Kami Hari Ini</h2>
+            <h2 className="text-5xl text-gray-900  font-medium tracking-tight mb-55">Delivering <span className="text-primary">Pure Happiness</span> Everyday</h2>
             <p className="text-foreground max-w-sm text-lg leading-relaxed mb-50 -mt-10">
               Redefining the dental experience with comfort, clarity, and care. 
               Join the movement toward healthier smiles.

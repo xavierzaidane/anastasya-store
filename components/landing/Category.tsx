@@ -1,5 +1,7 @@
-import { LandingAccordionItem } from "@/components/ui/interactive-image-accordion";
+
 import { MobileCategoryCarousel } from "@/components/ui/mobile-category-carousel";
+import CategorySlider from "./CategorySlider";
+
 
 export default function Category() {
   return (
@@ -17,7 +19,7 @@ export default function Category() {
 
       {/* Desktop Accordion */}
       <div className="hidden md:block">
-        <LandingAccordionItem />
+        <CategorySlider />
       </div>
     </div>
   );
