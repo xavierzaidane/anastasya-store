@@ -1,92 +1,95 @@
+import Link from 'next/link';
 import React from 'react';
-import { MapPin, Phone, Mail } from 'lucide-react';
-
 
 const Footer: React.FC = () => {
   return (
-
-      <footer className="bg-primary/10 text-foreground py-16 px-6 mt-24 ">
-        <div className="max-w-6xl mx-auto flex flex-col lg:flex-row justify-between items-start gap-12">
-          
-          {/* Brand & Contact Info */}
-          <div className="lg:w-1/3">
-            <h2 className="text-5xl text-gray-900  font-medium tracking-tight mb-55">Delivering <span className="text-primary">Pure Happiness</span> Everyday</h2>
-            <p className="text-foreground max-w-sm text-lg leading-relaxed mb-50 -mt-10">
-              Redefining the dental experience with comfort, clarity, and care. 
-              Join the movement toward healthier smiles.
+    <footer className="container mx-auto px-6 md:px-10 lg:px-12 max-w-8xl border-t border-border/40 bg-background">
+      <div className="mx-auto max-w-8xl px-4 py-12 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 pb-45">
+          <div className="space-y-4">
+            <Link className="flex items-center gap-2 transition-opacity hover:opacity-80" href="/">
+              <span className="text-lg font-medium">Anastasya</span>
+            </Link>
+            <p className="text-sm text-muted-foreground sm:max-w-md">
+              Create memorable floral gifts with modern bouquets and curated arrangements.
             </p>
-
-            <p className="text-foreground max-w-sm text-lg leading-relaxed ">
-               <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="44"
-                height="44"
-                viewBox="0 0 24 24"
-                fill="none"
-                color="currentColor"
-                stroke="currentColor"
-                strokeWidth="1.5"
-              >
-                <path
-                  d="M12 7.5V16.5M15.8971 9.75L8.10289 14.25M15.897 14.25L8.10275 9.75"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-                <path
-                  d="M6.47867 6.76926C2.20958 10.8137 1.22078 16.4342 4.27013 19.323C6.87609 21.7918 11.5879 21.4667 15.5675 18.7956L20 20.5L18.0841 16.6688C21.8721 12.6801 22.6403 7.43426 19.7299 4.67697C16.6805 1.78811 10.7478 2.72486 6.47867 6.76926Z"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
+            <p className="text-sm text-muted-foreground sm:max-w-md">
+              Have feedback? Feel free to send us a message.
             </p>
-
+            <p className="text-sm text-muted-foreground">
+              Crafted with love by <a className="text-primary underline" target="_blank" rel="noopener noreferrer" href="https://anastasya-store.com">Anastasya</a>
+            </p>
           </div>
-          
-          {/* Navigation Links */}
-          <div className="flex gap-12 md:gap-24 flex-wrap lg:justify-end lg:flex-1 w-full lg:w-auto">
-            <div>
-              <h4 className="font-medium text-brand-lime mb-6 tracking-wide uppercase text-sm">Clinic</h4>
-              <ul className="space-y-3 text-foreground">
+
+          <div className="grid grid-cols-1 gap-8 sm:grid-cols-3">
+            <div className="space-y-4">
+              <h3 className="text-sm font-semibold">Quick Links</h3>
+              <ul className="space-y-2">
                 <li>
-                  <a href="#" className="inline-block hover:text-brand-lime hover:translate-x-2 transition-all duration-300">
-                    About
-                  </a>
+                  <Link className="text-sm text-muted-foreground transition-colors hover:text-foreground" href="/">
+                    Home
+                  </Link>
                 </li>
                 <li>
-                  <a href="#" className="inline-block hover:text-brand-lime hover:translate-x-2 transition-all duration-300">
-                    Doctors
-                  </a>
+                  <Link className="text-sm text-muted-foreground transition-colors hover:text-foreground" href="/browse">
+                    Bouquets
+                  </Link>
                 </li>
                 <li>
-                  <a href="#" className="inline-block hover:text-brand-lime hover:translate-x-2 transition-all duration-300">
-                    Careers
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="inline-block hover:text-brand-lime hover:translate-x-2 transition-all duration-300">
+                  <Link className="text-sm text-muted-foreground transition-colors hover:text-foreground" href="/contact">
                     Contact
-                  </a>
+                  </Link>
                 </li>
               </ul>
             </div>
-            <div>
-              <h4 className="font-medium text-brand-lime mb-6 tracking-wide uppercase text-sm">Legal</h4>
-              <ul className="space-y-3 text-foreground">
+
+            <div className="space-y-4">
+              <h3 className="text-sm font-semibold">Resources</h3>
+              <ul className="space-y-2">
                 <li>
-                  <a href="#" className="inline-block hover:text-brand-lime hover:translate-x-2 transition-all duration-300">
-                    Privacy
-                  </a>
+                  <Link className="text-sm text-muted-foreground transition-colors hover:text-foreground" href="/blog">
+                    Floral Tips
+                  </Link>
                 </li>
                 <li>
-                  <a href="#" className="inline-block hover:text-brand-lime hover:translate-x-2 transition-all duration-300">
-                    Terms
-                  </a>
+                  <Link className="text-sm text-muted-foreground transition-colors hover:text-foreground" href="/care">
+                    Care Guide
+                  </Link>
+                </li>
+                <li>
+                  <Link className="text-sm text-muted-foreground transition-colors hover:text-foreground" href="/help">
+                    Help Center
+                  </Link>
+                </li>
+              </ul>
+            </div>
+
+            <div className="space-y-4">
+              <h3 className="text-sm font-semibold">Legal</h3>
+              <ul className="space-y-2">
+                <li>
+                  <Link className="text-sm text-muted-foreground transition-colors hover:text-foreground" href="/privacy">
+                    Privacy Policy
+                  </Link>
+                </li>
+                <li>
+                  <Link className="text-sm text-muted-foreground transition-colors hover:text-foreground" href="/terms">
+                    Terms of Service
+                  </Link>
                 </li>
               </ul>
             </div>
           </div>
         </div>
-      </footer>
+
+        <div className="mt-12 border-t border-border/40 pt-8">
+          <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
+            <p className="text-sm text-muted-foreground">© 2026 Anastasya. All rights reserved.</p>
+            <p className="text-sm text-muted-foreground">Made in Jakarta, Indonesia</p>
+          </div>
+        </div>
+      </div>
+    </footer>
   );
 };
 

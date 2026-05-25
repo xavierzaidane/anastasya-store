@@ -3,7 +3,6 @@
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import StoreNavbar from '@/components/navigations/StoreNavbar';
-import Footer from '@/components/navigations/Footer';
 import { Skeleton } from '@/components/ui/skeleton';
 
 interface Category {
@@ -68,7 +67,7 @@ export default function BrowsePage() {
   return (
     <section className="w-full">
       <StoreNavbar />
-      <div className="w-full max-w-6xl mx-auto px-4 sm:px-8 mt-15">
+      <div className="container mx-auto px-6 md:px-10 lg:px-12 max-w-8xl">
         <div className="mb-8 py-35">
           <h1 className="text-3xl font-normal text-zinc-900 tracking-tight mb-2 text-center">
             Browse by Category
@@ -84,7 +83,7 @@ export default function BrowsePage() {
           </div>
         </div>
 
-        <div className="pb-8 grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6 min-h-100">
+        <div className="pb-8 grid grid-cols-3 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 min-h-100">
           {isLoading && (
             Array.from({ length: 6 }).map((_, index) => (
               <div key={`category-skeleton-${index}`} className="pointer-events-none">
@@ -114,10 +113,10 @@ export default function BrowsePage() {
               tabIndex={0}
               aria-label={`Browse ${name} category`}
             >
-              <div className="relative bg-zinc-100 overflow-hidden aspect-4/5 sm:aspect-square">
+              <div className="relative bg-transparent overflow-hidden aspect-4/5 sm:aspect-3/4">
                 <img
                   alt={name}
-                  className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                  className="w-full h-full object-cover transition-transform duration-300 group-hover:border"
                   src={image || '/bunga1.jpg'}
                 />
                 <div
@@ -146,7 +145,7 @@ export default function BrowsePage() {
           ))}
         </div>
       </div>
-      <Footer />
+
     </section>
 
   );

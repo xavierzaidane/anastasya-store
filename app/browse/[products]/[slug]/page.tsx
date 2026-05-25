@@ -1,7 +1,6 @@
 import React from 'react';
 import ProductDetailPageClient from '@/components/products/ProductDetailPageClient';
 import StoreNavbar from '@/components/navigations/StoreNavbar';
-import Footer from '@/components/navigations/Footer';
 import { mapApiProductToStorefront } from '@/lib/storefront-products';
 import prisma from '@/lib/prisma';
 import { StorefrontApiProduct } from '@/types/storefront';
@@ -31,10 +30,10 @@ export default async function ProductDetail({ params }: PageProps) {
     const storefront = mapApiProductToStorefront(apiProduct, product.category?.slug || products || 'general');
 
     return (
-      <section className="w-full min-h-screen">
+      <section className="w-full min-h-screen -mb-50">
         <StoreNavbar />
 
-        <div className="px-4 sm:px-6 lg:px-8 py-8 max-w-6xl mx-auto mt-20">
+        <div className="px-4 sm:px-6 lg:px-8 py-10 max-w-6xl mx-auto mt-30">
           <ProductDetailPageClient initialProduct={storefront} />
         </div>
 
@@ -45,7 +44,6 @@ export default async function ProductDetail({ params }: PageProps) {
     return (
       <section className="w-full min-h-screen">
         <StoreNavbar />
-
         <div className="px-4 sm:px-6 lg:px-8 py-8 max-w-6xl mx-auto mt-20 flex items-center justify-center min-h-[50vh]">
           <div className="max-w-md text-center">
             <h2 className="text-2xl font-semibold mb-4">Product not found</h2>

@@ -211,7 +211,7 @@ export function EditCategoryDialog({ category, children, onCategoryUpdated }: Ed
               <Input
                 value={category.slug}
                 disabled
-                className="bg-neutral-50"
+
               />
               <FieldDescription>
                 Slug cannot be changed after creation
@@ -256,7 +256,7 @@ export function EditCategoryDialog({ category, children, onCategoryUpdated }: Ed
               
               {imagePreview ? (
                 <div className="relative">
-                  <div className="relative w-full h-40 rounded-lg overflow-hidden bg-neutral-100">
+                  <div className="relative w-full h-40 rounded-lg overflow-hidden">
                     <Image
                       src={imagePreview}
                       alt="Category preview"

@@ -4,8 +4,6 @@ import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 import StoreNavbar from '@/components/navigations/StoreNavbar';
-import Footer from '@/components/navigations/Footer';
-// product detail now routed to standalone page
 import { mapApiProductToStorefront } from '@/lib/storefront-products';
 import { StorefrontApiResponse, StorefrontProduct } from '@/types/storefront';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -81,14 +79,14 @@ export default function CategoryPage() {
     return (
       <section className="w-full ">
         <StoreNavbar />
-        <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="container mx-auto px-6 md:px-10 lg:px-12 max-w-8xl">
           <div className="mb-8">
             <Skeleton className="h-4 w-32 mb-4" />
             <Skeleton className="h-10 w-64 mb-3" />
             <Skeleton className="h-4 w-72" />
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-3 sm:gap-4 lg:gap-6 min-h-100 pb-16">
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6 min-h-100 pb-16">
             {Array.from({ length: 6 }).map((_, index) => (
               <div key={`product-skeleton-${index}`} className="pointer-events-none">
                 <Skeleton className="rounded-lg sm:rounded-xl aspect-4/3 w-full" />
@@ -100,7 +98,7 @@ export default function CategoryPage() {
             ))}
           </div>
         </div>
-        <Footer />
+
       </section>
     );
   }
@@ -136,7 +134,7 @@ export default function CategoryPage() {
       </div>
 
       {/* Products Header Bar */}
-      <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="container mx-auto px-6 md:px-10 lg:px-12 max-w-8xl">
         <div className="transition-all duration-700 z-30 w-full flex items-center justify-between text-neutral-600 h-10 md:h-14 font-light text-sm px-0 md:mb-12 mb-6 backdrop-blur-xl border-b border-t border-neutral-200">
           <p className="font-medium text-neutral-900">Products ({products.length})</p>
           <div className="h-full flex items-center justify-center select-none cursor-pointer gap-2">
@@ -149,8 +147,8 @@ export default function CategoryPage() {
       </div>
 
       {/* Product Grid */}
-      <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-2 mt-2">
-        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-3 sm:gap-4 lg:gap-6 min-h-100 pb-16">
+        <div className="container mx-auto px-6 md:px-10 lg:px-12 max-w-8xl">
+        <div className="grid grid-cols-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4 lg:gap-6 min-h-100 pb-16">
           {products.map((product) => (
             <Link
               key={product.id}
@@ -159,7 +157,7 @@ export default function CategoryPage() {
               aria-label={`View details for ${product.name}`}
             >
               {/* Image Container */}
-              <div className="relative bg-zinc-100 overflow-hidden aspect-4/4">
+              <div className="relative bg-zinc-100 overflow-hidden aspect-4/5">
                 <img
                   src={product.img}
                   alt={product.name}
@@ -220,7 +218,7 @@ export default function CategoryPage() {
       </div>
       
 
-      <Footer />
+
     </section>
   );
 }

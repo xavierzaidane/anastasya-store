@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 type CategoryItem = {
   id: number;
@@ -26,20 +27,16 @@ const CarouselCard = ({ item }: { item: CategoryItem }) => {
   return (
     <Link
       href={`/browse/${item.slug}`}
-      className="relative shrink-0 w-48 h-56 rounded-lg overflow-hidden cursor-pointer group"
+      className="shrink-0 w-78"
     >
-      {/* Background Image */}
-      <img
-        src={item.imageUrl}
-        alt={item.title}
-        className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-      />
-
-      {/* Overlay gradient */}
-      <div className="absolute inset-0 bg-linear-to-t from-black/60 to-transparent" />
-
-      {/* Title */}
-      <span className="absolute bottom-4 left-4 right-4 text-white text-sm font-medium line-clamp-2">
+      <div className="relative h-86 rounded-lg overflow-hidden cursor-pointer group">
+        <img
+          src={item.imageUrl}
+          alt={item.title}
+          className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+        />
+      </div>
+      <span className="mt-3 block text-sm font-medium text-neutral-900 line-clamp-2 text-center">
         {item.title}
       </span>
     </Link>
@@ -48,8 +45,7 @@ const CarouselCard = ({ item }: { item: CategoryItem }) => {
 
 export function MobileCategoryCarousel() {
   const [carouselItems, setCarouselItems] = useState<CategoryItem[]>([]);
-  const [scrollPosition, setScrollPosition] = useState(0);
-  const scrollContainerRef = React.useRef<HTMLDivElement>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     let isMounted = true;
@@ -84,30 +80,19 @@ export function MobileCategoryCarousel() {
 
   const scroll = (direction: "left" | "right") => {
     if (!scrollContainerRef.current) return;
-
-    const scrollAmount = 240; // Card width + gap
-    const newPosition =
-      direction === "left"
-        ? Math.max(0, scrollPosition - scrollAmount)
-        : scrollPosition + scrollAmount;
-
-    scrollContainerRef.current.scrollLeft = newPosition;
-    setScrollPosition(newPosition);
-  };
-
-  const handleScroll = () => {
-    if (scrollContainerRef.current) {
-      setScrollPosition(scrollContainerRef.current.scrollLeft);
-    }
+    const scrollAmount = direction === "left" ? -320 : 320;
+    scrollContainerRef.current.scrollBy({ left: scrollAmount, behavior: "smooth" });
   };
 
   return (
     <div className="w-full">
+      <div className="mb-4 flex items-center justify-end">
+      </div>
+
       <div className="relative">
         {/* Carousel Container */}
         <div
           ref={scrollContainerRef}
-          onScroll={handleScroll}
           className="flex gap-4 overflow-x-auto snap-x snap-mandatory scroll-smooth pb-2 no-scrollbar"
         >
           {carouselItems.map((item) => (

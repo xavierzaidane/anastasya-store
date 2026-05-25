@@ -3,7 +3,6 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import StoreNavbar from '@/components/navigations/StoreNavbar';
-import Footer from '@/components/navigations/Footer';
 import { StorefrontBlog } from '@/types/blog';
 import { getRelatedBlogs } from '@/lib/storefront-blogs';
 import { getBlogBySlug, getPublishedBlogs } from '@/lib/server/blogs';
@@ -280,7 +279,7 @@ export default async function BlogDetailPage({ params }: PageProps) {
         )}
       </div>
 
-      <Footer />
+
     </section>
   );
 }

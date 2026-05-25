@@ -2,7 +2,6 @@ import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import StoreNavbar from '@/components/navigations/StoreNavbar';
-import Footer from '@/components/navigations/Footer';
 import { getPublishedBlogs } from '@/lib/server/blogs';
 
 // Clock icon component
@@ -121,7 +120,7 @@ export default async function BlogPage() {
 				</div>
 			</div>
 
-			<Footer />
+
 		</section>
 	);
 }

@@ -2,12 +2,7 @@
 
 import Link from "next/link"
 import React, { useEffect, useState } from "react"
-import {
-  HoverSlider,
-  HoverSliderImage,
-  HoverSliderImageWrap,
-  TextStaggerHover,
-} from "@/components/ui/animated-slideshow"
+
 
 type CategoryItem = {
   id: number
@@ -76,10 +71,10 @@ export default function CategorySlider() {
     <>
       <div className="md:hidden flex flex-col gap-4 text-[#3d3929]">
         <div>
-          <h3 className="text-xs font-normal text-muted-foreground tracking-tighter">
-            Category
-          </h3>
-        </div>
+              <h1 className="text-5xl md:text-7xl lg:text-8xl font-medium tracking-tighter text-neutral-900 leading-[0.95] text-center ">
+              Collections.
+            </h1>
+            </div>
 
         <div className="grid gap-4 sm:grid-cols-2">
           {items.map((item) => (
@@ -106,46 +101,34 @@ export default function CategorySlider() {
         </div>
       </div>
 
-      <HoverSlider className="hidden md:block min-h-auto md:min-h-svh text-[#3d3929]">
-        <div className="flex flex-col gap-2">
-          <h3 className="text-sm font-normal text-muted-foreground tracking-tighter">
-            Category
-          </h3>
-        </div>
-
-        <div className="flex flex-col gap-8 md:flex-row md:flex-wrap md:items-center md:justify-start md:gap-16 lg:gap-115">
-          <div className="flex flex-col space-y-2 md:space-y-4">
-            {items.map((item, index) => (
-              <Link
-                key={item.id}
-                href={`/browse/${item.slug}`}
-                onClick={() => undefined}
-                className="cursor-pointer text-2xl sm:text-3xl md:text-4xl font-medium uppercase tracking-tighter"
-              >
-                <TextStaggerHover index={index} text={item.title} />
-              </Link>
-            ))}
-          </div>
-
-          <HoverSliderImageWrap>
-            {items.map((item, index) => (
-              <div key={item.id} className="">
-                <Link href={`/browse/${item.slug}`}>
-                  <HoverSliderImage
-                    index={index}
-                    imageUrl={item.imageUrl}
-                    src={item.imageUrl}
-                    alt={item.title}
-                    className="size-full max-h-72 sm:max-h-80 md:max-h-96 object-cover"
-                    loading="eager"
-                    decoding="async"
-                  />
-                </Link>
+      <div className="hidden md:block text-[#3d3929]">
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-5">
+          {items.map((item, index) => (
+            <Link
+              key={item.id}
+              href={`/browse/${item.slug}`}
+              onClick={() => undefined}
+              className="group flex flex-col gap-3"
+            >
+              <div className="relative w-full overflow-hidden  bg-transparent aspect-2/3">
+                <img
+                  src={item.imageUrl}
+                  alt={item.title}
+                  className="h-full w-full object-cover transition-transform duration-300 transform-gpu group-hover:border "
+                  loading="eager"
+                  decoding="async"
+                />
               </div>
-            ))}
-          </HoverSliderImageWrap>
+              <div className="text-center">
+        
+                <h4 className="text-base md:text-lg text-neutral-600 max-w-xl leading-relaxed text-center ">
+                  {item.title}
+                </h4>
+              </div>
+            </Link>
+          ))}
         </div>
-      </HoverSlider>
+      </div>
     </>
   )
 }

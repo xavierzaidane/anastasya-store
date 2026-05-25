@@ -8,17 +8,16 @@ export default function Category() {
     <div className="w-full mx-auto mt-8 md:w-container md:-mt-20">
       {/* Mobile Carousel */}
       <div className="md:hidden">
-        <div className="flex flex-col gap-4">
-          <div className="-px-1">
-            <h2 className="text-2xl font-normal">Our Category</h2>
-            <p className="text-sm text-foreground/50">Explore our collection</p>
-          </div>
+        <div className="flex flex-col gap-4 -mt-30">
           <MobileCategoryCarousel />
         </div>
       </div>
 
       {/* Desktop Accordion */}
       <div className="hidden md:block">
+        <div>
+              
+            </div>
         <CategorySlider />
       </div>
     </div>

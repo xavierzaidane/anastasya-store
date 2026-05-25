@@ -54,7 +54,7 @@ export async function POST(request: NextRequest) {
       folder: `anastasya/${folder}`,
       resource_type: "image",
       transformation: [
-        { quality: "auto", fetch_format: "auto" },
+        { quality: "auto" },
       ],
     });
 

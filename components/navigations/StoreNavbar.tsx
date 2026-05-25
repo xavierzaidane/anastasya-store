@@ -29,7 +29,7 @@ export default function StoreNavbar() {
 
   return (
     <>
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-background border-b h-20 flex items-center">
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-background h-20 flex items-center">
         <div className="container mx-auto px-6 md:px-12 flex items-center justify-between w-full">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 group cursor-pointer">
@@ -108,7 +108,7 @@ export default function StoreNavbar() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden fixed top-20 left-0 right-0 bg-white border-b border-neutral-100 overflow-hidden shadow-xl z-40"
+            className="md:hidden fixed top-20 left-0 right-0 bg-white overflow-hidden shadow-xl z-40"
           >
             <div className="flex flex-col p-6 gap-4">
               {navLinks.map((link) => (
