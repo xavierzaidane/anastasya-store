@@ -20,14 +20,28 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(url);
 
     const search = searchParams.get("search") || "";
-    const category = searchParams.get("category");
+  const category = searchParams.get("category");
 
     const where = {
       ...(search && {
-        name: {
-          contains: search,
-          mode: "insensitive" as const,
-        },
+        OR: [
+          {
+            name: {
+              contains: search,
+              mode: "insensitive" as const,
+            },
+          },
+          {
+            category: {
+              is: {
+                name: {
+                  contains: search,
+                  mode: "insensitive" as const,
+                },
+              },
+            },
+          },
+        ],
       }),
       ...(category && {
         category: {

@@ -55,7 +55,7 @@ function BlogCard({ post }: { post: StorefrontBlog }) {
         className="w-full h-full text-left focus-visible:outline-none"
         aria-label={`Read ${post.title}`}
       >
-        <div className="rounded-xl overflow-hidden border bg-card border-border/80 transition-all duration-300 h-full flex flex-col hover:border-primary/40 hover:shadow-xl hover:shadow-primary/5">
+        <div className="overflow-hidden border bg-card border-border/80 transition-all duration-300 h-full flex flex-col hover:border-primary/40 hover:shadow-xl hover:shadow-primary/5">
           {/* Image */}
           <div className="aspect-video bg-muted flex items-center justify-center relative overflow-hidden">
             <Image
@@ -212,7 +212,7 @@ export default async function BlogDetailPage({ params }: PageProps) {
         </Link>
 
         {/* Article */}
-        <article className="bg-card rounded-xl border border-border/80 overflow-hidden shadow-sm">
+        <article className="bg-card  border border-border/80 overflow-hidden shadow-sm">
           {/* Header Image */}
           <div className="aspect-video bg-muted flex items-center justify-center relative overflow-hidden">
             <Image

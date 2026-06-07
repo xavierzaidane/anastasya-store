@@ -1,18 +1,52 @@
 "use client";
-import React, { useState } from 'react';
-import { Menu, X, ArrowUpRight, Handbag } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { Menu, Search, X, Handbag } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useSavedItems } from '@/hooks/use-saved-items';
 import { SavedItemsSheet } from '../products/SavedItemsSheet';
+import SearchModal from '../products/SearchModal';
 
 export default function StoreNavbar() {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
   const { getTotalItems } = useSavedItems();
   const [savedItemsSheetOpen, setSavedItemsSheetOpen] = useState(false);
+  const [searchModalOpen, setSearchModalOpen] = useState(false);
   const totalItems = getTotalItems();
+  const isTypingTarget = (target: EventTarget | null) => {
+    if (!(target instanceof HTMLElement)) return false;
+    return (
+      target.tagName.toLowerCase() === 'input' ||
+      target.tagName.toLowerCase() === 'textarea' ||
+      target.isContentEditable
+    );
+  };
+
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      if ((event.key === 'k' || event.key === 'K') && (event.metaKey || event.ctrlKey)) {
+        event.preventDefault();
+        setSearchModalOpen(true);
+        return;
+      }
+
+      if (event.key === '/' && !isTypingTarget(event.target)) {
+        event.preventDefault();
+        setSearchModalOpen(true);
+        return;
+      }
+
+      if (event.key === 'Escape') {
+        setSearchModalOpen(false);
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener('keydown', onKeyDown);
+    return () => document.removeEventListener('keydown', onKeyDown);
+  }, []);
 
   const isActive = (path: string) => {
     if (path === '/' && pathname === '/') return true;
@@ -23,7 +57,6 @@ export default function StoreNavbar() {
   const navLinks = [
     { name: 'Discover', href: '/' },
     { name: 'Browse', href: '/browse' },
-    { name: 'Search', href: '/search' },
     { name: 'Blog', href: '/blog' },
   ];
 
@@ -73,6 +106,17 @@ export default function StoreNavbar() {
                 {link.name}
               </Link>
             ))}
+            <button
+              type="button"
+              onClick={() => setSearchModalOpen(true)}
+              className="text-sm font-medium transition-colors relative after:content-[''] after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-[2px] after:bg-brand-lime after:transition-all hover:after:w-full text-neutral-500 hover:text-black flex items-center gap-2"
+            >
+
+              Search
+              <kbd className="text-[10px] font-mono px-1.5 py-0.5 rounded border border-neutral-200 bg-neutral-100 text-neutral-500 ml-2">
+                ⌘ K
+              </kbd>
+            </button>
           </div>
 
           {/* Right Icons */}
@@ -125,6 +169,16 @@ export default function StoreNavbar() {
                   {link.name}
                 </Link>
               ))}
+              <button
+                onClick={() => {
+                  setSearchModalOpen(true);
+                  setIsOpen(false);
+                }}
+                className="text-lg font-medium transition-colors text-neutral-600 hover:text-black flex items-center gap-2"
+              >
+                <Search className="w-5 h-5" />
+                Search
+              </button>
               <hr className="border-neutral-100" />
               <button 
                 onClick={() => {
@@ -140,6 +194,8 @@ export default function StoreNavbar() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      <SearchModal open={searchModalOpen} onOpenChange={setSearchModalOpen} />
 
       <SavedItemsSheet 
         open={savedItemsSheetOpen} 

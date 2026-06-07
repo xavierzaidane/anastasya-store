@@ -30,15 +30,12 @@ export default async function BlogPage() {
 		<section className="w-full min-h-screen ">
 			<StoreNavbar />
 
-		<div className="px-4 sm:px-6 lg:px-8 py-8 max-w-6xl mx-auto mt-1">
+		<div className="px-4 sm:px-6 lg:px-8 py-8 max-w-6xl mx-auto pt-45">
 				{/* Header */}
-				<div className="mb-10">
-					<h1 className="text-3xl sm:text-4xl font-semibold font-mono text-foreground tracking-tight mb-3">
-						Blog
+				<div className="mb-40 text-center">
+					<h1 className="text-3xl sm:text-4xl font-normal text-foreground tracking-tight mb-3">
+						Blogs
 					</h1>
-					<p className="text-muted-foreground text-base sm:text-lg">
-						Tips, inspiration, and stories from the world of flowers
-					</p>
 				</div>
 
 				{/* Blog Grid */}
@@ -57,7 +54,7 @@ export default async function BlogPage() {
 								className="w-full h-full text-left focus-visible:outline-none"
 								aria-label={`Read ${post.title}`}
 							>
-								<div className="rounded-xl overflow-hidden border border-border/80 bg-card h-full flex flex-col transition-all duration-300 hover:border-primary/40 hover:shadow-xl hover:shadow-primary/5">
+								<div className="overflow-hidden border border-border/80 bg-card h-full flex flex-col transition-all duration-300 hover:border-primary/40 hover:shadow-xl hover:shadow-primary/5">
 									{/* Image */}
 									<div className="aspect-video bg-muted flex items-center justify-center relative overflow-hidden">
 										<Image
