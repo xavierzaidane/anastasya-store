@@ -152,7 +152,7 @@ export default function StoreNavbar() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden fixed top-20 left-0 right-0 bg-white overflow-hidden shadow-xl z-40"
+            className="md:hidden fixed top-20 left-0 right-0 bg-background overflow-hidden shadow-xl z-40"
           >
             <div className="flex flex-col p-6 gap-4">
               {navLinks.map((link) => (

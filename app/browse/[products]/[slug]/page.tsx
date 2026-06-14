@@ -30,7 +30,7 @@ export default async function ProductDetail({ params }: PageProps) {
     const storefront = mapApiProductToStorefront(apiProduct, product.category?.slug || products || 'general');
 
     return (
-      <section className="w-full min-h-screen -mb-50">
+      <section className="w-full min-h-screen mb-10 lg:mb-10">
         <StoreNavbar />
 
         <div className="px-4 sm:px-6 lg:px-8 py-10 max-w-6xl mx-auto mt-30">
