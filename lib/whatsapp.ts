@@ -8,7 +8,6 @@ export function generateWhatsAppMessage(product: StorefrontProduct, quantity: nu
   const message = `Halo Kak, saya mau pesan produk berikut yaa:
 
 *Detail Pesanan*
-<me6ta
 Produk   : ${product.name}
 Kategori : ${product.category || 'Umum'}
 Harga    : ${product.price}

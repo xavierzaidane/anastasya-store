@@ -4,6 +4,7 @@ import Category from './Category';
 import LatestProduct from './LatestProduct';
 import CTA from './CTA';
 import FAQ from './FAQ';
+import Link from 'next/link';
 
 const Hero: React.FC = () => {
   return (
@@ -34,12 +35,12 @@ const Hero: React.FC = () => {
 
             </div>
             <div className="flex justify-center md:justify-start pt-6 md:pt-8 lg:pt-10 items-center">
-              <button
-                type="button"
+              <Link
+                href="/browse"
                 className="inline-flex items-center justify-center border border-zinc-200 px-4 py-3 md:px-5 md:py-4 text-sm font-medium uppercase tracking-wide text-zinc-900 transition-colors hover:bg-primary hover:text-white"
               >
                 View Bouquets
-              </button>
+              </Link>
             </div>
           </motion.div>
 

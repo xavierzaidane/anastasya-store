@@ -150,7 +150,7 @@ export default function SearchModal({ open, onOpenChange }: SearchModalProps) {
             value={query}
             onChange={(event) => setQuery(event.target.value)}
             placeholder="Type a product name or category..."
-            className="w-full h-11 pl-10 pr-11 rounded-lg border bg-transparent text-sm outline-none focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/50"
+            className="w-full h-11 pl-10 pr-11  border bg-transparent text-sm outline-none focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/50"
           />
           {query ? (
             <button
@@ -164,7 +164,7 @@ export default function SearchModal({ open, onOpenChange }: SearchModalProps) {
           ) : null}
         </div>
 
-        <div className="max-h-96 overflow-y-auto border rounded-lg divide-y">
+        <div className="max-h-96 overflow-y-auto border divide-y">
           {isLoading ? (
             <div className="flex items-center justify-center gap-2 py-8 text-sm text-muted-foreground">
               <Loader2 className="w-4 h-4 animate-spin" />
@@ -173,11 +173,11 @@ export default function SearchModal({ open, onOpenChange }: SearchModalProps) {
           ) : error ? (
             <p className="p-4 text-sm text-red-600">{error}</p>
           ) : hasSearched && results.length === 0 ? (
-            <p className="p-4 text-sm text-muted-foreground">
-              No products found for "{debouncedQuery}".
+           <p className="p-4 text-sm text-muted-foreground">
+              No products found for <span className="font-medium">{debouncedQuery}</span>.
             </p>
           ) : !hasSearched ? (
-            <p className="p-4 text-sm text-muted-foreground">
+            <p className="p-4 text-sm text-muted-foreground">clea
               Start typing to search by product name or category.
             </p>
           ) : (

@@ -5,37 +5,37 @@ import Link from 'next/link'
 
 export default function FaqLanding() {
     const faqItems = [
-        {
-            id: 'item-1',
-            question: 'How does LearnIndo help me learn Indonesian?',
-            answer:
-            'LearnIndo combines interactive lessons, AI-powered conversations, pronunciation practice, and daily exercises to help you learn Indonesian naturally.',
-        },
-        {
-            id: 'item-2',
-            question: 'Is LearnIndo suitable for beginners?',
-            answer:
-            'Yes. LearnIndo is designed for learners of all levels, including complete beginners. You can start with basic greetings, pronunciation, and essential vocabulary.',
-        },
-        {
-            id: 'item-3',
-            question: 'How does the AI learning coach work?',
-            answer:
-            'Our AI coach personalizes your learning experience by analyzing your progress, strengths, and practice habits.',
-        },
-        {
-            id: 'item-4',
-            question: 'Can I practice speaking Indonesian?',
-            answer:
-            'Absolutely. LearnIndo includes conversation practice, pronunciation feedback, and real-life dialogue simulations designed to help you speak Indonesian more naturally and confidently in everyday situations.',
-        },
-        {
-            id: 'item-5',
-            question: 'Can I learn at my own pace?',
-            answer:
-            'Yes. LearnIndo is built for flexible learning, allowing you to study whenever and wherever you want. Short daily lessons and personalized recommendations make it easy to stay consistent without feeling overwhelmed.',
-        },
-        ]
+  {
+    id: 'item-1',
+    question: 'What products does Anastasya Bouquet offer?',
+    answer:
+      'Anastasya Bouquet offers a variety of fresh flower bouquets, artificial flower arrangements, gift bouquets, graduation bouquets, and custom floral designs for special occasions.',
+  },
+  {
+    id: 'item-2',
+    question: 'Can I request a custom bouquet design?',
+    answer:
+      'Yes. We provide custom bouquet services based on your preferred flowers, colors, budget, and occasion to create a personalized arrangement.',
+  },
+  {
+    id: 'item-3',
+    question: 'Do you provide delivery services?',
+    answer:
+      'Yes. Anastasya Bouquet offers delivery services to ensure your flowers arrive fresh and beautifully arranged at the desired location.',
+  },
+  {
+    id: 'item-4',
+    question: 'How do I place an order?',
+    answer:
+      'You can place an order through our website, social media channels, or by contacting our customer service team directly for assistance.',
+  },
+  {
+    id: 'item-5',
+    question: 'What occasions are your bouquets suitable for?',
+    answer:
+      'Our bouquets are perfect for birthdays, graduations, anniversaries, weddings, Valentine’s Day, Mother’s Day, and many other special celebrations.',
+  },
+]
 
     return (
         <section className="py-16 md:py-24">
