@@ -85,7 +85,7 @@ const Footer: React.FC = () => {
         <div className="mt-12 border-t border-border/40 pt-8">
           <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
             <p className="text-sm text-muted-foreground">© 2026 Anastasya. All rights reserved.</p>
-            <p className="text-sm text-muted-foreground">Made in Jakarta, Indonesia</p>
+            <p className="text-sm text-muted-foreground">Made in Malang, Indonesia</p>
           </div>
         </div>
       </div>

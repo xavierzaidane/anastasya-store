@@ -9,7 +9,7 @@ export default function FaqLanding() {
     id: 'item-1',
     question: 'What products does Anastasya Bouquet offer?',
     answer:
-      'Anastasya Bouquet offers a variety of fresh flower bouquets, artificial flower arrangements, gift bouquets, graduation bouquets, and custom floral designs for special occasions.',
+      'Anastasya Bouquet offers a variety of fresh flower bouquets, gift bouquets, graduation bouquets, and custom floral designs for special occasions.',
   },
   {
     id: 'item-2',

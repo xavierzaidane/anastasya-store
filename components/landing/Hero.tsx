@@ -69,11 +69,6 @@ const Hero: React.FC = () => {
         <div className=" border-neutral-200 pt-32 pb-10 ">
           <Category />
         </div>
-
-        <div className="pb-16 pt-50">
-          <LatestProduct />
-        </div>
-
         <div className="pb-16 pt-10">
           <FAQ />
         </div>
