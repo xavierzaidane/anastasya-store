@@ -208,7 +208,7 @@ export default function ProductDetailPageClient({ initialProduct }: Props) {
                 <button 
                   onClick={handleOrderViaWhatsApp} 
                   disabled={isOrdering} 
-                  className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-foreground text-white font-medium rounded-lg hover:bg-foreground/80 transition-colors duration-200 disabled:opacity-75 disabled:cursor-not-allowed"
+                  className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-primary text-white font-medium hover:bg-primary/80 transition-colors duration-200 disabled:opacity-75 disabled:cursor-not-allowed"
                 >
                   <SiWhatsapp className="w-5 h-5 text-background" />
                   <span>{isOrdering ? 'Opening WhatsApp...' : 'Order via WhatsApp'}</span>
@@ -217,7 +217,7 @@ export default function ProductDetailPageClient({ initialProduct }: Props) {
                 {/* Button baru (contoh: bookmark/cart kamu) */}
                 <button 
                   onClick={handleToggleBookmark} 
-                  className={`p-3 rounded-lg transition-colors duration-200 ${
+                  className={`p-3 transition-colors duration-200 ${
                     isBookmarked 
                       ? 'bg-zinc-900 text-white hover:bg-zinc-800' 
                       : 'bg-foreground/20 hover: text-zinc-600 hover:text-zinc-800'

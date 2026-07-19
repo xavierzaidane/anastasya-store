@@ -1,7 +1,8 @@
 'use client';
 
+import { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useSearchParams } from 'next/navigation';
 import {
   Sidebar,
   SidebarContent,
@@ -21,6 +22,7 @@ import {
   Users,
   ChevronRight,
 } from 'lucide-react';
+import { Category } from '@/types/api';
 
 interface NavItem {
   title: string;
@@ -29,35 +31,89 @@ interface NavItem {
   items?: NavItem[];
 }
 
-const navItems: NavItem[] = [
-  {
-    title: 'Dashboard',
-    url: '/admin',
-    icon: LayoutDashboard,
-  },
-  {
-    title: 'Products',
-    url: '/admin/products',
-    icon: Package,
-  },
-  {
-    title: 'Blog',
-    url: '/admin/blog',
-    icon: FileText,
-  },
-  {
-    title: 'Categories',
-    url: '/admin/categories',
-    icon: Users,
-  },
-];
-
 export function AdminSidebar() {
   const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const [categories, setCategories] = useState<Category[]>([]);
+
+  useEffect(() => {
+    async function fetchCategories() {
+      try {
+        const response = await fetch('/api/categories');
+        if (response.ok) {
+          const res = await response.json();
+          if (res.success && Array.isArray(res.data)) {
+            setCategories(res.data);
+          }
+        }
+      } catch (err) {
+        console.error('Error fetching categories in sidebar:', err);
+      }
+    }
+    fetchCategories();
+  }, []);
+
+  const navItems = useMemo<NavItem[]>(() => {
+    const productsSubmenu: NavItem[] = [
+      {
+        title: 'All Products',
+        url: '/admin/products',
+        icon: Package,
+      },
+      ...categories.map((cat) => ({
+        title: cat.name,
+        url: `/admin/products?category=${cat.id}`,
+        icon: Package,
+      })),
+    ];
+
+    return [
+      {
+        title: 'Dashboard',
+        url: '/admin',
+        icon: LayoutDashboard,
+      },
+      {
+        title: 'Products',
+        url: '/admin/products',
+        icon: Package,
+        items: productsSubmenu,
+      },
+      {
+        title: 'Blog',
+        url: '/admin/blog',
+        icon: FileText,
+      },
+      {
+        title: 'Categories',
+        url: '/admin/categories',
+        icon: Users,
+      },
+    ];
+  }, [categories]);
 
   const isActive = (url: string) => {
-    if (url === '/admin' && pathname === '/admin') return true;
-    if (url !== '/admin' && pathname.startsWith(url)) return true;
+    const urlObj = new URL(url, 'http://localhost');
+    const targetPathname = urlObj.pathname;
+
+    if (targetPathname === '/admin') {
+      return pathname === '/admin';
+    }
+
+    if (pathname.startsWith(targetPathname)) {
+      const categoryParam = urlObj.searchParams.get('category');
+      const currentCategoryParam = searchParams.get('category');
+
+      if (categoryParam) {
+        return categoryParam === currentCategoryParam;
+      }
+
+      if (targetPathname === '/admin/products' && currentCategoryParam) {
+        return false;
+      }
+
+      return true;
+    }
     return false;
   };
 
@@ -145,3 +201,4 @@ export function AdminSidebar() {
     </Sidebar>
   );
 }
+

@@ -80,7 +80,7 @@ function BlogCard({ post }: { post: StorefrontBlog }) {
             </div>
 
             {/* Title */}
-            <h3 className="text-lg sm:text-xl font-semibold text-foreground mb-2 group-hover:text-primary transition-colors duration-200 line-clamp-2 min-h-12 sm:min-h-14 font-serif">
+            <h3 className="text-lg sm:text-xl font-normal text-foreground mb-2 group-hover:text-primary transition-colors duration-200 line-clamp-2 min-h-12 sm:min-h-14">
               {post.title}
             </h3>
 

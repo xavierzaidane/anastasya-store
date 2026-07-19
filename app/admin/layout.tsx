@@ -1,5 +1,6 @@
 'use client';
 
+import { Suspense } from 'react';
 import { usePathname } from 'next/navigation';
 import { SidebarProvider } from '@/components/ui/sidebar';
 import { Toaster } from '@/components/ui/sonner';
@@ -30,7 +31,9 @@ export default function AdminRootLayout({
   return (
     <AdminThemeProvider>
       <SidebarProvider>
-        <AdminSidebar />
+        <Suspense fallback={<div className="w-[260px] border-r bg-background shrink-0" />}>
+          <AdminSidebar />
+        </Suspense>
         <main className="flex-1 flex flex-col min-h-screen">
           <AdminHeader />
           {/* Page Content */}

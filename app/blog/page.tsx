@@ -69,7 +69,7 @@ export default async function BlogPage() {
 									<div className="p-5 sm:p-6 flex flex-col grow">
 										{/* Category & Read Time */}
 										<div className="flex items-center gap-3 mb-3">
-											<span className="px-3 py-1 bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider rounded-full font-mono">
+											<span className="px-3 py-1 bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider rounded-full font-normal">
 												{post.category}
 											</span>
 											<div className="flex items-center gap-1.5 text-xs text-muted-foreground font-mono">
@@ -79,7 +79,7 @@ export default async function BlogPage() {
 										</div>
 
 										{/* Title */}
-										<h2 className="text-lg sm:text-xl font-semibold text-foreground mb-2 transition-colors duration-200 line-clamp-2 min-h-12 sm:min-h-14 font-serif">
+										<h2 className="text-lg sm:text-xl text-foreground mb-2 transition-colors duration-200 line-clamp-2 min-h-12 sm:min-h-14 font-normal">
 											{post.title}
 										</h2>
 

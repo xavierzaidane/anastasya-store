@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback, useMemo, Suspense } from 'react';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { Product, ApiResponse, PaginatedData, Category } from '@/types/api';
 import { Button } from '@/components/ui/button';
 import {
@@ -14,17 +15,27 @@ import CreateProductDialog from '@/components/admin/products/CreateProductDialog
 import { DataTable } from './data-table';
 import { createColumns } from './columns';
 
-export default function ProductsPage() {
+function ProductsPageContent() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const categoryParam = searchParams.get('category') || '';
+
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [selectedCategory, setSelectedCategory] = useState<string>('');
+  const [selectedCategory, setSelectedCategory] = useState<string>(categoryParam);
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [totalPages, setTotalPages] = useState(1);
   const [total, setTotal] = useState(0);
   const [search, setSearch] = useState('');
+
+  // Sync selectedCategory state with URL param changes (e.g. sidebar navigation)
+  useEffect(() => {
+    setSelectedCategory(categoryParam);
+    setPage(1);
+  }, [categoryParam]);
 
   const fetchCategories = useCallback(async () => {
     try {
@@ -128,8 +139,14 @@ export default function ProductsPage() {
         <div className="flex items-center gap-2">
           <CreateProductDialog onProductCreated={handleProductCreated} />
           <Select value={selectedCategory} onValueChange={(value) => {
-            setSelectedCategory(value === 'all' ? '' : value);
-            setPage(1);
+            const val = value === 'all' ? '' : value;
+            const params = new URLSearchParams(searchParams.toString());
+            if (val) {
+              params.set('category', val);
+            } else {
+              params.delete('category');
+            }
+            router.push(`/admin/products?${params.toString()}`);
           }}>
             <SelectTrigger className="w-48">
               <SelectValue placeholder="All Categories" />
@@ -169,5 +186,18 @@ export default function ProductsPage() {
         onGlobalFilterChange={setSearch}
       />
     </div>
+  );
+}
+
+export default function ProductsPage() {
+  return (
+    <Suspense fallback={
+      <div className="space-y-6">
+        <h1 className="text-2xl font-semibold font-mono text-foreground">Products</h1>
+        <div className="text-sm text-muted-foreground mt-1">Loading products...</div>
+      </div>
+    }>
+      <ProductsPageContent />
+    </Suspense>
   );
 }

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { ABeeZee, Merriweather, Fira_Code, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import { SavedItemsProvider } from "@/hooks/use-saved-items";
-import Footer from "@/components/navigations/Footer";
+import ConditionalFooter from "@/components/navigations/ConditionalFooter";
 
 const fontSans = ABeeZee({
   subsets: ["latin"],
@@ -38,7 +38,7 @@ export default function RootLayout({
             {children}
         </SavedItemsProvider>
       </body>
-      <Footer />
+      <ConditionalFooter />
     </html>
   );
 }
