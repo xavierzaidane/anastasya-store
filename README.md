@@ -5,6 +5,9 @@ Anastasya is a high-end, minimalist e-commerce platform and editorial blog syste
 <p align="center">
   <img src="/public/assets/anastasya.png" alt="Project Image" width="100%">
 </p>
+<p align="center">
+  <img src="/public/assets/admindb.png" alt="Project Image" width="100%">
+</p>
 
 ## 🏗️ Architecture & Tech Stack
 
