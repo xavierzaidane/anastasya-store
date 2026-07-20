@@ -67,6 +67,8 @@ export async function PUT(
         ...(data.image !== undefined && { image: data.image }),
         ...(data.gallery !== undefined && { gallery: data.gallery }),
         ...(data.items !== undefined && { items: data.items }),
+        ...(data.isStaffPick !== undefined && { isStaffPick: data.isStaffPick }),
+        ...(data.isActive !== undefined && { isActive: data.isActive }),
         ...(data.categoryId && {
           category: { connect: { id: data.categoryId } },
         }),

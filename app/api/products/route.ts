@@ -20,9 +20,11 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(url);
 
     const search = searchParams.get("search") || "";
-  const category = searchParams.get("category");
+    const category = searchParams.get("category");
+    const staffPick = searchParams.get("staffPick");
 
     const where = {
+      ...(staffPick === "true" && { isStaffPick: true }),
       ...(search && {
         OR: [
           {

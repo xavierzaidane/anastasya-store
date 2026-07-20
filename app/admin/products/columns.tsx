@@ -10,6 +10,7 @@ import { Product } from '@/types/api';
 import { ViewProductDialog } from '@/components/admin/products/ViewProductDialog';
 import { EditProductDialog } from '@/components/admin/products/EditProductDialog';
 import { DeleteProductDialog } from '@/components/admin/products/DeleteProductDialog';
+import { ToggleStaffPickButton } from '@/components/admin/products/ToggleStaffPickButton';
 
 interface ColumnsProps {
   onProductUpdated: () => void;
@@ -150,6 +151,22 @@ export const createColumns = ({
         <Badge variant={getCategoryBadgeVariant(category?.id || 0)}>
           {category?.name || 'Uncategorized'}
         </Badge>
+      );
+    },
+    enableSorting: false,
+  },
+  {
+    id: 'staffPick',
+    header: () => <div className="text-center">Staff Pick</div>,
+    cell: ({ row }) => {
+      const product = row.original;
+      return (
+        <div className="flex justify-center">
+          <ToggleStaffPickButton
+            product={product}
+            onProductUpdated={onProductUpdated}
+          />
+        </div>
       );
     },
     enableSorting: false,

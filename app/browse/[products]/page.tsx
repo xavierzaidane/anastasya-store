@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
+import { Star } from 'lucide-react';
 import StoreNavbar from '@/components/navigations/StoreNavbar';
 import { mapApiProductToStorefront } from '@/lib/storefront-products';
 import { StorefrontApiResponse, StorefrontProduct } from '@/types/storefront';
@@ -22,6 +23,7 @@ interface CategoryDetailData {
     image: string | null;
     description?: string | null;
     items?: string[];
+    isStaffPick?: boolean;
   }>;
 }
 
@@ -163,6 +165,14 @@ export default function CategoryPage() {
                   alt={product.name}
                   className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                 />
+
+                {/* Staff Pick Badge - Top Left */}
+                {product.isStaffPick && (
+                  <div className="absolute top-1.5 left-1.5 sm:top-2 sm:left-2 px-2 py-0.5 sm:px-2.5 sm:py-1 bg-white/50  text-black backdrop-blur-sm rounded-full text-[10px] sm:text-xs font-normal flex items-center gap-1 z-10">
+                    <Star className="w-2.5 h-2.5 sm:w-3 sm:h-3 fill-white/50 text-black" />
+                    <span>Staff Pick</span>
+                  </div>
+                )}
                 
                 {/* Tap/Click Indicator */}
                 <div

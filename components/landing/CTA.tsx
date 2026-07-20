@@ -19,7 +19,7 @@ function CTA() {
         </div>
 
         <div className="flex flex-col items-center  text-center md:text-right gap-5">
-          <h2 className="text-7xl font-medium tracking-tighter text-neutral-900 leading-[0.95]">
+          <h2 className="text-7xl font-normal tracking-tighter text-neutral-900 leading-[0.95]">
             Collections.
           </h2>
           <p className="text-base md:text-lg text-neutral-600 leading-relaxed max-w-xl">

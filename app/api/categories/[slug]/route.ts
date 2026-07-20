@@ -32,6 +32,7 @@ export async function GET(
             image: true,
             description: true,
             items: true,
+            isStaffPick: true,
           },
         },
         _count: {

@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import Category from './Category';
 import LatestProduct from './LatestProduct';
+import StaffPicks from './StaffPicks';
 import CTA from './CTA';
 import FAQ from './FAQ';
 import Link from 'next/link';
@@ -66,9 +67,12 @@ const Hero: React.FC = () => {
           <CTA />
         </div>
 
-        <div className=" border-neutral-200 pt-32 pb-10 ">
+      
+
+        <div className=" border-neutral-200 pt-16 pb-10 ">
           <Category />
         </div>
+          <StaffPicks />
         <div className="pb-16 pt-10">
           <FAQ />
         </div>

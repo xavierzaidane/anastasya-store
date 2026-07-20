@@ -64,6 +64,8 @@ export const updateProductSchema = z.object({
   image: z.string().optional().nullable(),
   gallery: z.array(z.string()).optional(),
   items: z.array(z.string()).optional(),
+  isStaffPick: z.boolean().optional(),
+  isActive: z.boolean().optional(),
 });
 
 export type CreateProductInput = z.infer<typeof createProductSchema>;

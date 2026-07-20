@@ -61,6 +61,8 @@ export interface UpdateProductInput {
   description?: string;
   image?: string | null;
   items?: string[];
+  isStaffPick?: boolean;
+  isActive?: boolean;
 }
 
 // Blog Types

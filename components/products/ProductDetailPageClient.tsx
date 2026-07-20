@@ -2,7 +2,7 @@
 
 import React, { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import { XIcon, Share2, ShoppingCart, ChevronLeft, ChevronRight } from "lucide-react";
+import { XIcon, Share2, ShoppingCart, ChevronLeft, ChevronRight, Star } from "lucide-react";
 import { SiWhatsapp } from "react-icons/si";
 import { motion } from "motion/react";
 import { Button } from "../ui/button";
@@ -172,7 +172,14 @@ export default function ProductDetailPageClient({ initialProduct }: Props) {
           </div>
 
           <div className="pr-4 md:pr-0 no-scrollbar">
-            <p className="text-md text-zinc-500 mb-2">{liveProduct.category || 'Product'}</p>
+            <div className="flex items-center gap-2 mb-2">
+              <p className="text-md text-zinc-500">{liveProduct.category || 'Product'}</p>
+              {liveProduct.isStaffPick && (
+                <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-amber-500/10 text-amber-600 dark:text-amber-400 text-xs font-semibold">
+                  <Star className="w-3 h-3 fill-current" /> Staff Pick
+                </span>
+              )}
+            </div>
 
             <h1 className="text-3xl font-normal text-zinc-900 mb-4 tracking-tight">{liveProduct.name}</h1>
 
