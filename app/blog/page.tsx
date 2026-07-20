@@ -4,7 +4,6 @@ import Image from 'next/image';
 import StoreNavbar from '@/components/navigations/StoreNavbar';
 import { getPublishedBlogs } from '@/lib/server/blogs';
 
-// Clock icon component
 function ClockIcon() {
 	return (
 		<svg
@@ -31,7 +30,6 @@ export default async function BlogPage() {
 			<StoreNavbar />
 
 		<div className="px-4 sm:px-6 lg:px-8 py-8 max-w-6xl mx-auto pt-45">
-				{/* Header */}
 				<div className="mb-40 text-center">
 					<h1 className="text-3xl sm:text-4xl font-normal text-foreground tracking-tight mb-3">
 						Blogs
@@ -64,7 +62,6 @@ export default async function BlogPage() {
 											className="object-cover transition-transform duration-500 group-hover:scale-105"
 										/>
 									</div>
-
 									{/* Content */}
 									<div className="p-5 sm:p-6 flex flex-col grow">
 										{/* Category & Read Time */}
@@ -116,8 +113,6 @@ export default async function BlogPage() {
 					))}
 				</div>
 			</div>
-
-
 		</section>
 	);
 }
