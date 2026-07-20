@@ -1,4 +1,4 @@
-# Anastasya - Luxury Editorial Storefront & Admin
+# Anastasya - Storefront & Admin
 
 Anastasya is a high-end, minimalist e-commerce platform and editorial blog system. It features a sophisticated design language blending "Terminal Intelligence" (monospaced data layouts) with "Elegant Editorial" (serif-driven narratives). The application is built with a focus on luxury aesthetics, high-performance interactions, and a seamless management experience.
 
