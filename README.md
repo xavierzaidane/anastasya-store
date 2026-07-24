@@ -31,7 +31,7 @@ Anastasya is a high-end, minimalist e-commerce platform and editorial blog syste
 - **Saved Items**: Client-side item persistence for personalized shopping experiences.
 - **Responsive Design**: Fully optimized for mobile and desktop with custom hooks (`use-mobile`).
 
-### 🛡️ Admin Dashboard (v4.0.0)
+### Admin Dashboard (v4.0.0)
 - **Terminal Intelligence UI**: A minimalist, tech-focused dashboard using mono typography and `bg-card` containers.
 - **Real-time Metrics**: Dynamic analytics grid with "System Terminal" style status panels.
 - **Content Management**: Full CRUD operations for Products, Categories, and Blog posts via authenticated API routes.
@@ -77,6 +77,6 @@ public/              # Static Assets
 
 
 
-## 📄 License
+## License
 Private project. All rights reserved.
 
