@@ -9,7 +9,7 @@ Anastasya is a high-end, minimalist e-commerce platform and editorial blog syste
   <img src="/public/assets/admindb.png" alt="Project Image" width="100%">
 </p>
 
-## 🏗️ Architecture & Tech Stack
+## Architecture & Tech Stack
 
 - **Framework**: [Next.js 16 (App Router)](https://nextjs.org/)
 - **Language**: [TypeScript](https://www.typescript.org/)
@@ -22,9 +22,9 @@ Anastasya is a high-end, minimalist e-commerce platform and editorial blog syste
 - **Icons**: [Lucide React](https://lucide.dev/) & [React Icons](https://react-icons.github.io/react-icons/)
 - **Charts**: [Recharts](https://recharts.org/)
 
-## ✨ Key Features
+## Key Features
 
-### 🛍️ Storefront
+### Storefront
 - **Editorial Blog**: A high-contrast blog system using serif typography for long-form content and monospaced accents for metadata.
 - **Advanced Product Discovery**: Category-based browsing with interactive product dialogs.
 - **WhatsApp Integration**: Streamlined "Order via WhatsApp" functionality for direct customer engagement.
@@ -37,7 +37,7 @@ Anastasya is a high-end, minimalist e-commerce platform and editorial blog syste
 - **Content Management**: Full CRUD operations for Products, Categories, and Blog posts via authenticated API routes.
 - **Data Tables**: Powerful filtering and sorting using `@tanstack/react-table`.
 
-## 📁 Project Structure
+## Structure
 
 ```text
 app/                 # Next.js App Router (Admin, Blog, Browse, API)
@@ -49,7 +49,7 @@ types/               # Global TypeScript Definitions
 public/              # Static Assets
 ```
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 - Node.js 20+
