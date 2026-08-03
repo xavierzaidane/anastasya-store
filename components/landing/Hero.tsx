@@ -18,7 +18,7 @@ const Hero: React.FC = () => {
             transition={{ duration: 0.6 }}
             className="flex flex-col gap-6 pt-10"
           >
-            <h1 className="text-7xl md:text-8xl lg:text-[10rem] font-medium tracking-tighter text-neutral-900 leading-[0.95] text-center md:text-left">
+            <h1 className="text-7xl md:text-8xl lg:text-[10rem] font-normal tracking-tighter text-neutral-900 leading-[0.95] text-center md:text-left">
               Anastasya <br/>
               Bouquets
             </h1>

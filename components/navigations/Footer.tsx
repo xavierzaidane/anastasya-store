@@ -17,7 +17,7 @@ const Footer: React.FC = () => {
               Have feedback? Feel free to send us a message.
             </p>
             <p className="text-sm text-muted-foreground">
-              Crafted with love by <a className="text-primary underline" target="_blank" rel="noopener noreferrer" href="https://anastasya-store.com">Anastasya</a>
+              Crafted by <a className="text-primary underline" target="_blank" rel="noopener noreferrer" href="https://github.com/xavierzaidane">Xavier</a>
             </p>
           </div>
 
@@ -85,7 +85,7 @@ const Footer: React.FC = () => {
         <div className="mt-12 border-t border-border/40 pt-8">
           <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
             <p className="text-sm text-muted-foreground">© 2026 Anastasya. All rights reserved.</p>
-            <p className="text-sm text-muted-foreground">Made in Malang, Indonesia</p>
+            <p className="text-sm text-muted-foreground">Made in <span className="underline">Malang</span>, Indonesia</p>
           </div>
         </div>
       </div>
