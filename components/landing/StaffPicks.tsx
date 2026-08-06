@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
+import { Skeleton } from "@/components/ui/skeleton";
 import { mapApiProductToStorefront } from '@/lib/storefront-products';
 import { StorefrontApiResponse, StorefrontPaginatedProducts, StorefrontProduct } from '@/types/storefront';
 
@@ -40,7 +41,35 @@ export default function StaffPicks() {
     };
   }, []);
 
-  if (isLoading || products.length === 0) {
+  if (isLoading) {
+    return (
+      <section className="relative w-full py-12 md:py-16 mt-15">
+        <div className="mb-8 md:mb-10">
+          <h2 className="text-4xl md:text-5xl lg:text-6xl font-normal tracking-tighter text-neutral-900 leading-[0.95]">
+            Our Best Selling.
+          </h2>
+          <p className="mt-3 text-base text-neutral-600 leading-relaxed max-w-xl">
+            Explore our hand-curated collection of floral favorites, personally selected by our experienced lead florists. Every bouquet is carefully crafted to showcase the freshest seasonal flowers, elegant designs, and exceptional quality, making each gift truly memorable.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4 lg:gap-6">
+          {Array.from({ length: 5 }).map((_, index) => (
+            <div key={index} className="block">
+              <Skeleton className="w-full aspect-[3/4] rounded-md" />
+              <div className="pt-3 space-y-2">
+                <Skeleton className="h-3 w-16" />
+                <Skeleton className="h-4 w-32" />
+                <Skeleton className="h-4 w-20" />
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+    );
+  }
+
+  if (products.length === 0) {
     return null;
   }
 

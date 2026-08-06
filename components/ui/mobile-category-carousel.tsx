@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import React, { useEffect, useRef, useState } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
 
 type CategoryItem = {
   id: number;
@@ -22,7 +22,6 @@ type CategoriesApiResponse = {
   }> | null;
 };
 
-// Mobile carousel card component
 const CarouselCard = ({ item }: { item: CategoryItem }) => {
   return (
     <Link
@@ -45,6 +44,7 @@ const CarouselCard = ({ item }: { item: CategoryItem }) => {
 
 export function MobileCategoryCarousel() {
   const [carouselItems, setCarouselItems] = useState<CategoryItem[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -52,6 +52,7 @@ export function MobileCategoryCarousel() {
 
     const fetchCategories = async () => {
       try {
+        setIsLoading(true);
         const response = await fetch("/api/categories", { cache: "no-store" });
         if (!response.ok) return;
 
@@ -68,6 +69,8 @@ export function MobileCategoryCarousel() {
         setCarouselItems(items);
       } catch {
         // Keep empty UI if categories cannot be loaded.
+      } finally {
+        if (isMounted) setIsLoading(false);
       }
     };
 
@@ -78,19 +81,26 @@ export function MobileCategoryCarousel() {
     };
   }, []);
 
-  const scroll = (direction: "left" | "right") => {
-    if (!scrollContainerRef.current) return;
-    const scrollAmount = direction === "left" ? -320 : 320;
-    scrollContainerRef.current.scrollBy({ left: scrollAmount, behavior: "smooth" });
-  };
+  if (isLoading) {
+    return (
+      <div className="w-full">
+        <div className="relative">
+          <div className="flex gap-4 overflow-x-auto snap-x snap-mandatory scroll-smooth pb-2 no-scrollbar">
+            {Array.from({ length: 3 }).map((_, i) => (
+              <div key={i} className="shrink-0 w-78 flex flex-col gap-3">
+                <Skeleton className="h-86 rounded-lg w-full" />
+                <Skeleton className="h-4 w-32 mx-auto rounded" />
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full">
-      <div className="mb-4 flex items-center justify-end">
-      </div>
-
       <div className="relative">
-        {/* Carousel Container */}
         <div
           ref={scrollContainerRef}
           className="flex gap-4 overflow-x-auto snap-x snap-mandatory scroll-smooth pb-2 no-scrollbar"

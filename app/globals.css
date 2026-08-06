@@ -4,6 +4,9 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
+  --panel: #ffffff;
+  --ink: #131313;
+  --shadow-cap: 0 1.5px 0 rgba(0, 0, 0, 0.09), inset 0 0 0 1px rgba(0, 0, 0, 0.11);
   --background: #faf9f5;
   --foreground: #0a0a0a;
   --card: #faf9f5;
@@ -59,6 +62,9 @@
 }
 
 .dark {
+  --panel: #1d1d1a;
+  --ink: #f8f8f4;
+  --shadow-cap: 0 1.5px 0 rgba(0, 0, 0, 0.5), inset 0 0 0 1px rgba(255, 255, 255, 0.1);
   --background: #262624;
   --foreground: #c3c0b6;
   --card: #262624;
