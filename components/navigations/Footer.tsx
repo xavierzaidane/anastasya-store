@@ -17,7 +17,7 @@ const Footer: React.FC = () => {
               Have feedback? Feel free to send us a message.
             </p>
             <p className="text-sm text-muted-foreground">
-              Crafted by <a className="text-primary underline" target="_blank" rel="noopener noreferrer" href="https://github.com/xavierzaidane">Xavier</a>
+              Crafted by <a className="text-primary underline" target="_blank" rel="noopener noreferrer" href="https://www.linkedin.com/in/xavier-zaidane/">Xavier</a>
             </p>
           </div>
 
