@@ -36,12 +36,42 @@ const Hero: React.FC = () => {
 
             </div>
             <div className="flex justify-center md:justify-start pt-6 md:pt-8 lg:pt-10 items-center">
-              <Link
-                href="/browse"
-                className="inline-flex items-center justify-center border border-zinc-200 px-4 py-3 md:px-5 md:py-4 text-sm font-medium uppercase tracking-wide text-zinc-900 transition-colors hover:bg-primary hover:text-white"
-              >
-                View Bouquets
-              </Link>
+              <div className="relative inline-flex items-center">
+                <Link
+                  href="/browse"
+                  className="inline-flex items-center justify-center border border-zinc-200 px-4 py-3 md:px-5 md:py-4 text-sm font-medium uppercase tracking-wide text-zinc-900 transition-colors hover:bg-primary hover:text-white"
+                >
+                  View Bouquets
+                </Link>
+
+                {/* Hand-drawn arrow & "order here" pointing from the right */}
+                <div className="absolute left-full ml-2 sm:ml-3 -bottom-7 sm:-bottom-8 flex items-center select-none pointer-events-none z-10 scale-90 sm:scale-100 origin-left">
+                  <svg
+                    className="w-13 h-9 sm:w-16 sm:h-11 text-neutral-400 dark:text-neutral-500 -mt-1 sm:-mt-2 shrink-0"
+                    viewBox="0 0 85 50"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    aria-hidden="true"
+                  >
+                    <path
+                      d="M 77 44 C 59 38 33 24 7 8"
+                      stroke="currentColor"
+                      strokeWidth="1.75"
+                      strokeLinecap="round"
+                    />
+                    <path
+                      d="M 21 8 L 7 8 L 12 21"
+                      stroke="currentColor"
+                      strokeWidth="1.75"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                  <span className="font-handwriting text-2xl sm:text-3xl text-neutral-500 dark:text-neutral-400 rotate-6 tracking-wider font-normal whitespace-nowrap -ml-1">
+                    Shop Now!
+                  </span>
+                </div>
+              </div>
             </div>
           </motion.div>
 

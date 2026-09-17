@@ -70,7 +70,7 @@ export default function CategorySlider() {
         <div className="md:hidden flex flex-col gap-4 text-[#3d3929]">
           <div>
             <h1 className="text-5xl md:text-7xl lg:text-8xl font-medium tracking-tighter text-neutral-900 leading-[0.95] text-center">
-              Collections.
+              Order Here.
             </h1>
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
@@ -119,7 +119,7 @@ export default function CategorySlider() {
       <div className="md:hidden flex flex-col gap-4 text-[#3d3929]">
         <div>
           <h1 className="text-5xl md:text-7xl lg:text-8xl font-medium tracking-tighter text-neutral-900 leading-[0.95] text-center">
-            Collections.
+            Order Here.
           </h1>
         </div>
 

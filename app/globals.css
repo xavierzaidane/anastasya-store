@@ -1,7 +1,20 @@
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&display=swap');
 @import "tailwindcss";
 @import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
+
+.font-handwriting {
+  font-family: 'Caveat', 'Nanum Pen Script', 'Segoe Script', 'Comic Sans MS', cursive, sans-serif;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
 
 :root {
   --panel: #ffffff;

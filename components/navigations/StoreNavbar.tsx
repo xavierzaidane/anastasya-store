@@ -1,12 +1,19 @@
 "use client";
 import React, { useEffect, useState } from 'react';
-import { Menu, Search, X, Handbag } from 'lucide-react';
+import { Search, Handbag } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useSavedItems } from '@/hooks/use-saved-items';
+import { CurvedNavbar, type iNavItem } from '@/components/ui/curved-menu';
 import { SavedItemsSheet } from '../products/SavedItemsSheet';
 import SearchModal from '../products/SearchModal';
+
+const storeNavItems: iNavItem[] = [
+  { heading: "Discover", href: "/" },
+  { heading: "Browse", href: "/browse" },
+  { heading: "Blog", href: "/blog" },
+];
 
 export default function StoreNavbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -23,6 +30,17 @@ export default function StoreNavbar() {
       target.isContentEditable
     );
   };
+
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 80);
+    };
+    handleScroll();
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
@@ -62,7 +80,7 @@ export default function StoreNavbar() {
 
   return (
     <>
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-background h-20 flex items-center">
+      <nav className="absolute top-0 left-0 right-0 z-30 bg-background h-20 flex items-center">
         <div className="container mx-auto px-6 md:px-12 flex items-center justify-between w-full">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 group cursor-pointer">
@@ -111,7 +129,6 @@ export default function StoreNavbar() {
               onClick={() => setSearchModalOpen(true)}
               className="text-sm font-medium transition-colors relative after:content-[''] after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-[2px] after:bg-brand-lime after:transition-all hover:after:w-full text-neutral-500 hover:text-black flex items-center gap-2"
             >
-
               Search
               <kbd className="text-[10px] font-mono px-1.5 py-0.5 rounded border border-neutral-200 bg-neutral-100 text-neutral-500 ml-2">
                 ⌘ K
@@ -135,63 +152,91 @@ export default function StoreNavbar() {
             </button>
           </div>
 
-          {/* Mobile Menu Button */}
-          <button 
-            className="md:hidden p-2 text-neutral-600"
-            onClick={() => setIsOpen(!isOpen)}
-          >
-            {isOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
+          {/* Mobile Right Controls (when at top of page) */}
+          <div className="flex md:hidden items-center gap-1 z-40">
+            <button 
+              onClick={() => setSavedItemsSheetOpen(true)}
+              className="relative p-2 text-neutral-600 hover:text-neutral-900 transition-colors rounded-lg" 
+              aria-label="Saved items"
+            >
+              <Handbag className="w-5 h-5" />
+              {totalItems > 0 && (
+                <span className="absolute top-0 right-0 min-w-4 h-4 flex items-center justify-center px-1 text-[10px] font-semibold rounded-full text-white bg-neutral-900">
+                  {totalItems > 99 ? '99+' : totalItems}
+                </span>
+              )}
+            </button>
+
+            {/* Hamburger Button inside top navbar (hidden when floating trigger is active) */}
+            {!isScrolled && !isOpen && (
+              <button 
+                className="p-2 text-black cursor-pointer focus:outline-none"
+                onClick={() => setIsOpen(true)}
+                aria-label="Open navigation menu"
+              >
+                <div className="relative w-6 h-4.5 flex flex-col justify-between items-center">
+                  <span className="block h-0.5 w-6 bg-black" />
+                  <span className="block h-0.5 w-6 bg-black" />
+                  <span className="block h-0.5 w-6 bg-black" />
+                </div>
+              </button>
+            )}
+          </div>
         </div>
       </nav>
 
-      {/* Mobile Menu Overlay */}
+      {/* Floating Sidebar Trigger (Appears when scrolled down on desktop & mobile, or when menu is open) */}
       <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            className="md:hidden fixed top-20 left-0 right-0 bg-background overflow-hidden shadow-xl z-40"
+        {(isScrolled || isOpen) && (
+          <motion.button
+            initial={{ opacity: 0, scale: 0.8, y: -10 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.8, y: -10 }}
+            transition={{ duration: 0.25, ease: "easeOut" }}
+            onClick={() => setIsOpen(!isOpen)}
+            className="fixed top-4 right-4 md:top-5 md:right-8 z-[60] w-12 h-12 rounded-full bg-white dark:bg-neutral-900 border border-neutral-200/80 dark:border-neutral-800 shadow-md hover:shadow-lg flex items-center justify-center cursor-pointer hover:scale-105 active:scale-95 transition-all focus:outline-none"
+            aria-label="Toggle navigation menu"
           >
-            <div className="flex flex-col p-6 gap-4">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.name}
-                  href={link.href}
-                  className={`text-lg font-medium transition-colors ${
-                    isActive(link.href)
-                      ? 'text-neutral-900'
-                      : 'text-neutral-600 hover:text-black'
-                  }`}
-                  onClick={() => setIsOpen(false)}
-                >
-                  {link.name}
-                </Link>
-              ))}
-              <button
-                onClick={() => {
-                  setSearchModalOpen(true);
-                  setIsOpen(false);
-                }}
-                className="text-lg font-medium transition-colors text-neutral-600 hover:text-black flex items-center gap-2"
-              >
-                <Search className="w-5 h-5" />
-                Search
-              </button>
-              <hr className="border-neutral-100" />
-              <button 
-                onClick={() => {
-                  setSavedItemsSheetOpen(true);
-                  setIsOpen(false);
-                }}
-                className="w-full py-3 font-semibold rounded-lg flex justify-center items-center gap-2 text-neutral-600 hover:text-black hover:bg-neutral-50 transition-colors"
-              >
-                <Handbag className="w-5 h-5" />
-                Saved Items {totalItems > 0 && `(${totalItems > 99 ? '99+' : totalItems})`}
-              </button>
+            <div className="relative w-6 h-4.5 flex flex-col justify-between items-center">
+              <span
+                className={`block h-0.5 w-5 bg-neutral-900 dark:bg-white transition-transform duration-300 ${
+                  isOpen ? "rotate-45 translate-y-2" : ""
+                }`}
+              />
+              <span
+                className={`block h-0.5 w-5 bg-neutral-900 dark:bg-white transition-opacity duration-300 ${
+                  isOpen ? "opacity-0" : ""
+                }`}
+              />
+              <span
+                className={`block h-0.5 w-5 bg-neutral-900 dark:bg-white transition-transform duration-300 ${
+                  isOpen ? "-rotate-45 -translate-y-2" : ""
+                }`}
+              />
             </div>
-          </motion.div>
+          </motion.button>
+        )}
+      </AnimatePresence>
+
+      {/* Curved Menu Overlay (Works on both desktop & mobile) */}
+      <AnimatePresence mode="wait">
+        {isOpen && (
+          <>
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              onClick={() => setIsOpen(false)}
+              className="fixed inset-0 bg-black/40 backdrop-blur-[2px] z-40"
+            />
+            {/* Curved Navbar Slide-over */}
+            <CurvedNavbar
+              setIsActive={setIsOpen}
+              navItems={storeNavItems}
+            />
+          </>
         )}
       </AnimatePresence>
 
