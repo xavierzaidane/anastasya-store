@@ -1,5 +1,5 @@
-import RegisterPage from "@/components/admin/auth/RegisterPage";
+import { redirect } from "next/navigation";
 
 export default function AdminRegisterPage() {
-    return <RegisterPage />;
+  redirect("/sign-in");
 }

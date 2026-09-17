@@ -1,3 +1,4 @@
+import { ClerkProvider } from "@clerk/nextjs";
 import type { Metadata } from "next";
 import { ABeeZee, Merriweather, Fira_Code, Playfair_Display } from "next/font/google";
 import "./globals.css";
@@ -34,9 +35,11 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${fontSans.variable} ${fontSerif.variable} ${fontMono.variable} antialiased`}>
-        <SavedItemsProvider>
-            {children}
-        </SavedItemsProvider>
+        <ClerkProvider>
+          <SavedItemsProvider>
+          {children}
+          </SavedItemsProvider>
+        </ClerkProvider>
       </body>
       <ConditionalFooter />
     </html>

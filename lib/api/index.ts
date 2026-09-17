@@ -71,7 +71,6 @@ export {
   isAuthenticated,
   withAuth,
   withAdmin,
-  verifyToken,
   type AuthUser,
   type AuthResult,
   type UserRole,

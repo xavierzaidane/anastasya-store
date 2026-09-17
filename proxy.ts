@@ -1,40 +1,21 @@
-import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
+import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 
-export function proxy(request: NextRequest) {
-    // Get the path
-    const path = request.nextUrl.pathname;
+const isAdminRoute = createRouteMatcher(["/admin(.*)"]);
 
-    // Define public paths that don't require authentication
-    const isPublicPath = path === "/admin/login" || path === "/admin/register";
+const handler = clerkMiddleware(async (auth, req) => {
+  if (isAdminRoute(req)) {
+    await auth.protect();
+  }
+});
 
-    // Check if the path is an admin path
-    const isAdminPath = path.startsWith("/admin");
+export default handler;
+export const proxy = handler;
 
-    // Get the token from cookies
-    const token = request.cookies.get("token")?.value || "";
-
-    // If it's an admin path (and not a public path like login/register)
-    if (isAdminPath && !isPublicPath) {
-        // If no token, redirect to login
-        if (!token) {
-            return NextResponse.redirect(new URL("/admin/login", request.nextUrl));
-        }
-    }
-
-    // If it's a public path (login/register) and user has a token
-    if (isPublicPath && token) {
-        // Redirect to admin dashboard
-        return NextResponse.redirect(new URL("/admin", request.nextUrl));
-    }
-
-    return NextResponse.next();
-}
-
-// Configure which paths the middleware should run on
 export const config = {
-    matcher: [
-        // Match all paths starting with /admin
-        "/admin/:path*",
-    ],
+  matcher: [
+    // Skip Next.js internals and all static files, unless found in search params
+    "/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)",
+    // Always run for API routes
+    "/(api|trpc)(.*)",
+  ],
 };

@@ -1,5 +1,5 @@
-import LoginPage from "@/components/admin/auth/LoginPage";
+import { redirect } from "next/navigation";
 
 export default function AdminLoginPage() {
-    return <LoginPage />;
+  redirect("/sign-in");
 }

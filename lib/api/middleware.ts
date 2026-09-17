@@ -1,58 +1,24 @@
 import { NextResponse } from "next/server";
-import { cookies } from "next/headers";
-import jwt from "jsonwebtoken";
-import prisma from "@/lib/prisma";
+import { getCurrentUser } from "@/lib/auth";
 import { ApiErrors } from "./response";
-
-const JWT_SECRET = process.env.JWT_SECRET!;
 
 export type UserRole = "ADMIN" | "CUSTOMER";
 
 export interface AuthUser {
   id: number;
+  clerkId?: string | null;
   email: string;
   name: string | null;
   role: UserRole;
 }
 
-export interface JwtPayload {
-  userId: number;
-}
-
 /**
- * Verify JWT token and return payload
- */
-export function verifyToken(token: string): JwtPayload | null {
-  try {
-    return jwt.verify(token, JWT_SECRET) as JwtPayload;
-  } catch {
-    return null;
-  }
-}
-
-/**
- * Get authenticated user from request cookies
+ * Get authenticated user from Clerk session & Prisma
  */
 export async function getAuthUser(): Promise<AuthUser | null> {
-  const cookieStore = await cookies();
-  const token = cookieStore.get("token")?.value;
-
-  if (!token) return null;
-
-  const payload = verifyToken(token);
-  if (!payload) return null;
-
-  const user = await prisma.user.findUnique({
-    where: { id: payload.userId },
-    select: {
-      id: true,
-      email: true,
-      name: true,
-      role: true,
-    },
-  });
-
-  return user as AuthUser | null;
+  const user = await getCurrentUser();
+  if (!user) return null;
+  return user as AuthUser;
 }
 
 /**
