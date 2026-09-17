@@ -9,6 +9,31 @@ interface PageProps {
   params: Promise<{ products: string; slug: string }>;
 }
 
+export const revalidate = 60;
+
+export async function generateStaticParams() {
+  try {
+    const products = await prisma.product.findMany({
+      where: { isActive: true },
+      select: {
+        slug: true,
+        category: {
+          select: {
+            slug: true,
+          },
+        },
+      },
+    });
+
+    return products.map((product) => ({
+      products: product.category?.slug || 'general',
+      slug: product.slug,
+    }));
+  } catch {
+    return [];
+  }
+}
+
 export default async function ProductDetail({ params }: PageProps) {
   const { slug, products } = await params;
 

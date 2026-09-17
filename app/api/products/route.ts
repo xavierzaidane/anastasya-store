@@ -1,4 +1,5 @@
 import { NextRequest } from "next/server";
+import { revalidatePath } from "next/cache";
 import prisma from "@/lib/prisma";
 import {
   successResponse,
@@ -117,6 +118,11 @@ export async function POST(request: NextRequest) {
         category: true,
       },
     });
+
+    // Revalidate storefront pages
+    revalidatePath('/browse/[products]', 'page');
+    revalidatePath('/browse/[products]/[slug]', 'page');
+    revalidatePath('/');
 
     return createdResponse(product, "Product created successfully");
   } catch (error) {

@@ -1,4 +1,5 @@
 import { NextRequest } from "next/server";
+import { revalidatePath } from "next/cache";
 import prisma from "@/lib/prisma";
 import {
   successResponse,
@@ -78,6 +79,12 @@ export async function PUT(
       },
     });
 
+    // Revalidate storefront pages
+    revalidatePath(`/browse/${updatedProduct.category?.slug || 'general'}/${updatedProduct.slug}`, 'page');
+    revalidatePath('/browse/[products]/[slug]', 'page');
+    revalidatePath('/browse/[products]', 'page');
+    revalidatePath('/');
+
     return successResponse(updatedProduct, "Product updated successfully");
   } catch (error) {
     return handleApiError(error);
@@ -101,6 +108,7 @@ export async function DELETE(
     // Check if product exists
     const existingProduct = await prisma.product.findUnique({
       where: { slug },
+      include: { category: true },
     });
 
     if (!existingProduct) {
@@ -111,6 +119,12 @@ export async function DELETE(
     await prisma.product.delete({
       where: { slug },
     });
+
+    // Revalidate storefront pages
+    revalidatePath(`/browse/${existingProduct.category?.slug || 'general'}/${existingProduct.slug}`, 'page');
+    revalidatePath('/browse/[products]/[slug]', 'page');
+    revalidatePath('/browse/[products]', 'page');
+    revalidatePath('/');
 
     return successResponse(null, "Product deleted successfully");
   } catch (error) {

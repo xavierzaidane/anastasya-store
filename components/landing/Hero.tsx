@@ -18,7 +18,7 @@ const Hero: React.FC = () => {
             transition={{ duration: 0.6 }}
             className="flex flex-col gap-6 pt-10"
           >
-            <h1 className="text-7xl md:text-8xl lg:text-[10rem] font-normal tracking-tighter text-neutral-900 leading-[0.95] text-center md:text-left">
+            <h1 className="text-7xl md:text-8xl lg:text-[8rem] font-normal tracking-tighter text-neutral-900 leading-[0.95] text-center md:text-left">
               Anastasya <br/>
               Bouquets
             </h1>
@@ -81,19 +81,19 @@ const Hero: React.FC = () => {
             transition={{ duration: 0.6, delay: 0.1 }}
             className="flex items-center justify-center"
           >
-            <div className="relative w-full max-w-[300px] sm:max-w-[440px] md:max-w-[520px] lg:max-w-[600px] xl:max-w-[790px]">
+            <div className="relative w-full max-w-[500px] sm:max-w-[440px] md:max-w-[520px] lg:max-w-[500px] xl:max-w-[795px]">
               <div className="relative w-full">
                 <img
                   src="/assets/bungahero.png"
                   alt="flower bouquet"
-                  className="w-full h-auto object-contain relative z-10 left-0 lg:left-58 top-2 sm:top-0 md:-top-8 lg:-top-206"
+                  className="w-full h-auto object-contain relative z-10 left-0 lg:left-58 top-2 sm:top-0 md:-top-8 lg:-top-180"
                 />
               </div>
             </div>
           </motion.div>
         </div>
 
-         <div className=" border-neutral-200 pt-228 md:pt-206 lg:pt-1 -mb-15 -mt-242">
+         <div className=" border-neutral-200 pt-202 md:pt-206 lg:pt-1 -mb-15 -mt-216">
           <CTA />
         </div>
 
