@@ -46,7 +46,7 @@ export default function StaffPicks() {
       <section className="relative w-full py-12 md:py-16 mt-15">
         <div className="mb-8 md:mb-10">
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-normal tracking-tighter text-neutral-900 leading-[0.95]">
-            Our Best Selling.
+            Our Best Selling
           </h2>
           <p className="mt-3 text-base text-neutral-600 leading-relaxed max-w-xl">
             Explore our hand-curated collection of floral favorites, personally selected by our experienced lead florists.
@@ -91,7 +91,7 @@ export default function StaffPicks() {
     <section className="relative w-full py-12 md:py-16 mt-15">
       <div className="mb-8 md:mb-10">
         <h2 className="text-4xl md:text-5xl lg:text-6xl font-normal tracking-tighter text-neutral-900 leading-[0.95]">
-          Our Best Selling.
+          Our Best Selling
         </h2>
         <p className="mt-3 text-base text-neutral-600 leading-relaxed max-w-xl">
           Explore our hand-curated collection of floral favorites, personally selected by our experienced lead florists.

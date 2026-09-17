@@ -69,9 +69,9 @@ export default function BrowsePage() {
       <StoreNavbar />
       <div className="container mx-auto px-6 md:px-10 lg:px-12 max-w-8xl">
         <div className="mb-8 py-35">
-          <h1 className="text-3xl font-normal text-zinc-900 tracking-tight mb-2 text-center">
-            Browse by Category
-          </h1>
+          <h1 className="text-3xl sm:text-4xl font-normal text-foreground tracking-tight mb-3 text-center">
+						Browse by Category
+					</h1>
         </div>
         <div className="transition-all duration-700 z-30 w-full flex items-center justify-between text-neutral-600 h-10 md:h-14 font-light text-sm px-4 md:px-8 md:mb-12 mb-6 bg-background backdrop-blur-xl border-b border-t border-neutral-200 border-opacity-60">
           <p className="font-medium text-neutral-900">Categories ({categories.length})</p>

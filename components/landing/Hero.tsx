@@ -6,6 +6,7 @@ import StaffPicks from './StaffPicks';
 import CTA from './CTA';
 import FAQ from './FAQ';
 import Link from 'next/link';
+import RippleLink from '@/components/ui/ripple-link';
 
 const Hero: React.FC = () => {
   return (
@@ -37,12 +38,12 @@ const Hero: React.FC = () => {
             </div>
             <div className="flex justify-center md:justify-start pt-6 md:pt-8 lg:pt-10 items-center">
               <div className="relative inline-flex items-center">
-                <Link
+                <RippleLink
                   href="/browse"
-                  className="inline-flex items-center justify-center border border-zinc-200 px-4 py-3 md:px-5 md:py-4 text-sm font-medium uppercase tracking-wide text-zinc-900 transition-colors hover:bg-primary hover:text-white"
+                  className="inline-flex items-center justify-center border border-zinc-200 px-4 py-3 md:px-5 md:py-4 text-sm font-medium uppercase tracking-wide text-zinc-900"
                 >
                   View Bouquets
-                </Link>
+                </RippleLink>
 
                 {/* Hand-drawn arrow & "order here" pointing from the right */}
                 <div className="absolute left-full ml-2 sm:ml-3 -bottom-7 sm:-bottom-8 flex items-center select-none pointer-events-none z-10 scale-90 sm:scale-100 origin-left">
@@ -81,19 +82,19 @@ const Hero: React.FC = () => {
             transition={{ duration: 0.6, delay: 0.1 }}
             className="flex items-center justify-center"
           >
-            <div className="relative w-full max-w-[500px] sm:max-w-[440px] md:max-w-[520px] lg:max-w-[500px] xl:max-w-[795px]">
+            <div className="relative w-full max-w-[500px] sm:max-w-[440px] md:max-w-[550px] lg:max-w-[500px] xl:max-w-[795px]">
               <div className="relative w-full">
                 <img
                   src="/assets/bungahero.png"
                   alt="flower bouquet"
-                  className="w-full h-auto object-contain relative z-10 left-0 lg:left-58 top-2 sm:top-0 md:-top-8 lg:-top-180"
+                  className="w-full h-auto object-contain relative z-10 left-0 lg:left-58 top-2 sm:top-0 md:-top-6 lg:-top-180"
                 />
               </div>
             </div>
           </motion.div>
         </div>
 
-         <div className=" border-neutral-200 pt-202 md:pt-206 lg:pt-1 -mb-15 -mt-216">
+         <div className=" border-neutral-200 pt-202 md:pt-182 lg:pt-1 -mb-15 -mt-216">
           <CTA />
         </div>
 
@@ -102,7 +103,7 @@ const Hero: React.FC = () => {
         <div className=" border-neutral-200 pt-16 pb-10 ">
           <Category />
         </div>
-          <StaffPicks />
+        <StaffPicks />
         <div className="pb-16 pt-10">
           <FAQ />
         </div>
