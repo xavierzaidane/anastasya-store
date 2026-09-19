@@ -225,7 +225,7 @@ export default function ProductDetailPageClient({ initialProduct }: Props) {
                     <ul className="space-y-2 pt-2">
                       {liveProduct.items.map((item, index) => (
                         <li key={index} className="flex items-start gap-2 text-sm text-zinc-700">
-                          <span className="text-zinc-400 mt-0.5">✓</span>
+                          <span className="text-zinc-400 mt-0.5">-</span>
                           <span>{item}</span>
                         </li>
                       ))}

@@ -150,7 +150,7 @@ export default function CategoryPage() {
 
       {/* Product Grid */}
         <div className="container mx-auto px-6 md:px-10 lg:px-12 max-w-8xl">
-        <div className="grid grid-cols-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4 lg:gap-6 min-h-100 pb-16">
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4 lg:gap-6 min-h-100 pb-16">
           {products.map((product) => (
             <Link
               key={product.id}

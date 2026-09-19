@@ -21,7 +21,7 @@ const Footer: React.FC = () => {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 gap-8 sm:grid-cols-3">
+          <div className="hidden md:grid grid-cols-3 gap-8">
             <div className="space-y-4">
               <h3 className="text-sm font-semibold">Quick Links</h3>
               <ul className="space-y-2">

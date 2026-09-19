@@ -83,7 +83,7 @@ export default function BrowsePage() {
           </div>
         </div>
 
-        <div className="pb-8 grid grid-cols-3 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 min-h-100">
+        <div className="pb-8 grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 min-h-100">
           {isLoading && (
             Array.from({ length: 6 }).map((_, index) => (
               <div key={`category-skeleton-${index}`} className="pointer-events-none">
