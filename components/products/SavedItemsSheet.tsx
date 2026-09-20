@@ -66,9 +66,6 @@ export function SavedItemsSheet({ open, onOpenChange }: SavedItemsSheetProps) {
             <ShoppingCart className="w-5 h-5" />
             Cart ({getTotalItems()})
           </DrawerTitle>
-          <DrawerDescription>
-            Review your bouquet items before checking out via WhatsApp.
-          </DrawerDescription>
         </DrawerHeader>
 
         <DrawerBody className="max-h-[60vh] overflow-y-auto">
