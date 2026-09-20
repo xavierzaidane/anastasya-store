@@ -1,14 +1,7 @@
-<h1 align="center">Anastasya Bouquets</h1>
+<h1 align="left">Anastasya Bouquets</h1>
 
-<p align="center">
+<p align="left">
   <strong>A high-end e-commerce atelier & terminal-inspired backoffice management platform for bespoke floral arrangements.</strong>
-</p>
-
-<p align="center">
-  <img src="/public/assets/anastasya.png" alt="Project Image" width="100%">
-</p>
-<p align="center">
-  <img src="/public/assets/admindb.png" alt="Project Image" width="100%">
 </p>
 
 ## Architecture & Tech Stack
