@@ -76,16 +76,6 @@ export function SavedItemsSheet({ open, onOpenChange }: SavedItemsSheetProps) {
               <p className="text-muted-foreground text-sm mb-6">
                 Browse our collection and save your favorites!
               </p>
-              <DrawerClose asChild>
-                <RippleButton
-                  variant="outline"
-                  className="border-zinc-200 tracking-wide text-xs sm:text-sm font-medium px-4 py-2"
-                  rippleColor="bg-primary"
-                  hoverTextColor="group-hover:text-white"
-                >
-                  Continue Shopping
-                </RippleButton>
-              </DrawerClose>
             </div>
           ) : (
             <div className="space-y-4">
