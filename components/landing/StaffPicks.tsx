@@ -89,7 +89,7 @@ export default function StaffPicks() {
 
   return (
     <section className="relative w-full py-12 md:py-16 mt-15">
-      <div className="mb-8 md:mb-10">
+      <div className="mb-8 md:mb-10 text-center md:text-left">
         <h2 className="text-4xl md:text-5xl lg:text-6xl font-normal tracking-tighter text-neutral-900 leading-[0.95]">
           Our Best Selling
         </h2>

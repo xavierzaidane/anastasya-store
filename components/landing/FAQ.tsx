@@ -39,8 +39,8 @@ export default function FaqLanding() {
   ]
 
   return (
-    <section className="py-16 md:py-24">
-      <div className="mx-auto w-full px-6">
+    <section className="py-16 md:py-24 ">
+      <div className="mx-auto w-full px-6 text-center md:text-left">
         <div className="grid gap-8 md:grid-cols-5 md:gap-12">
           <div className="md:col-span-2">
             <h2 className="text-neutral-900 text-4xl md:text-5xl font-normal tracking-tighter leading-[0.95]">Frequently Asked Questions</h2>

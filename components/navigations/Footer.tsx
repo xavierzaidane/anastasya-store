@@ -4,10 +4,10 @@ import React from 'react';
 const Footer: React.FC = () => {
   return (
     <footer className="container mx-auto px-6 md:px-10 lg:px-12 max-w-8xl border-t border-border/40 bg-background">
-      <div className="mx-auto max-w-8xl px-4 py-12 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-8xl px-4 py-12 sm:px-6 lg:px-8 text-center md:text-left">
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2 pb-45">
-          <div className="space-y-4">
-            <Link className="flex items-center gap-2 transition-opacity hover:opacity-80" href="/">
+          <div className="space-y-5">
+            <Link className="items-center gap-2 transition-opacity hover:opacity-80 " href="/">
               <span className="text-lg font-medium">Anastasya</span>
             </Link>
             <p className="text-sm text-muted-foreground sm:max-w-md">
