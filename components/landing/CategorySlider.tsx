@@ -69,7 +69,7 @@ export default function CategorySlider() {
         {/* Mobile Skeleton */}
         <div className="md:hidden flex flex-col gap-4 text-[#3d3929]">
           <div>
-            <h1 className="text-5xl md:text-7xl lg:text-8xl font-medium tracking-tighter text-neutral-900 leading-[0.95] text-center">
+            <h1 className="text-4xl md:text-7xl lg:text-8xl font-medium tracking-tighter text-neutral-900 leading-[0.95] text-center">
               Order Here.
             </h1>
           </div>

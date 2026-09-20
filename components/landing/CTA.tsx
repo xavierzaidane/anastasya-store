@@ -7,7 +7,7 @@ function CTA() {
     <section className="border-t border-neutral-200 py-12 reveal-text-container">
       <div className="grid gap-10 pt-10 md:grid-cols-2 items-start mt-15">
         <div className="flex flex-col gap-3 text-center md:text-left">
-           <h2 className="text-7xl md:text-6xl font-normal tracking-tighter text-neutral-900 leading-[0.95]">
+           <h2 className="text-5xl md:text-6xl font-normal tracking-tighter text-neutral-900 leading-[0.95]">
             Order Here
           </h2>
           <p className="mt-3 text-base text-neutral-600 leading-relaxed max-w-xl">

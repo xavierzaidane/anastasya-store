@@ -43,7 +43,7 @@ export default function FaqLanding() {
       <div className="mx-auto w-full px-6">
         <div className="grid gap-8 md:grid-cols-5 md:gap-12">
           <div className="md:col-span-2">
-            <h2 className="text-neutral-900 text-6xl md:text-5xl font-normal tracking-tighter leading-[0.95]">Frequently Asked Questions</h2>
+            <h2 className="text-neutral-900 text-4xl md:text-5xl font-normal tracking-tighter leading-[0.95]">Frequently Asked Questions</h2>
             <p className="text-muted-foreground mt-4 text-balance text-lg">
               Everything you need to know about Anastasya Bouquet
             </p>
