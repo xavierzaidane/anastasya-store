@@ -69,7 +69,7 @@ export default function BrowsePage() {
       <StoreNavbar />
       <div className="container mx-auto px-6 md:px-10 lg:px-12 max-w-8xl">
         <div className="mb-8 py-35">
-          <h1 className="text-3xl sm:text-4xl font-normal text-foreground tracking-tight mb-3 text-center">
+          <h1 className="text-3xl sm:text-4xl font-normal text-neutral-900 tracking-tight mb-3 text-center">
 						Browse by Category
 					</h1>
         </div>

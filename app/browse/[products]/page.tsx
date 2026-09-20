@@ -1,13 +1,21 @@
+/* eslint-disable @next/next/no-img-element */
 'use client';
 
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState, useSyncExternalStore } from 'react';
 import { Star } from 'lucide-react';
 import StoreNavbar from '@/components/navigations/StoreNavbar';
 import { mapApiProductToStorefront } from '@/lib/storefront-products';
 import { StorefrontApiResponse, StorefrontProduct } from '@/types/storefront';
 import { Skeleton } from '@/components/ui/skeleton';
+import {
+  Pagination,
+  PaginationPrevious,
+  PaginationItem,
+  PaginationNext,
+  PaginationEllipsis,
+} from '@/components/ui/pagination';
 
 interface CategoryDetailData {
   id: number;
@@ -27,6 +35,25 @@ interface CategoryDetailData {
   }>;
 }
 
+function useMediaQuery(query: string) {
+  const subscribe = useCallback(
+    (callback: () => void) => {
+      const matchMedia = window.matchMedia(query);
+      matchMedia.addEventListener('change', callback);
+      return () => matchMedia.removeEventListener('change', callback);
+    },
+    [query]
+  );
+
+  const getSnapshot = () => {
+    return window.matchMedia(query).matches;
+  };
+
+  const getServerSnapshot = () => false;
+
+  return useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
+}
+
 export default function CategoryPage() {
   const params = useParams();
   const categorySlug = params?.products as string;
@@ -34,13 +61,16 @@ export default function CategoryPage() {
   const [categoryName, setCategoryName] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const ITEMS_PER_PAGE = 20;
+
+  const isMobile = useMediaQuery('(max-width: 640px)');
+  const isTablet = useMediaQuery('(max-width: 768px)');
 
   const fallbackCategoryName = useMemo(() => {
     if (!categorySlug) return '';
     return categorySlug.charAt(0).toUpperCase() + categorySlug.slice(1);
   }, [categorySlug]);
-
-  // product detail now navigates to standalone page; no dialogs here
 
   useEffect(() => {
     const fetchCategory = async () => {
@@ -77,9 +107,71 @@ export default function CategoryPage() {
     fetchCategory();
   }, [categorySlug, fallbackCategoryName]);
 
+  // Reset page when category changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [categorySlug]);
+
+  const totalPages = Math.max(1, Math.ceil(products.length / ITEMS_PER_PAGE));
+
+  const paginatedProducts = useMemo(() => {
+    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+    return products.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+  }, [products, currentPage, ITEMS_PER_PAGE]);
+
+  const handlePageChange = (newPage: number) => {
+    setCurrentPage(newPage);
+    const targetElement = document.getElementById('products-section');
+    if (targetElement) {
+      targetElement.scrollIntoView({ behavior: 'smooth' });
+    } else {
+      window.scrollTo({ top: 250, behavior: 'smooth' });
+    }
+  };
+
+  const getVisiblePages = () => {
+    const delta = isMobile ? 1 : isTablet ? 1 : 2;
+    const rangeWithDots: (number | string)[] = [];
+    if (totalPages <= 7) {
+      return Array.from({ length: totalPages }, (_, i) => i + 1);
+    }
+    rangeWithDots.push(1);
+
+    let startPage = Math.max(2, currentPage - delta);
+    let endPage = Math.min(totalPages - 1, currentPage + delta);
+
+    if (currentPage === 1) {
+      endPage = Math.min(totalPages - 1, 1 + delta * 2);
+    } else if (currentPage === totalPages) {
+      startPage = Math.max(2, totalPages - delta * 2);
+    } else {
+      startPage = Math.max(2, Math.min(startPage, currentPage));
+      endPage = Math.min(totalPages - 1, Math.max(endPage, currentPage));
+    }
+
+    if (startPage > 2) {
+      rangeWithDots.push('...');
+    }
+
+    for (let i = startPage; i <= endPage; i++) {
+      if (i !== 1 && i !== totalPages) {
+        rangeWithDots.push(i);
+      }
+    }
+
+    if (endPage < totalPages - 1) {
+      rangeWithDots.push('...');
+    }
+
+    if (totalPages > 1) {
+      rangeWithDots.push(totalPages);
+    }
+    return rangeWithDots;
+  };
+
   if (isLoading) {
     return (
-      <section className="w-full ">
+      <section className="w-full">
         <StoreNavbar />
         <div className="container mx-auto px-6 md:px-10 lg:px-12 max-w-8xl">
           <div className="mb-8">
@@ -100,7 +192,6 @@ export default function CategoryPage() {
             ))}
           </div>
         </div>
-
       </section>
     );
   }
@@ -128,17 +219,23 @@ export default function CategoryPage() {
       {/* Category Header */}
       <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mb-8 py-8 sm:py-10 lg:py-12">
         <div className="-mb-10 py-35">
-          <h1 className="text-3xl sm:text-4xl lg:text-4xl font-medium text-neutral-900 tracking-tight mb-3 text-center">
+          <h1 className="text-3xl sm:text-4xl lg:text-4xl font-normal text-neutral-900 tracking-tight mb-3 text-center">
             {categoryName}
           </h1>
-
         </div>
       </div>
 
       {/* Products Header Bar */}
-      <div className="container mx-auto px-6 md:px-10 lg:px-12 max-w-8xl">
+      <div id="products-section" className="container mx-auto px-6 md:px-10 lg:px-12 max-w-8xl">
         <div className="transition-all duration-700 z-30 w-full flex items-center justify-between text-neutral-600 h-10 md:h-14 font-light text-sm px-0 md:mb-12 mb-6 backdrop-blur-xl border-b border-t border-neutral-200">
-          <p className="font-medium text-neutral-900">Products ({products.length})</p>
+          <p className="font-medium text-neutral-900">
+            Products ({products.length})
+            {totalPages > 1 && (
+              <span className="text-muted-foreground font-normal ml-2 text-xs sm:text-sm">
+                • Page {currentPage} of {totalPages}
+              </span>
+            )}
+          </p>
           <div className="h-full flex items-center justify-center select-none cursor-pointer gap-2">
             <svg stroke="currentColor" fill="none" strokeWidth="2" viewBox="0 0 24 24" aria-hidden="true" className="opacity-70 w-4 h-4 text-neutral-600" xmlns="http://www.w3.org/2000/svg">
               <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
@@ -149,9 +246,9 @@ export default function CategoryPage() {
       </div>
 
       {/* Product Grid */}
-        <div className="container mx-auto px-6 md:px-10 lg:px-12 max-w-8xl">
-        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4 lg:gap-6 min-h-100 pb-16">
-          {products.map((product) => (
+      <div className="container mx-auto px-6 md:px-10 lg:px-12 max-w-8xl">
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4 lg:gap-6 min-h-100 pb-12">
+          {paginatedProducts.map((product) => (
             <Link
               key={product.id}
               href={`/browse/${categorySlug}/${product.slug}`}
@@ -168,12 +265,12 @@ export default function CategoryPage() {
 
                 {/* Staff Pick Badge - Top Left */}
                 {product.isStaffPick && (
-                  <div className="absolute top-1.5 left-1.5 sm:top-2 sm:left-2 px-2 py-0.5 sm:px-2.5 sm:py-1 bg-white/50  text-black backdrop-blur-sm rounded-full text-[10px] sm:text-xs font-normal flex items-center gap-1 z-10">
+                  <div className="absolute top-1.5 left-1.5 sm:top-2 sm:left-2 px-2 py-0.5 sm:px-2.5 sm:py-1 bg-white/50 text-black backdrop-blur-sm rounded-full text-[10px] sm:text-xs font-normal flex items-center gap-1 z-10">
                     <Star className="w-2.5 h-2.5 sm:w-3 sm:h-3 fill-white/50 text-black" />
                     <span>Staff Pick</span>
                   </div>
                 )}
-                
+
                 {/* Tap/Click Indicator */}
                 <div
                   className="absolute top-1 right-1 sm:top-2 sm:right-2 p-1.5 sm:p-2 bg-white/50 backdrop-blur-sm rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
@@ -205,8 +302,6 @@ export default function CategoryPage() {
                   </svg>
                 </div>
 
-              
-
                 {/* Price Badge - Bottom Right */}
                 <p className="absolute bottom-1 right-1 sm:bottom-2 sm:right-2 px-2 sm:px-3 py-1 sm:py-1.5 bg-white/50 backdrop-blur-sm rounded-full text-xs sm:text-sm font-semibold text-zinc-900">
                   {product.price}
@@ -225,10 +320,43 @@ export default function CategoryPage() {
             </Link>
           ))}
         </div>
+
+        {/* Pagination */}
+        {products.length > 0 && (
+          <div className="w-full flex justify-center pb-16 overflow-x-auto">
+            <Pagination className="flex-wrap min-w-fit">
+              <PaginationPrevious
+                onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
+                disabled={currentPage === 1}
+                size={isMobile ? 'sm' : 'default'}
+              >
+                {isMobile ? 'Prev' : 'Previous'}
+              </PaginationPrevious>
+              {getVisiblePages().map((page, index) =>
+                page === '...' ? (
+                  <PaginationEllipsis key={`ellipsis-${index}`} />
+                ) : (
+                  <PaginationItem
+                    key={page}
+                    isActive={page === currentPage}
+                    onClick={() => handlePageChange(page as number)}
+                    size={isMobile ? 'sm' : 'default'}
+                  >
+                    {page}
+                  </PaginationItem>
+                )
+              )}
+              <PaginationNext
+                onClick={() => handlePageChange(Math.min(totalPages, currentPage + 1))}
+                disabled={currentPage === totalPages}
+                size={isMobile ? 'sm' : 'default'}
+              >
+                {isMobile ? 'Next' : 'Next'}
+              </PaginationNext>
+            </Pagination>
+          </div>
+        )}
       </div>
-      
-
-
     </section>
   );
 }

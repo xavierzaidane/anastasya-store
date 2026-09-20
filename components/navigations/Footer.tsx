@@ -47,6 +47,11 @@ const Footer: React.FC = () => {
               <h3 className="text-sm font-semibold">Resources</h3>
               <ul className="space-y-2">
                 <li>
+                  <Link className="text-sm text-muted-foreground transition-colors hover:text-foreground" href="/guide">
+                    Order Guide
+                  </Link>
+                </li>
+                <li>
                   <Link className="text-sm text-muted-foreground transition-colors hover:text-foreground" href="/blog">
                     Floral Tips
                   </Link>

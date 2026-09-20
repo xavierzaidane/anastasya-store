@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from 'react';
-import { Search, Handbag } from 'lucide-react';
+import { Handbag } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -12,6 +12,7 @@ import SearchModal from '../products/SearchModal';
 const storeNavItems: iNavItem[] = [
   { heading: "Discover", href: "/" },
   { heading: "Browse", href: "/browse" },
+  { heading: "Guide", href: "/guide" },
   { heading: "Blog", href: "/blog" },
 ];
 
@@ -75,6 +76,7 @@ export default function StoreNavbar() {
   const navLinks = [
     { name: 'Discover', href: '/' },
     { name: 'Browse', href: '/browse' },
+    { name: 'Guide', href: '/guide' },
     { name: 'Blog', href: '/blog' },
   ];
 
