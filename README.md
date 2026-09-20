@@ -1,7 +1,7 @@
 <h1 align="left">Anastasya Bouquets</h1>
 
 <p align="left">
-  <strong>A high-end e-commerce atelier & terminal-inspired backoffice management platform for bespoke floral arrangements.</strong>
+A high-end e-commerce atelier & terminal-inspired backoffice management platform for bespoke floral arrangements.
 </p>
 
 ## Architecture & Tech Stack
