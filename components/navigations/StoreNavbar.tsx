@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Handbag } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useSavedItems } from '@/hooks/use-saved-items';
 import { CurvedNavbar, type iNavItem } from '@/components/ui/curved-menu';
@@ -85,30 +86,15 @@ export default function StoreNavbar() {
       <nav className="absolute top-0 left-0 right-0 z-30 bg-background h-20 flex items-center">
         <div className="container mx-auto px-6 md:px-12 flex items-center justify-between w-full">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 group cursor-pointer">
-            <div className="p-1.5 rounded-full text-black group-hover:bg-brand-lime group-hover:text-black transition-colors duration-300">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                color="currentColor"
-                stroke="currentColor"
-                strokeWidth="1.5"
-              >
-                <path
-                  d="M12 7.5V16.5M15.8971 9.75L8.10289 14.25M15.897 14.25L8.10275 9.75"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-                <path
-                  d="M6.47867 6.76926C2.20958 10.8137 1.22078 16.4342 4.27013 19.323C6.87609 21.7918 11.5879 21.4667 15.5675 18.7956L20 20.5L18.0841 16.6688C21.8721 12.6801 22.6403 7.43426 19.7299 4.67697C16.6805 1.78811 10.7478 2.72486 6.47867 6.76926Z"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </div>
+          <Link href="/" className="flex items-center gap-2 group cursor-pointer" aria-label="Anastasya Home">
+            <Image
+              src="/assets/logoanastasya.png"
+              alt="Anastasya Bouquets Logo"
+              width={555}
+              height={555}
+              className="h-15 w-auto object-contain"
+              priority
+            />
           </Link>
 
           {/* Desktop Links */}

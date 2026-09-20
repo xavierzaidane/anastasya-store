@@ -24,7 +24,7 @@ const fontMono = ADLaM_Display({
 
 
 export const metadata: Metadata = {
-  title: "Anastasya Store",
+  title: "Anastasya Bouquet",
   description: "Welcome to Anastasya Store, a curated selection of unique and stylish items. Explore our collection and find your next treasure.",
 };
 

@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import React from 'react';
+import Image from 'next/image';
 
 const Footer: React.FC = () => {
   return (
@@ -7,8 +8,14 @@ const Footer: React.FC = () => {
       <div className="mx-auto max-w-8xl px-4 py-12 sm:px-6 lg:px-8 text-center md:text-left">
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2 pb-45">
           <div className="space-y-5">
-            <Link className="items-center gap-2 transition-opacity hover:opacity-80 " href="/">
-              <span className="text-lg font-medium">Anastasya</span>
+            <Link className="inline-flex items-center justify-center md:justify-start gap-2 transition-opacity hover:opacity-80" href="/" aria-label="Anastasya Home">
+              <Image
+                src="/assets/logoanastasya.png"
+                alt="Anastasya Bouquets Logo"
+                width={555}
+                height={555}
+                className="h-15 w-auto object-contain"
+              />
             </Link>
             <p className="text-sm text-muted-foreground sm:max-w-md">
               Create memorable floral gifts with modern bouquets and curated arrangements.
