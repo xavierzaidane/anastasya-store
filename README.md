@@ -1,7 +1,3 @@
-<p align="center">
-  <img src="public/assets/logoanastasya.png" alt="Anastasya Logo" width="100" />
-</p>
-
 <h1 align="center">Anastasya Bouquets</h1>
 
 <p align="center">
