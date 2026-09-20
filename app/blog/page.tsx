@@ -39,7 +39,7 @@ export default async function BlogPage() {
 				{/* Blog Grid */}
 				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 min-h-100 items-stretch pb-16">
 					{blogPosts.length === 0 && (
-						<p className="text-sm text-muted-foreground col-span-full font-mono">No blog posts available.</p>
+						<p className="text-sm text-muted-foreground col-span-full font-normal">No blog posts available.</p>
 					)}
 
 					{blogPosts.map((post) => (
@@ -69,7 +69,7 @@ export default async function BlogPage() {
 											<span className="px-3 py-1 bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider rounded-full font-normal">
 												{post.category}
 											</span>
-											<div className="flex items-center gap-1.5 text-xs text-muted-foreground font-mono">
+											<div className="flex items-center gap-1.5 text-xs text-muted-foreground font-normal">
 												<ClockIcon />
 												<span>{post.readTime} min read</span>
 											</div>
@@ -102,7 +102,7 @@ export default async function BlogPage() {
 													</p>
 												</div>
 											</div>
-											<span className="text-xs font-bold text-primary group-hover:translate-x-1 transition-transform duration-300 font-mono">
+											<span className="text-xs font-bold text-primary group-hover:translate-x-1 transition-transform duration-300 font-normal">
 												READ →
 											</span>
 										</div>

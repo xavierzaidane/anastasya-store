@@ -70,10 +70,10 @@ function BlogCard({ post }: { post: StorefrontBlog }) {
           <div className="p-5 sm:p-6 flex flex-col grow">
             {/* Category & Read Time */}
             <div className="flex items-center gap-3 mb-3">
-              <span className="px-3 py-1 bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider rounded-full font-mono">
+              <span className="px-3 py-1 bg-primary/10 text-primary text-xs font-normal  tracking-wider rounded-full font-normal">
                 {post.category}
               </span>
-              <div className="flex items-center gap-1.5 text-xs text-muted-foreground font-mono">
+              <div className="flex items-center gap-1.5 text-xs text-muted-foreground font-normal">
                 <ClockIcon size={14} />
                 <span>{post.readTime} min read</span>
               </div>
@@ -89,18 +89,18 @@ function BlogCard({ post }: { post: StorefrontBlog }) {
             <div className="flex items-center justify-between pt-4 border-t border-border/40 mt-auto">
               <div className="flex items-center gap-2">
                 <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
-                  <span className="text-[10px] font-bold text-primary">
+                  <span className="text-[10px] font-normal text-primary">
                     {post.author.initial}
                   </span>
                 </div>
                 <div>
-                  <p className="text-[10px] font-bold text-foreground uppercase tracking-tight">
+                  <p className="text-[10px] font-normal text-foreground  tracking-tight">
                     {post.author.name}
                   </p>
-                  <p className="text-[10px] text-muted-foreground uppercase">{post.date}</p>
+                  <p className="text-[10px] text-muted-foreground ">{post.date}</p>
                 </div>
               </div>
-              <span className="text-xs font-bold text-primary group-hover:translate-x-1 transition-transform duration-300 font-mono">
+              <span className="text-xs font-normal text-primary group-hover:translate-x-1 transition-transform duration-300 font-normal">
                 READ →
               </span>
             </div>
@@ -129,7 +129,7 @@ function BlogContent({ content }: { content: string }) {
       elements.push(
         <h2
           key={index}
-          className="text-2xl font-bold text-foreground mt-8 mb-4 first:mt-0 font-serif"
+          className="text-2xl font-normal text-foreground mt-8 mb-4 first:mt-0 font-serif"
         >
           {trimmedLine.slice(3)}
         </h2>
@@ -137,7 +137,7 @@ function BlogContent({ content }: { content: string }) {
       return;
     }
 
-    // Bold text handling within paragraphs
+    // normal text handling within paragraphs
     const formattedLine = trimmedLine.replace(
       /\*\*(.*?)\*\*/g,
       '<strong>$1</strong>'
@@ -204,7 +204,7 @@ export default async function BlogDetailPage({ params }: PageProps) {
         {/* Back Button */}
         <Link
           href="/blog"
-          className="inline-flex items-center gap-2 text-muted-foreground hover:text-primary mb-6 transition-all group font-mono text-xs font-bold uppercase tracking-widest"
+          className="inline-flex items-center gap-2 text-muted-foreground hover:text-primary mb-6 transition-all group font-normal text-xs font-normal  tracking-widest"
           aria-label="Back to blog"
         >
           <ArrowLeftIcon />
@@ -228,32 +228,32 @@ export default async function BlogDetailPage({ params }: PageProps) {
           <div className="p-6 sm:p-8 md:p-12">
             {/* Category & Read Time */}
             <div className="flex items-center gap-3 mb-6">
-              <span className="px-3 py-1 bg-primary/10 text-primary text-sm font-bold uppercase tracking-wider rounded-full font-mono">
+              <span className="px-3 py-1 bg-primary/10 text-primary text-sm font-normal  tracking-wider rounded-full font-normal">
                 {post.category}
               </span>
-              <div className="flex items-center gap-1.5 text-sm text-muted-foreground font-mono">
+              <div className="flex items-center gap-1.5 text-sm text-muted-foreground font-normal">
                 <ClockIcon />
                 <span>{post.readTime} min read</span>
               </div>
             </div>
 
             {/* Title */}
-            <h1 className="text-3xl md:text-5xl font-bold text-foreground mb-6 leading-tight font-serif tracking-tight">
+            <h1 className="text-3xl md:text-5xl font-normal text-foreground mb-6 leading-tight font-serif tracking-tight">
               {post.title}
             </h1>
 
             {/* Author Info */}
             <div className="flex items-center gap-4 mb-10 pb-10 border-b border-border/40">
               <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
-                <span className="text-sm font-bold text-primary">
+                <span className="text-sm font-normal text-primary">
                   {post.author.initial}
                 </span>
               </div>
               <div>
-                <p className="text-sm font-bold text-foreground uppercase tracking-tight">
+                <p className="text-sm font-normal text-foreground  tracking-tight">
                   {post.author.name}
                 </p>
-                <p className="text-[10px] text-muted-foreground uppercase opacity-60">{post.date}</p>
+                <p className="text-[10px] text-muted-foreground  opacity-60">{post.date}</p>
               </div>
             </div>
 
@@ -267,7 +267,7 @@ export default async function BlogDetailPage({ params }: PageProps) {
         {/* Related Articles */}
         {relatedPosts.length > 0 && (
           <div className="mt-20 pb-20">
-            <h2 className="text-2xl font-bold text-foreground mb-10 font-serif">
+            <h2 className="text-2xl font-normal text-foreground mb-10 font-serif">
               Suggested Articles
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">

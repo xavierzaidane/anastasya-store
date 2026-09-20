@@ -1,7 +1,19 @@
-# Anastasya - Storefront & Admin
+<p align="center">
+  <img src="public/assets/logoanastasya.png" alt="Anastasya Logo" width="100" />
+</p>
 
-Anastasya is a high-end, minimalist e-commerce platform and editorial blog system. It features a sophisticated design language blending "Terminal Intelligence" (monospaced data layouts) with "Elegant Editorial" (serif-driven narratives). The application is built with a focus on luxury aesthetics, high-performance interactions, and a seamless management experience.
+<h1 align="center">Anastasya Bouquets</h1>
 
+<p align="center">
+  <strong>A high-end e-commerce atelier & terminal-inspired backoffice management platform for bespoke floral arrangements.</strong>
+</p>
+
+<p align="center">
+  <img src="/public/assets/anastasya.png" alt="Project Image" width="100%">
+</p>
+<p align="center">
+  <img src="/public/assets/admindb.png" alt="Project Image" width="100%">
+</p>
 
 ## Architecture & Tech Stack
 
@@ -34,43 +46,128 @@ Anastasya is a high-end, minimalist e-commerce platform and editorial blog syste
 ## Structure
 
 ```text
-app/                 # Next.js App Router (Admin, Blog, Browse, API)
-components/          # UI Components (shadcn/ui + Custom Admin/Storefront)
-hooks/               # Custom React Hooks (Theme, Mobile, Saved Items)
-lib/                 # Core Utilities (Auth, Prisma, API Middleware)
-prisma/              # Database Schema & Migrations
-types/               # Global TypeScript Definitions
-public/              # Static Assets
+anastasya-store/
+├── app/
+│   ├── (auth)/                # Clerk authentication routes (sign-in, sign-up)
+│   ├── admin/                 # Backoffice management routes
+│   │   ├── blog/              # Blog post CRUD & editorial management
+│   │   ├── categories/        # Category administration
+│   │   ├── products/          # Product catalog & inventory controls
+│   │   └── AdminDashboard.tsx # Terminal-inspired telemetry & metrics HUD
+│   ├── api/                   # Route handlers (REST endpoints & Clerk webhooks)
+│   ├── blog/                  # Customer-facing editorial blog & post details
+│   ├── browse/                # Product catalog with category filter & pagination
+│   ├── landing/               # Brand storytelling & flagship showcase
+│   ├── layout.tsx             # Root application layout & font declarations
+│   └── page.tsx               # Storefront homepage
+├── components/
+│   ├── admin/                 # Admin data tables, uploaders & modal dialogs
+│   ├── landing/               # Hero, Staff Picks, Categories, FAQ, & CTA
+│   ├── navigations/           # StoreNavbar, AdminSidebar, CurvedMenu, & Footer
+│   ├── products/              # ProductCards, SavedItemsSheet, & SizeGuideModal
+│   └── ui/                    # Reusable shadcn/ui & custom micro-interaction components
+├── hooks/                     # Custom React hooks (useMobile, useSavedItems, etc.)
+├── lib/                       # Prisma client, authentication helpers, & utilities
+├── prisma/                    # Prisma schema, migrations, & database config
+├── public/
+│   └── assets/                # Brand logos, mockups, sizing charts, & static images
+├── types/                     # Shared TypeScript interfaces & API contracts
+├── next.config.ts             # Next.js build & image optimization settings
+├── package.json               # Project manifest & dependency specifications
+└── tsconfig.json              # Strict TypeScript configuration
 ```
 
-## Getting Started
+---
+
+## ✦ Getting Started
 
 ### Prerequisites
-- Node.js 20+
-- PostgreSQL instance
 
-### Installation
-1. Clone the repository
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
-3. Set up your environment variables in a `.env` file (see `prisma.config.ts` for reference):
-   ```env
-   DATABASE_URL="postgresql://user:password@localhost:5432/anastasya"
-   JWT_SECRET="your_secret_key"
-   ```
-4. Initialize the database:
-   ```bash
-   npx prisma migrate dev
-   ```
-5. Run the development server:
-   ```bash
-   npm run dev
-   ```
+- **Node.js**: v20.x or higher
+- **npm** / **pnpm** / **yarn**
+- **PostgreSQL**: Local instance or cloud database (e.g., [Neon](https://neon.tech/))
+- **Clerk Account**: For authentication keys
+- **Cloudinary Account**: For media uploads and asset CDN
 
+### 1. Clone the Repository
 
+```bash
+git clone https://github.com/xavierzaidane/anastasya-store.git
+cd anastasya-store
+```
 
-## License
-Private project. All rights reserved.
+### 2. Install Dependencies
 
+```bash
+npm install
+```
+
+### 3. Environment Configuration
+
+Create a `.env` file in the root directory and populate the required environment variables:
+
+```env
+# Database (PostgreSQL / Neon)
+DATABASE_URL="postgresql://user:password@localhost:5432/anastasya?sslmode=require"
+
+# Environment Mode
+NODE_ENV="development"
+
+# Clerk Authentication
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY="pk_test_..."
+CLERK_SECRET_KEY="sk_test_..."
+NEXT_PUBLIC_CLERK_SIGN_IN_URL="/sign-in"
+NEXT_PUBLIC_CLERK_SIGN_UP_URL="/sign-up"
+NEXT_PUBLIC_CLERK_SIGN_IN_FALLBACK_REDIRECT_URL="/"
+NEXT_PUBLIC_CLERK_SIGN_UP_FALLBACK_REDIRECT_URL="/"
+
+# Cloudinary Media Storage
+NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME="your_cloud_name"
+CLOUDINARY_API_KEY="your_api_key"
+CLOUDINARY_API_SECRET="your_api_secret"
+
+# Optional: Custom JWT Secret for legacy routes
+JWT_SECRET="your_jwt_secret"
+```
+
+### 4. Database Setup & Migrations
+
+Generate the Prisma Client and apply migrations:
+
+```bash
+npx prisma generate
+npx prisma migrate dev
+```
+
+### 5. Launch Development Server
+
+```bash
+npm run dev
+```
+
+Visit [http://localhost:3000](http://localhost:3000) in your browser to view the storefront, or navigate to [http://localhost:3000/admin](http://localhost:3000/admin) to explore the admin dashboard.
+
+---
+
+## ✦ Engineering Highlights
+
+- **Server-First Architecture**: Extensive use of **React Server Components (RSC)** to fetch products, categories, and blog articles directly on the server, eliminating client waterfall requests and improving First Contentful Paint (FCP).
+- **Tailwind CSS v4 & Theme System**: Leverages the high-performance Rust-based engine of Tailwind CSS v4 with CSS custom properties (`@theme`), maintaining strict contrast ratios across light and dark interfaces.
+- **Client-Side Image Manipulation**: Integrates `react-easy-crop` with HTML canvas transforms to crop and optimize images before pushing directly to Cloudinary, ensuring uniform aspect ratios across all product cards and banners.
+- **Conversational Checkout Workflow**: Eliminates heavy traditional multi-step checkout friction for regional boutique floristry by serializing cart payloads into formatted WhatsApp API deep-links with item counts, notes, and totals.
+- **Micro-Interaction Fidelity**: Custom ref-forwarded interactive ripple buttons that measure pointer entry coordinates and smoothly scale animated radial fills without blocking click propagation.
+
+---
+
+## ✦ Author & Contact
+
+**Xavier Zaidane**
+
+- **GitHub**: [@xavierzaidane](https://github.com/xavierzaidane)
+- **Repository**: [anastasya-store](https://github.com/xavierzaidane/anastasya-store)
+
+---
+
+## ✦ License
+
+This project is proprietary software developed for portfolio and commercial presentation. All rights reserved.
