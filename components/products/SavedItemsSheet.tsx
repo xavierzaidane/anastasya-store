@@ -82,7 +82,7 @@ export function SavedItemsSheet({ open, onOpenChange }: SavedItemsSheetProps) {
               <DrawerClose asChild>
                 <RippleButton
                   variant="outline"
-                  className="border-zinc-200  tracking-wide text-xs sm:text-sm font-medium px-4 py-2"
+                  className="border-black/30 tracking-wide text-xs sm:text-sm font-medium px-4 py-2"
                   rippleColor="bg-primary"
                   hoverTextColor="group-hover:text-white"
                 >
@@ -95,7 +95,7 @@ export function SavedItemsSheet({ open, onOpenChange }: SavedItemsSheetProps) {
               {savedItems.map((item) => (
                 <div
                   key={item.id}
-                  className="flex items-center gap-3 sm:gap-4 p-3 sm:p-4 border border-border/70 rounded-xl bg-card/60"
+                  className="flex items-center gap-3 sm:gap-4 p-3 sm:p-4 border border-muted rounded-xl bg-card/60"
                 >
                   <div className="size-16 sm:size-20 rounded-lg overflow-hidden bg-muted shrink-0">
                     <img
@@ -157,13 +157,13 @@ export function SavedItemsSheet({ open, onOpenChange }: SavedItemsSheetProps) {
               ))}
 
               {/* Order Summary */}
-              <div className="border-t border-border/80 pt-4 mt-6">
+              <div className="border-t border-black/30 pt-4 mt-6">
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm text-muted-foreground">
                     <span>Subtotal</span>
                     <span>{formatPrice(calculateTotal())}</span>
                   </div>
-                  <div className="border-t border-border/60 pt-2 flex justify-between font-semibold text-base text-foreground">
+                  <div className="border-t border-black/30 pt-2 flex justify-between font-semibold text-base text-foreground">
                     <span>Total</span>
                     <span>{formatPrice(calculateTotal())}</span>
                   </div>
@@ -186,7 +186,7 @@ export function SavedItemsSheet({ open, onOpenChange }: SavedItemsSheetProps) {
           <DrawerClose asChild>
             <RippleButton
               variant="outline"
-              className="w-full border-zinc-200  tracking-wide text-xs sm:text-sm font-medium"
+              className="w-full border-black/30 tracking-wide text-xs sm:text-sm font-medium"
               rippleColor="bg-primary"
               hoverTextColor="group-hover:text-white"
             >
