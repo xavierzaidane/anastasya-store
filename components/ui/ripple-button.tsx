@@ -14,7 +14,7 @@ export interface RippleButtonProps
 
 const variantStyles: Record<string, string> = {
   default: "bg-primary text-primary-foreground",
-  outline: "border border-border bg-background text-foreground shadow-xs",
+  outline: "border border-zinc-200 bg-background text-foreground shadow-xs",
   secondary: "bg-secondary text-secondary-foreground border",
   ghost: "bg-transparent text-foreground",
 };

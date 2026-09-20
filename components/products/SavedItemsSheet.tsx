@@ -79,7 +79,7 @@ export function SavedItemsSheet({ open, onOpenChange }: SavedItemsSheetProps) {
               <DrawerClose asChild>
                 <RippleButton
                   variant="outline"
-                  className="border-black/30 tracking-wide text-xs sm:text-sm font-medium px-4 py-2"
+                  className="border-zinc-200 tracking-wide text-xs sm:text-sm font-medium px-4 py-2"
                   rippleColor="bg-primary"
                   hoverTextColor="group-hover:text-white"
                 >
@@ -183,7 +183,7 @@ export function SavedItemsSheet({ open, onOpenChange }: SavedItemsSheetProps) {
           <DrawerClose asChild>
             <RippleButton
               variant="outline"
-              className="w-full border-black/30 tracking-wide text-xs sm:text-sm font-medium"
+              className="w-full border-zinc-200 tracking-wide text-xs sm:text-sm font-medium"
               rippleColor="bg-primary"
               hoverTextColor="group-hover:text-white"
             >
