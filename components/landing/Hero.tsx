@@ -46,7 +46,7 @@ const Hero: React.FC = () => {
                 </RippleLink>
 
                 {/* Hand-drawn arrow & "order here" pointing from the right */}
-                <div className="absolute left-full ml-2 sm:ml-3 -bottom-7 sm:-bottom-8 flex items-center select-none pointer-events-none z-10 scale-90 sm:scale-100 origin-left">
+                <div className="absolute left-full -ml-10 sm:ml-3 -bottom-10 sm:-bottom-8 flex items-center select-none pointer-events-none z-10 scale-90 sm:scale-100 origin-left">
                   <svg
                     className="w-13 h-9 sm:w-16 sm:h-11 text-neutral-400 dark:text-neutral-500 -mt-1 sm:-mt-2 shrink-0"
                     viewBox="0 0 85 50"

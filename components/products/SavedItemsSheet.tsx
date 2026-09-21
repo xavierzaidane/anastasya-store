@@ -181,14 +181,14 @@ export function SavedItemsSheet({ open, onOpenChange }: SavedItemsSheetProps) {
             </RippleButton>
           </DrawerClose>
           <RippleButton
-            className="w-full gap-2 bg-[#25D366] text-white border-0  tracking-wide text-xs sm:text-sm font-medium shadow-xs"
+            className="w-full gap-2 bg-primary text-white border-0  tracking-wide text-xs sm:text-sm font-medium shadow-xs"
             rippleColor="bg-[#1ebe5d]"
             hoverTextColor="group-hover:text-white"
             disabled={savedItems.length === 0 || isOrdering}
             onClick={handleOrderViaWhatsApp}
             aria-label={isOrdering ? 'Opening WhatsApp...' : `Checkout (${formatPrice(calculateTotal())})`}
           >
-            <SiWhatsapp className="w-4 h-4 shrink-0" />
+            <SiWhatsapp className="w-4 h-4 text-[#25D366] hover:text-white shrink-0" />
             <span>{isOrdering ? 'Opening...' : 'Checkout'}</span>
             <span className="hidden sm:inline">
               {!isOrdering && ` (${formatPrice(calculateTotal())})`}
