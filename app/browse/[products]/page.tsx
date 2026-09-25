@@ -4,7 +4,7 @@
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { useCallback, useEffect, useMemo, useState, useSyncExternalStore } from 'react';
-import { Star } from 'lucide-react';
+import { Star, Tag, Sparkles, Flower2, ArrowUpDown } from 'lucide-react';
 import StoreNavbar from '@/components/navigations/StoreNavbar';
 import { mapApiProductToStorefront } from '@/lib/storefront-products';
 import { StorefrontApiResponse, StorefrontProduct } from '@/types/storefront';
@@ -16,6 +16,70 @@ import {
   PaginationNext,
   PaginationEllipsis,
 } from '@/components/ui/pagination';
+import { FilterBar, type Filter, type FilterFieldDef } from '@/components/ui/filter-token-bar';
+
+function parsePrice(priceStr: string | number): number {
+  if (typeof priceStr === 'number') return priceStr;
+  const num = Number(priceStr.replace(/[^0-9]/g, ''));
+  return Number.isNaN(num) ? 0 : num;
+}
+
+const productFilterFields: FilterFieldDef[] = [
+  {
+    id: 'price',
+    label: 'Price',
+    icon: <Tag className="text-neutral-500 dark:text-zinc-400 w-3.5 h-3.5" />,
+    operators: [{ value: 'is', label: 'is' }],
+    options: [
+      { value: 'under_100k', label: 'Under Rp 100.000' },
+      { value: '100k_250k', label: 'Rp 100.000 – Rp 250.000' },
+      { value: '250k_500k', label: 'Rp 250.000 – Rp 500.000' },
+      { value: 'above_500k', label: 'Above Rp 500.000' },
+    ],
+  },
+  {
+    id: 'staff_pick',
+    label: 'Staff Pick',
+    icon: <Sparkles className=" text-neutral-500 dark:text-zinc-400 w-3.5 h-3.5" />,
+    operators: [{ value: 'is', label: 'is' }],
+    options: [
+      { value: 'yes', label: 'Staff Picks Only' },
+      { value: 'no', label: 'All Products' },
+    ],
+  },
+  {
+    id: 'flower',
+    label: 'Flower',
+    icon: <Flower2 className="text-neutral-500 dark:text-zinc-400 w-3.5 h-3.5" />,
+    operators: [
+      { value: 'is', label: 'contains' },
+      { value: 'is_any', label: 'contains any of', multi: true },
+    ],
+    options: [
+      { value: 'rose', label: 'Rose' },
+      { value: 'tulip', label: 'Tulip' },
+      { value: 'daisy', label: 'Daisy' },
+      { value: 'breath', label: "Baby's Breath" },
+      { value: 'hydrangea', label: 'Hydrangea' },
+      { value: 'sunflower', label: 'Sunflower' },
+      { value: 'lily', label: 'Lily' },
+      { value: 'carnation', label: 'Carnation' },
+      { value: 'orchid', label: 'Orchid' },
+    ],
+  },
+  {
+    id: 'sort',
+    label: 'Sort',
+    icon: <ArrowUpDown className=" text-neutral-500 dark:text-zinc-400 w-3.5 h-3.5" />,
+    operators: [{ value: 'is', label: 'is' }],
+    options: [
+      { value: 'price_asc', label: 'Price: Low to High' },
+      { value: 'price_desc', label: 'Price: High to Low' },
+      { value: 'name_asc', label: 'Name: A to Z' },
+      { value: 'staff_first', label: 'Staff Picks First' },
+    ],
+  },
+];
 
 interface CategoryDetailData {
   id: number;
@@ -107,17 +171,76 @@ export default function CategoryPage() {
     fetchCategory();
   }, [categorySlug, fallbackCategoryName]);
 
-  // Reset page when category changes
+  const [filters, setFilters] = useState<Filter[]>([]);
+
+  // Reset page when category or filters change
   useEffect(() => {
     setCurrentPage(1);
-  }, [categorySlug]);
+  }, [categorySlug, filters]);
 
-  const totalPages = Math.max(1, Math.ceil(products.length / ITEMS_PER_PAGE));
+  const filteredProducts = useMemo(() => {
+    let result = [...products];
+
+    // Apply active filters
+    for (const filter of filters) {
+      if (!filter.values.length) continue;
+
+      if (filter.field === 'price') {
+        const val = filter.values[0];
+        result = result.filter((p) => {
+          const price = parsePrice(p.price);
+          if (val === 'under_100k') return price < 100000;
+          if (val === '100k_250k') return price >= 100000 && price <= 250000;
+          if (val === '250k_500k') return price > 250000 && price <= 500000;
+          if (val === 'above_500k') return price > 500000;
+          return true;
+        });
+      } else if (filter.field === 'staff_pick') {
+        const val = filter.values[0];
+        if (val === 'yes') {
+          result = result.filter((p) => Boolean(p.isStaffPick));
+        }
+      } else if (filter.field === 'flower') {
+        if (filter.operator === 'is') {
+          const needle = filter.values[0].toLowerCase();
+          result = result.filter((p) => {
+            const haystack = `${p.name} ${(p.items || []).join(' ')} ${p.description || ''}`.toLowerCase();
+            return haystack.includes(needle);
+          });
+        } else if (filter.operator === 'is_any') {
+          const needles = filter.values.map((v) => v.toLowerCase());
+          result = result.filter((p) => {
+            const haystack = `${p.name} ${(p.items || []).join(' ')} ${p.description || ''}`.toLowerCase();
+            return needles.some((needle) => haystack.includes(needle));
+          });
+        }
+      }
+    }
+
+    // Apply sorting
+    const sortFilter = filters.find((f) => f.field === 'sort' && f.values.length > 0);
+    if (sortFilter) {
+      const sortVal = sortFilter.values[0];
+      if (sortVal === 'price_asc') {
+        result.sort((a, b) => parsePrice(a.price) - parsePrice(b.price));
+      } else if (sortVal === 'price_desc') {
+        result.sort((a, b) => parsePrice(b.price) - parsePrice(a.price));
+      } else if (sortVal === 'name_asc') {
+        result.sort((a, b) => a.name.localeCompare(b.name));
+      } else if (sortVal === 'staff_first') {
+        result.sort((a, b) => (b.isStaffPick ? 1 : 0) - (a.isStaffPick ? 1 : 0));
+      }
+    }
+
+    return result;
+  }, [products, filters]);
+
+  const totalPages = Math.max(1, Math.ceil(filteredProducts.length / ITEMS_PER_PAGE));
 
   const paginatedProducts = useMemo(() => {
     const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-    return products.slice(startIndex, startIndex + ITEMS_PER_PAGE);
-  }, [products, currentPage, ITEMS_PER_PAGE]);
+    return filteredProducts.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+  }, [filteredProducts, currentPage, ITEMS_PER_PAGE]);
 
   const handlePageChange = (newPage: number) => {
     setCurrentPage(newPage);
@@ -227,27 +350,52 @@ export default function CategoryPage() {
 
       {/* Products Header Bar */}
       <div id="products-section" className="container mx-auto px-6 md:px-10 lg:px-12 max-w-8xl">
-        <div className="transition-all duration-700 z-30 w-full flex items-center justify-between text-neutral-600 h-10 md:h-14 font-light text-sm px-0 md:mb-12 mb-6 backdrop-blur-xl border-b border-t border-neutral-200">
-          <p className="font-medium text-neutral-900">
-            Products ({products.length})
+        <div className="transition-all duration-700 z-30 w-full flex items-center justify-between text-neutral-600 min-h-10 md:min-h-14 font-light text-sm px-0 md:mb-12 mb-6 backdrop-blur-xl border-b border-t border-neutral-200 flex-wrap gap-2 py-1.5 md:py-0">
+          <p className="font-medium text-neutral-900 shrink-0">
+            Products ({filteredProducts.length})
             {totalPages > 1 && (
               <span className="text-muted-foreground font-normal ml-2 text-xs sm:text-sm">
                 • Page {currentPage} of {totalPages}
               </span>
             )}
           </p>
-          <div className="h-full flex items-center justify-center select-none cursor-pointer gap-2">
-            <svg stroke="currentColor" fill="none" strokeWidth="2" viewBox="0 0 24 24" aria-hidden="true" className="opacity-70 w-4 h-4 text-neutral-600" xmlns="http://www.w3.org/2000/svg">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-            </svg>
-            <p className="hidden md:block text-neutral-600 text-sm font-medium">More products available</p>
+          <div className="flex items-center gap-2 flex-wrap py-1">
+            <FilterBar
+              fields={productFilterFields}
+              value={filters}
+              onChange={setFilters}
+              aria-label="Filter products"
+              addLabel="Filter"
+              emptyLabel="Filter"
+            />
+            {filters.length > 0 && (
+              <button
+                type="button"
+                onClick={() => setFilters([])}
+                className="text-xs text-neutral-500 hover:text-neutral-900 transition-colors underline underline-offset-4 ml-1 cursor-pointer"
+              >
+                Reset
+              </button>
+            )}
           </div>
         </div>
       </div>
 
       {/* Product Grid */}
       <div className="container mx-auto px-6 md:px-10 lg:px-12 max-w-8xl">
-        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4 lg:gap-6 min-h-100 pb-12">
+        {filteredProducts.length === 0 ? (
+          <div className="py-20 text-center flex flex-col items-center justify-center">
+            <p className="text-neutral-600 mb-4 text-sm sm:text-base">No products match your active filters.</p>
+            <button
+              type="button"
+              onClick={() => setFilters([])}
+              className="inline-flex items-center justify-center px-4 py-2 border border-neutral-300 text-xs sm:text-sm font-medium rounded-md hover:bg-neutral-100 transition-colors cursor-pointer"
+            >
+              Clear filters
+            </button>
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4 lg:gap-6 min-h-100 pb-12">
           {paginatedProducts.map((product) => (
             <Link
               key={product.id}
@@ -320,9 +468,10 @@ export default function CategoryPage() {
             </Link>
           ))}
         </div>
+        )}
 
         {/* Pagination */}
-        {products.length > 0 && (
+        {filteredProducts.length > 0 && (
           <div className="w-full flex justify-center pb-16 overflow-x-auto">
             <Pagination className="flex-wrap min-w-fit">
               <PaginationPrevious

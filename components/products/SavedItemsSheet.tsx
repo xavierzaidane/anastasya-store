@@ -188,7 +188,7 @@ export function SavedItemsSheet({ open, onOpenChange }: SavedItemsSheetProps) {
             onClick={handleOrderViaWhatsApp}
             aria-label={isOrdering ? 'Opening WhatsApp...' : `Checkout (${formatPrice(calculateTotal())})`}
           >
-            <SiWhatsapp className="w-4 h-4 text-[#25D366] hover:text-white shrink-0" />
+            <SiWhatsapp className="w-4 h-4 text-[#25D366] hover:text-whites shrink-0" />
             <span>{isOrdering ? 'Opening...' : 'Checkout'}</span>
             <span className="hidden sm:inline">
               {!isOrdering && ` (${formatPrice(calculateTotal())})`}
