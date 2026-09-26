@@ -24,6 +24,14 @@ type CategoriesApiResponse = {
     | null
 }
 
+const OLD_CATEGORY_SLUGS = [
+  "hand-bouquet",
+  "small-bouquet",
+  "medium-bouquet",
+  "large-bouquet",
+  "round-bouquet",
+]
+
 // Desktop & Mobile Collections slider with shadcn Skeleton loading state
 export default function CategorySlider() {
   const [items, setItems] = useState<CategoryItem[]>([])
@@ -41,7 +49,19 @@ export default function CategorySlider() {
         const result: CategoriesApiResponse = await response.json()
         if (!result.success || !result.data || !mounted) return
 
-        const mapped = result.data.map((c) => ({
+         let selected = result.data.filter((c) => OLD_CATEGORY_SLUGS.includes(c.slug))
+        if (selected.length === 0) {
+          selected = result.data.slice(0, 5)
+        } else {
+          selected.sort((a, b) => {
+            const idxA = OLD_CATEGORY_SLUGS.indexOf(a.slug)
+            const idxB = OLD_CATEGORY_SLUGS.indexOf(b.slug)
+            return (idxA !== -1 ? idxA : 99) - (idxB !== -1 ? idxB : 99)
+          })
+          selected = selected.slice(0, 5)
+        }
+
+        const mapped = selected.map((c) => ({
           id: c.id,
           slug: c.slug,
           title: c.name,
