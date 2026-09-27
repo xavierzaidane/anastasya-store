@@ -2,7 +2,21 @@
 'use client';
 
 import React from 'react';
-import { MessageCircle, FileText, CreditCard, PackageCheck } from 'lucide-react';
+import Link from 'next/link';
+import {
+  Search,
+  ShoppingBag,
+  CheckCircle2,
+  MessageCircle,
+  FileText,
+  CreditCard,
+  Flower2,
+  Truck,
+  Clock,
+  MapPin,
+} from 'lucide-react';
+import Timeline, { type TimelineItem } from '@/components/ui/timeline-04';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 export interface SizeOption {
   label: string;
@@ -29,18 +43,48 @@ const defaultSizeOptions: SizeOption[] = [
 ];
 
 export default function OrderGuide() {
-  const steps = [
+  const { t } = useLanguage();
+
+  const orderSteps: TimelineItem[] = [
     {
-      number: 1,
-      icon: MessageCircle,
-      content: (
+      title: t.guide.orderSteps.step1Title,
+      icon: Search,
+      description: (
         <span>
-          Contact our Admin during operational hours at{' '}
+          {t.guide.orderSteps.step1Desc.split('catalog')[0]}
+          <Link
+            href="/browse"
+            className="text-primary font-medium underline underline-offset-4 hover:opacity-80"
+          >
+            {t.nav.browse.toLowerCase()}
+          </Link>
+          {t.guide.orderSteps.step1Desc.includes('catalog')
+            ? t.guide.orderSteps.step1Desc.split('catalog')[1]
+            : ''}
+        </span>
+      ),
+    },
+    {
+      title: t.guide.orderSteps.step2Title,
+      icon: ShoppingBag,
+      description: <span>{t.guide.orderSteps.step2Desc}</span>,
+    },
+    {
+      title: t.guide.orderSteps.step3Title,
+      icon: CheckCircle2,
+      description: <span>{t.guide.orderSteps.step3Desc}</span>,
+    },
+    {
+      title: t.guide.orderSteps.step4Title,
+      icon: MessageCircle,
+      description: (
+        <span>
+          {t.guide.orderSteps.step4Desc}{' '}
           <a
             href="https://wa.me/62895375681188"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-primary font-medium underline underline-offset-4 hover:opacity-80 transition-opacity"
+            className="text-primary font-medium underline underline-offset-4 hover:opacity-80"
           >
             +62 895-3756-81188
           </a>
@@ -48,87 +92,68 @@ export default function OrderGuide() {
       ),
     },
     {
-      number: 2,
+      title: t.guide.orderSteps.step5Title,
       icon: FileText,
-      content: <span>Fill out the order form provided by the admin</span>,
+      description: <span>{t.guide.orderSteps.step5Desc}</span>,
     },
     {
-      number: 3,
+      title: t.guide.orderSteps.step6Title,
       icon: CreditCard,
-      content: (
-        <span>
-          Once the admin issues the invoice, the client can make the payment{' '}
-          <span className="text-muted-foreground font-medium">(2-hour grace period)</span>
-        </span>
-      ),
+      description: <span>{t.guide.orderSteps.step6Desc}</span>,
     },
     {
-      number: 4,
-      icon: PackageCheck,
-      content: (
-        <span>
-          The client&apos;s order will be processed after payment is made{' '}
-          <span className="text-muted-foreground font-medium">(2-hour assembly time)</span>
-        </span>
-      ),
+      title: t.guide.orderSteps.step7Title,
+      icon: Flower2,
+      description: <span>{t.guide.orderSteps.step7Desc}</span>,
     },
   ];
 
-  const deliveryPoints = [
-    'Self Pick-up/GoSend Delivery available from 07:00 to 16:00 WIB',
-    'Pick-up/Delivery available at least 2 hours after payment',
-    'Delivery fee is paid together with the bouquet payment; please ensure the fee matches the delivery destination address',
+  const deliverySteps: TimelineItem[] = [
+    {
+      title: t.guide.deliverySteps.step1Title,
+      icon: Clock,
+      description: <span>{t.guide.deliverySteps.step1Desc}</span>,
+    },
+    {
+      title: t.guide.deliverySteps.step2Title,
+      icon: Truck,
+      description: <span>{t.guide.deliverySteps.step2Desc}</span>,
+    },
+    {
+      title: t.guide.deliverySteps.step3Title,
+      icon: MapPin,
+      description: <span>{t.guide.deliverySteps.step3Desc}</span>,
+    },
   ];
 
   return (
     <div className="w-full space-y-12 md:space-y-16">
       {/* Page Header */}
-      <div className="text-center space-y-3 border-b pb-30">
+      <div className="text-center space-y-3 border-b pb-12 sm:pb-16 md:pb-20">
         <h1 className="text-4xl sm:text-5xl md:text-5xl font-normal tracking-tighter text-neutral-900 dark:text-neutral-100 leading-[0.95]">
-          Order Guide
+          {t.guide.title}
         </h1>
-
+        <p className="text-sm sm:text-base text-muted-foreground max-w-lg mx-auto">
+          {t.guide.subtitle}
+        </p>
       </div>
 
       {/* 1. "How to Order" Section */}
-      <section className="space-y-6 -pt-10 ">
-        <div className="space-y-2">
+      <section className="space-y-6">
+        <div className="space-y-1">
           <h2 className="text-2xl sm:text-3xl font-normal tracking-tight text-neutral-900 dark:text-neutral-100">
-            How to Order
+            {t.guide.howToOrderTitle}
           </h2>
         </div>
 
-        {/* 4 Steps arranged vertically: [sequence number] + [small icon] + [step text] */}
-        <div className="space-y-3 sm:space-y-4">
-          {steps.map((step) => {
-            const Icon = step.icon;
-            return (
-              <div
-                key={step.number}
-                className="flex items-center gap-3 sm:gap-4 py-2 sm:py-2.5 group"
-              >
-                {/* [sequence number] */}
-                <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-secondary text-secondary-foreground font-semibold text-xs sm:text-sm flex items-center justify-center shrink-0">
-                  {step.number}
-                </div>
-
-                {/* [small icon] */}
-                <div className="w-5 h-5 flex items-center justify-center text-primary shrink-0">
-                  <Icon className="w-4 h-4 sm:w-5 sm:h-5" />
-                </div>
-
-                {/* [step text] */}
-                <div className="text-sm sm:text-base text-neutral-700 dark:text-neutral-300 leading-snug">
-                  {step.content}
-                </div>
-              </div>
-            );
-          })}
+        {/* Timeline representation for steps */}
+        <div className="pt-2">
+          <Timeline items={orderSteps} />
         </div>
 
         {/* Small disclaimer text (italicized) */}
-        <p className="text-xs sm:text-sm text-muted-foreground italic pt-2">
-          Disclaimer: If payment is not made within the grace period, the order will be automatically cancelled.
+        <p className="text-xs sm:text-sm text-muted-foreground italic pt-2 pl-4 sm:pl-5">
+          {t.guide.disclaimer}
         </p>
       </section>
 
@@ -137,9 +162,9 @@ export default function OrderGuide() {
 
       {/* 2. "Size Chart" Section */}
       <section className="space-y-6">
-        <div className="space-y-2">
+        <div className="space-y-1">
           <h2 className="text-2xl sm:text-3xl font-normal tracking-tight text-neutral-900 dark:text-neutral-100">
-            Size Chart
+            {t.guide.sizeChartTitle}
           </h2>
         </div>
 
@@ -151,8 +176,7 @@ export default function OrderGuide() {
                 <img
                   src={size.imageSrc}
                   alt={size.alt}
-                  className="h-full w-full object-contain  group-hover:border"
-
+                  className="h-full w-full object-contain group-hover:border"
                 />
               </div>
               <span className="mt-2 sm:mt-3 text-base sm:text-lg font-medium text-foreground tracking-wide text-center">
@@ -168,29 +192,18 @@ export default function OrderGuide() {
 
       {/* 3. "Pick up & Delivery" Section */}
       <section className="space-y-6 pb-6">
-        <div className="space-y-2">
+        <div className="space-y-1">
           <h2 className="text-2xl sm:text-3xl font-normal tracking-tight text-neutral-900 dark:text-neutral-100">
-            Pick up &amp; Delivery
+            {t.guide.pickupDeliveryTitle}
           </h2>
         </div>
 
-        {/* Numbered list (1, 2, 3) */}
-        <div className="space-y-3 sm:space-y-4">
-          {deliveryPoints.map((point, index) => (
-            <div
-              key={index}
-              className="flex items-start gap-3 sm:gap-4 py-1.5 sm:py-2"
-            >
-              <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-secondary text-secondary-foreground font-semibold text-xs sm:text-sm flex items-center justify-center shrink-0 mt-0.5">
-                {index + 1}
-              </div>
-              <p className="text-sm sm:text-base text-neutral-700 dark:text-neutral-300 leading-relaxed">
-                {point}
-              </p>
-            </div>
-          ))}
+        {/* Timeline representation for delivery points */}
+        <div className="pt-2">
+          <Timeline items={deliverySteps} />
         </div>
       </section>
     </div>
   );
 }
+

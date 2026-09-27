@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Handbag } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
@@ -9,21 +9,18 @@ import { useSavedItems } from '@/hooks/use-saved-items';
 import { CurvedNavbar, type iNavItem } from '@/components/ui/curved-menu';
 import { SavedItemsSheet } from '../products/SavedItemsSheet';
 import SearchModal from '../products/SearchModal';
-
-const storeNavItems: iNavItem[] = [
-  { heading: "Discover", href: "/" },
-  { heading: "Browse", href: "/browse" },
-  { heading: "Guide", href: "/guide" },
-  { heading: "Blog", href: "/blog" },
-];
+import { useLanguage } from '@/contexts/LanguageContext';
+import LanguageSwitcher from '@/components/common/LanguageSwitcher';
 
 export default function StoreNavbar() {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
   const { getTotalItems } = useSavedItems();
+  const { t } = useLanguage();
   const [savedItemsSheetOpen, setSavedItemsSheetOpen] = useState(false);
   const [searchModalOpen, setSearchModalOpen] = useState(false);
   const totalItems = getTotalItems();
+
   const isTypingTarget = (target: EventTarget | null) => {
     if (!(target instanceof HTMLElement)) return false;
     return (
@@ -74,12 +71,19 @@ export default function StoreNavbar() {
     return false;
   };
 
-  const navLinks = [
-    { name: 'Discover', href: '/' },
-    { name: 'Browse', href: '/browse' },
-    { name: 'Guide', href: '/guide' },
-    { name: 'Blog', href: '/blog' },
-  ];
+  const navLinks = useMemo(() => [
+    { name: t.nav.discover, href: '/' },
+    { name: t.nav.browse, href: '/browse' },
+    { name: t.nav.guide, href: '/guide' },
+    { name: t.nav.blog, href: '/blog' },
+  ], [t]);
+
+  const storeNavItems: iNavItem[] = useMemo(() => [
+    { heading: t.nav.discover, href: "/" },
+    { heading: t.nav.browse, href: "/browse" },
+    { heading: t.nav.guide, href: "/guide" },
+    { heading: t.nav.blog, href: "/blog" },
+  ], [t]);
 
   return (
     <>
@@ -101,7 +105,7 @@ export default function StoreNavbar() {
           <div className="hidden md:flex items-center gap-8">
             {navLinks.map((link) => (
               <Link
-                key={link.name}
+                key={link.href}
                 href={link.href}
                 className={`text-sm font-medium transition-colors relative after:content-[''] after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-[2px] after:bg-brand-lime after:transition-all hover:after:w-full ${
                   isActive(link.href)
@@ -115,9 +119,9 @@ export default function StoreNavbar() {
             <button
               type="button"
               onClick={() => setSearchModalOpen(true)}
-              className="text-sm font-medium transition-colors relative after:content-[''] after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-[2px] after:bg-brand-lime after:transition-all hover:after:w-full text-neutral-500 hover:text-black flex items-center gap-2"
+              className="text-sm font-medium transition-colors relative after:content-[''] after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-[2px] after:bg-brand-lime after:transition-all hover:after:w-full text-neutral-500 hover:text-black flex items-center gap-2 cursor-pointer"
             >
-              Search
+              {t.nav.search}
               <kbd className="text-[10px] font-mono px-1.5 py-0.5 rounded border border-neutral-200 bg-neutral-100 text-neutral-500 ml-2">
                 ⌘ K
               </kbd>
@@ -126,10 +130,12 @@ export default function StoreNavbar() {
 
           {/* Right Icons */}
           <div className="hidden md:flex items-center gap-2">
+            <LanguageSwitcher />
             <button 
               onClick={() => setSavedItemsSheetOpen(true)}
-              className="relative p-2.5 text-neutral-600 hover:text-neutral-900 transition-colors rounded-lg hover:bg-neutral-100" 
-              aria-label="Saved items"
+              className="relative p-2.5 text-neutral-600 hover:text-neutral-900 transition-colors rounded-lg hover:bg-neutral-100 cursor-pointer" 
+              aria-label={t.nav.savedItems}
+              title={t.nav.savedItems}
             >
               <Handbag className="w-5 h-5" />
               {totalItems > 0 && (
@@ -141,11 +147,12 @@ export default function StoreNavbar() {
           </div>
 
           {/* Mobile Right Controls (when at top of page) */}
-          <div className="flex md:hidden items-center gap-1 z-40">
+          <div className="flex md:hidden items-center gap-1.5 z-40">
+            <LanguageSwitcher />
             <button 
               onClick={() => setSavedItemsSheetOpen(true)}
-              className="relative p-2 text-neutral-600 hover:text-neutral-900 transition-colors rounded-lg" 
-              aria-label="Saved items"
+              className="relative p-2 text-neutral-600 hover:text-neutral-900 transition-colors rounded-lg cursor-pointer" 
+              aria-label={t.nav.savedItems}
             >
               <Handbag className="w-5 h-5" />
               {totalItems > 0 && (
@@ -223,6 +230,11 @@ export default function StoreNavbar() {
             <CurvedNavbar
               setIsActive={setIsOpen}
               navItems={storeNavItems}
+              footer={
+                <div className="px-10 md:px-24 pb-12">
+                  <LanguageSwitcher variant="menu" />
+                </div>
+              }
             />
           </>
         )}
@@ -237,3 +249,4 @@ export default function StoreNavbar() {
     </>
   );
 }
+

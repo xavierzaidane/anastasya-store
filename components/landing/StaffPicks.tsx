@@ -5,8 +5,10 @@ import React, { useEffect, useState } from 'react';
 import { Skeleton } from "@/components/ui/skeleton";
 import { mapApiProductToStorefront } from '@/lib/storefront-products';
 import { StorefrontApiResponse, StorefrontPaginatedProducts, StorefrontProduct } from '@/types/storefront';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 export default function StaffPicks() {
+  const { t } = useLanguage();
   const [products, setProducts] = useState<StorefrontProduct[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -91,10 +93,10 @@ export default function StaffPicks() {
     <section className="relative w-full py-12 md:py-16 mt-15">
       <div className="mb-8 md:mb-10 text-center md:text-left">
         <h2 className="text-4xl md:text-5xl lg:text-6xl font-normal tracking-tighter text-neutral-900 leading-[0.95]">
-          Our Best Selling
+          {t.staffPicks.title}
         </h2>
         <p className="mt-3 text-base text-neutral-600 leading-relaxed max-w-xl">
-          Explore our hand-curated collection of floral favorites, personally selected by our experienced lead florists.
+          {t.staffPicks.subtitle}
         </p>
       </div>
 

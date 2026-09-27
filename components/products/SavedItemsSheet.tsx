@@ -8,6 +8,7 @@ import { useSavedItems } from '@/hooks/use-saved-items';
 import { orderMultipleItemsViaWhatsApp } from '@/lib/whatsapp';
 import { Button } from '@/components/ui/button';
 import { RippleButton } from '@/components/ui/ripple-button';
+import { useLanguage } from '@/contexts/LanguageContext';
 import {
   Drawer,
   DrawerBody,
@@ -25,6 +26,7 @@ interface SavedItemsSheetProps {
 }
 
 export function SavedItemsSheet({ open, onOpenChange }: SavedItemsSheetProps) {
+  const { t } = useLanguage();
   const { savedItems, removeItem, updateQuantity, clearItems, getTotalItems } = useSavedItems();
   const [isOrdering, setIsOrdering] = useState(false);
 
@@ -64,7 +66,7 @@ export function SavedItemsSheet({ open, onOpenChange }: SavedItemsSheetProps) {
         <DrawerHeader>
           <DrawerTitle className="flex items-center gap-2 text-lg sm:text-xl">
             <ShoppingCart className="w-5 h-5" />
-            Cart ({getTotalItems()})
+            {t.cart.title} ({getTotalItems()})
           </DrawerTitle>
         </DrawerHeader>
 
@@ -72,9 +74,9 @@ export function SavedItemsSheet({ open, onOpenChange }: SavedItemsSheetProps) {
           {savedItems.length === 0 ? (
             <div className="text-center py-8">
               <ShoppingCart className="w-16 h-16 text-muted-foreground/40 mx-auto mb-4" />
-              <p className="text-foreground font-medium mb-1">Your cart is empty</p>
+              <p className="text-foreground font-medium mb-1">{t.cart.emptyTitle}</p>
               <p className="text-muted-foreground text-sm mb-6">
-                Browse our collection and save your favorites!
+                {t.cart.emptyDesc}
               </p>
             </div>
           ) : (
@@ -100,7 +102,7 @@ export function SavedItemsSheet({ open, onOpenChange }: SavedItemsSheetProps) {
                       {item.name}
                     </h3>
                     <p className="text-xs sm:text-sm text-muted-foreground">
-                      {item.price} each
+                      {item.price} {t.cart.each}
                     </p>
                   </div>
 
@@ -147,11 +149,11 @@ export function SavedItemsSheet({ open, onOpenChange }: SavedItemsSheetProps) {
               <div className="border-t border-black/30 pt-4 mt-6">
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm text-muted-foreground">
-                    <span>Subtotal</span>
+                    <span>{t.cart.subtotal}</span>
                     <span>{formatPrice(calculateTotal())}</span>
                   </div>
                   <div className="border-t border-black/30 pt-2 flex justify-between font-semibold text-base text-foreground">
-                    <span>Total</span>
+                    <span>{t.cart.total}</span>
                     <span>{formatPrice(calculateTotal())}</span>
                   </div>
                 </div>
@@ -159,9 +161,9 @@ export function SavedItemsSheet({ open, onOpenChange }: SavedItemsSheetProps) {
                   <button
                     type="button"
                     onClick={clearItems}
-                    className="text-xs text-muted-foreground hover:text-destructive transition-colors"
+                    className="text-xs text-muted-foreground hover:text-destructive transition-colors cursor-pointer"
                   >
-                    Clear all items
+                    {t.cart.clearAll}
                   </button>
                 </div>
               </div>
@@ -173,23 +175,23 @@ export function SavedItemsSheet({ open, onOpenChange }: SavedItemsSheetProps) {
           <DrawerClose asChild>
             <RippleButton
               variant="outline"
-              className="w-full border-zinc-200 tracking-wide text-xs sm:text-sm font-medium"
+              className="w-full border-zinc-200 tracking-wide text-xs sm:text-sm font-medium cursor-pointer"
               rippleColor="bg-primary"
               hoverTextColor="group-hover:text-white"
             >
-              Continue Shopping
+              {t.cart.continueShopping}
             </RippleButton>
           </DrawerClose>
           <RippleButton
-            className="w-full gap-2 bg-primary text-white border-0  tracking-wide text-xs sm:text-sm font-medium shadow-xs"
+            className="w-full gap-2 bg-primary text-white border-0 tracking-wide text-xs sm:text-sm font-medium shadow-xs cursor-pointer"
             rippleColor="bg-[#1ebe5d]"
             hoverTextColor="group-hover:text-white"
             disabled={savedItems.length === 0 || isOrdering}
             onClick={handleOrderViaWhatsApp}
-            aria-label={isOrdering ? 'Opening WhatsApp...' : `Checkout (${formatPrice(calculateTotal())})`}
+            aria-label={isOrdering ? t.cart.openingWhatsApp : `${t.cart.checkout} (${formatPrice(calculateTotal())})`}
           >
             <SiWhatsapp className="w-4 h-4 text-[#25D366] hover:text-whites shrink-0" />
-            <span>{isOrdering ? 'Opening...' : 'Checkout'}</span>
+            <span>{isOrdering ? t.cart.openingWhatsApp : t.cart.checkout}</span>
             <span className="hidden sm:inline">
               {!isOrdering && ` (${formatPrice(calculateTotal())})`}
             </span>

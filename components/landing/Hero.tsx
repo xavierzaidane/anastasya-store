@@ -1,14 +1,15 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import Category from './Category';
-import LatestProduct from './LatestProduct';
 import StaffPicks from './StaffPicks';
 import CTA from './CTA';
 import FAQ from './FAQ';
-import Link from 'next/link';
 import RippleLink from '@/components/ui/ripple-link';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 const Hero: React.FC = () => {
+  const { t } = useLanguage();
+
   return (
     <section className="relative overflow-hidden">
       <div className="container mx-auto px-6 md:px-10 lg:px-12 max-w-8xl">
@@ -20,21 +21,16 @@ const Hero: React.FC = () => {
             className="flex flex-col gap-6 pt-10"
           >
             <h1 className="text-7xl md:text-8xl lg:text-[8rem] font-normal tracking-tighter text-neutral-900 leading-[0.95] text-center md:text-left">
-              Anastasya <br/>
-              Bouquets
+              {t.hero.titleLine1} <br/>
+              {t.hero.titleLine2}
             </h1>
             {/* MOBILE + TABLET + WEB modes handled by breakpoints */}
             <div className="grid gap-4 md:gap-5 lg:gap-7 lg:grid-cols-2">
-              
-                <div className="max-w-1xl text-sm md:text-base lg:text-lg text-neutral-500 leading-relaxed text-center md:text-left lg:text-left pt-1 md:pt-4 lg:pt-8 space-y-4">
-
-  <p className="hidden md:block">
-    We create fresh floral arrangements with a modern and elegant design touch, carefully crafted to bring beauty and sophistication to every occasion. Every bouquet and floral decoration is thoughtfully arranged using fresh, high-quality flowers to deliver a luxurious and memorable impression.
-  </p>
-
-
-</div>
-
+              <div className="max-w-1xl text-sm md:text-base lg:text-lg text-neutral-500 leading-relaxed text-center md:text-left lg:text-left pt-1 md:pt-4 lg:pt-8 space-y-4">
+                <p className="hidden md:block">
+                  {t.hero.description}
+                </p>
+              </div>
             </div>
             <div className="flex justify-center md:justify-start pt-6 md:pt-8 lg:pt-10 items-center">
               <div className="relative inline-flex items-center">
@@ -42,7 +38,7 @@ const Hero: React.FC = () => {
                   href="/browse"
                   className="inline-flex items-center justify-center border border-zinc-200 px-4 py-3 md:px-5 md:py-4 text-sm font-medium uppercase tracking-wide text-zinc-900"
                 >
-                  View Bouquets
+                  {t.hero.viewBouquets}
                 </RippleLink>
 
                 {/* Hand-drawn arrow & "order here" pointing from the right */}
@@ -69,7 +65,7 @@ const Hero: React.FC = () => {
                     />
                   </svg>
                   <span className="font-handwriting text-2xl sm:text-3xl text-neutral-500 dark:text-neutral-400 rotate-6 tracking-wider font-normal whitespace-nowrap -ml-1">
-                    Shop Now!
+                    {t.hero.shopNow}
                   </span>
                 </div>
               </div>

@@ -11,12 +11,14 @@ import { useSavedItems } from "@/hooks/use-saved-items";
 import { StorefrontProduct } from "@/types/storefront";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "../ui/accordion";
 import { cn } from "@/lib/utils";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface Props {
   initialProduct: StorefrontProduct;
 }
 
 export default function ProductDetailPageClient({ initialProduct }: Props) {
+  const { t } = useLanguage();
   const router = useRouter();
   const liveProduct = initialProduct;
   const [quantity, setQuantity] = useState(1);
@@ -123,7 +125,7 @@ export default function ProductDetailPageClient({ initialProduct }: Props) {
               <p className="text-md text-zinc-500">{liveProduct.category || 'Product'}</p>
               {liveProduct.isStaffPick && (
                 <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-amber-500/10 text-amber-600 dark:text-amber-400 text-xs font-semibold">
-                  <Star className="w-3 h-3 fill-current" /> Staff Pick
+                  <Star className="w-3 h-3 fill-current" /> {t.staffPicks.staffPickBadge}
                 </span>
               )}
             </div>
@@ -139,7 +141,7 @@ export default function ProductDetailPageClient({ initialProduct }: Props) {
             <div className="flex flex-col gap-4">
               <div className="flex justify-between items-end gap-6 mb-10">
                 <div className="flex items-center gap-4">
-                  <label htmlFor="quantity" className="text-md font-normal">Quantity:</label>
+                  <label htmlFor="quantity" className="text-md font-normal">{t.productDetail.quantity}:</label>
                   <div className="flex items-center gap-2 border border-zinc-300 rounded-lg overflow-hidden">
                     <button onClick={decreaseQuantity} disabled={quantity <= 1} className="p-2 hover:bg-zinc-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200" aria-label="Decrease quantity">-</button>
                     <span id="quantity" className="w-12 text-center text-base font-medium text-zinc-900" aria-live="polite">{quantity}</span>
@@ -148,8 +150,8 @@ export default function ProductDetailPageClient({ initialProduct }: Props) {
                 </div>
 
                 <div className="flex flex-col gap-1 text-right">
-                  <p>Add to Cart</p>
-                  <p className="text-sm text-muted-foreground">Click Button Below</p>
+                  <p>{isBookmarked ? t.productDetail.savedInBag : t.productDetail.addToCart}</p>
+                  <p className="text-sm text-muted-foreground">{t.productDetail.clickButtonBelow}</p>
                 </div>
               </div>
 
@@ -161,7 +163,7 @@ export default function ProductDetailPageClient({ initialProduct }: Props) {
                   className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-primary text-white font-medium hover:bg-primary/80 transition-colors duration-200 disabled:opacity-75 disabled:cursor-not-allowed"
                 >
                   <SiWhatsapp className="w-5 h-5 text-background" />
-                  <span>{isOrdering ? 'Opening WhatsApp...' : 'Order via WhatsApp'}</span>
+                  <span>{isOrdering ? t.productDetail.openingWhatsApp : t.productDetail.orderViaWhatsApp}</span>
                 </button>
 
                 {/* Bookmark button */}
@@ -172,6 +174,7 @@ export default function ProductDetailPageClient({ initialProduct }: Props) {
                       ? 'bg-zinc-900 text-white hover:bg-zinc-800' 
                       : 'bg-foreground/20 hover:text-zinc-800'
                   }`}
+                  aria-label={isBookmarked ? t.productDetail.savedInBag : t.productDetail.saveForLater}
                 >
                   <ShoppingCart className="w-5 h-5" fill={isBookmarked ? 'currentColor' : 'none'} />
                 </button>
@@ -185,27 +188,27 @@ export default function ProductDetailPageClient({ initialProduct }: Props) {
               {/* Accordion 1 - Product Details */}
               <AccordionItem value="product-details">
                 <AccordionTrigger className="text-sm font-semibold text-zinc-900">
-                  Product Details
+                  {t.productDetail.productDetails}
                 </AccordionTrigger>
 
                 <AccordionContent>
                   <div className="space-y-3 text-sm text-zinc-600 pt-2">
                     <div className="flex justify-between">
-                      <span className="text-zinc-500">Category:</span>
+                      <span className="text-zinc-500">{t.productDetail.category}:</span>
                       <span className="font-medium text-zinc-900">
                         {liveProduct.category || 'General'}
                       </span>
                     </div>
 
                     <div className="flex justify-between">
-                      <span className="text-zinc-500">Price:</span>
+                      <span className="text-zinc-500">{t.productDetail.priceLabel}:</span>
                       <span className="font-medium text-zinc-900">
                         {liveProduct.price}
                       </span>
                     </div>
 
                     <div className="flex flex-col gap-1">
-                      <span className="text-zinc-500">Description:</span>
+                      <span className="text-zinc-500">{t.productDetail.description}:</span>
                       <span className="font-medium text-zinc-700">
                         {liveProduct.description}
                       </span>
@@ -218,7 +221,7 @@ export default function ProductDetailPageClient({ initialProduct }: Props) {
               {liveProduct.items && liveProduct.items.length > 0 && (
                 <AccordionItem value="whats-included">
                   <AccordionTrigger className="text-sm font-semibold text-zinc-900">
-                    What&apos;s Included
+                    {t.productDetail.itemsIncluded}
                   </AccordionTrigger>
 
                   <AccordionContent>

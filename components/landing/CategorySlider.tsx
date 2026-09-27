@@ -3,6 +3,7 @@
 import Link from "next/link"
 import React, { useEffect, useState } from "react"
 import { Skeleton } from "@/components/ui/skeleton"
+import { useLanguage } from "@/contexts/LanguageContext"
 
 type CategoryItem = {
   id: number
@@ -34,6 +35,7 @@ const OLD_CATEGORY_SLUGS = [
 
 // Desktop & Mobile Collections slider with shadcn Skeleton loading state
 export default function CategorySlider() {
+  const { t } = useLanguage()
   const [items, setItems] = useState<CategoryItem[]>([])
   const [isLoading, setIsLoading] = useState(true)
 
@@ -129,7 +131,7 @@ export default function CategorySlider() {
   if (items.length === 0) {
     return (
       <div className="min-h-60 flex items-center justify-center">
-        <p className="text-sm text-neutral-500">No categories found</p>
+        <p className="text-sm text-neutral-500">{t.cta.noCategories}</p>
       </div>
     )
   }
@@ -139,7 +141,7 @@ export default function CategorySlider() {
       <div className="md:hidden flex flex-col gap-4 text-[#3d3929]">
         <div>
           <h1 className="text-5xl md:text-7xl lg:text-8xl font-medium tracking-tighter text-neutral-900 leading-[0.95] text-center">
-            Order Here.
+            {t.cta.orderHereMobile}
           </h1>
         </div>
 
@@ -157,7 +159,7 @@ export default function CategorySlider() {
               />
               <div className="min-w-0">
                 <p className="text-[11px] font-medium uppercase tracking-[0.2em] text-muted-foreground">
-                  Browse
+                  {t.nav.browse}
                 </p>
                 <h4 className="truncate text-base font-medium text-zinc-900">
                   {item.title}

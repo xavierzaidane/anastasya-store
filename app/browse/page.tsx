@@ -1,9 +1,11 @@
+/* eslint-disable @next/next/no-img-element */
 'use client';
 
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import StoreNavbar from '@/components/navigations/StoreNavbar';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface Category {
   id: number;
@@ -27,6 +29,7 @@ interface CategoriesApiResponse {
 }
 
 export default function BrowsePage() {
+  const { t } = useLanguage();
   const [categories, setCategories] = useState<Category[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -70,16 +73,13 @@ export default function BrowsePage() {
       <div className="container mx-auto px-6 md:px-10 lg:px-12 max-w-8xl">
         <div className="mb-8 py-35">
           <h1 className="text-3xl sm:text-4xl font-normal text-neutral-900 tracking-tight mb-3 text-center">
-						Browse by Category
-					</h1>
+            {t.browse.browseByCategory}
+          </h1>
         </div>
         <div className="transition-all duration-700 z-30 w-full flex items-center justify-between text-neutral-600 h-10 md:h-14 font-light text-sm px-4 md:px-8 md:mb-12 mb-6 bg-background backdrop-blur-xl border-b border-t border-neutral-200 border-opacity-60">
-          <p className="font-medium text-neutral-900">Categories ({categories.length})</p>
-          <div className="h-full flex items-center justify-center select-none cursor-pointer gap-2">
-            <svg stroke="currentColor" fill="none" strokeWidth="2" viewBox="0 0 24 24" aria-hidden="true" className="opacity-70 w-4 h-4 text-neutral-600" xmlns="http://www.w3.org/2000/svg">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-            </svg>
-            <p className="hidden md:block text-neutral-600 text-sm font-medium">More products available</p>
+          <p className="font-medium text-neutral-900">{t.browse.categoriesCount} ({categories.length})</p>
+          <div className="h-full flex items-center justify-center select-none text-neutral-500 text-xs sm:text-sm">
+            <span>{t.browse.selectCategoryToExplore}</span>
           </div>
         </div>
 
@@ -101,7 +101,7 @@ export default function BrowsePage() {
           )}
 
           {!isLoading && !error && categories.length === 0 && (
-            <p className="text-sm text-zinc-500">No categories available.</p>
+            <p className="text-sm text-zinc-500">{t.browse.noCategories}</p>
           )}
 
           {!isLoading && !error && categories.map(({ id, slug, name, image, itemCount }) => (
@@ -138,15 +138,13 @@ export default function BrowsePage() {
                 </div>
               </div>
               <div className="pt-2 sm:pt-3">
-                <p className="text-[11px] sm:text-xs text-zinc-500">{itemCount} items</p>
+                <p className="text-[11px] sm:text-xs text-zinc-500">{itemCount} {t.browse.itemsCount}</p>
                 <h3 className="text-xs sm:text-sm font-medium text-zinc-900 leading-tight">{name}</h3>
               </div>
             </Link>
           ))}
         </div>
       </div>
-
     </section>
-
   );
 }

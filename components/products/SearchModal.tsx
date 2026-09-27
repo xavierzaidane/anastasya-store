@@ -4,6 +4,7 @@ import React, { useEffect, useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import CommandPalette, { type CommandItem } from "@/components/ui/command-palette";
 import { formatRupiah } from "@/lib/storefront-products";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface SearchProduct {
   id: number;
@@ -28,13 +29,8 @@ interface SearchModalProps {
   onOpenChange: (open: boolean) => void;
 }
 
-const DEFAULT_COMMANDS: CommandItem[] = [
-  { id: "nav-discover", label: "Discover Home", hint: "Page", href: "/", shortcut: ["G", "H"] },
-  { id: "nav-browse", label: "Browse Products", hint: "Catalog", href: "/browse", shortcut: ["G", "B"] },
-  { id: "nav-blog", label: "Read Blog", hint: "Articles", href: "/blog", shortcut: ["G", "L"] },
-];
-
 export default function SearchModal({ open, onOpenChange }: SearchModalProps) {
+  const { t, isID } = useLanguage();
   const router = useRouter();
   const [products, setProducts] = useState<SearchProduct[]>([]);
 
@@ -55,17 +51,27 @@ export default function SearchModal({ open, onOpenChange }: SearchModalProps) {
     return () => controller.abort();
   }, [open]);
 
+  const defaultCommands: CommandItem[] = useMemo(
+    () => [
+      { id: "nav-discover", label: isID ? "Beranda" : "Discover Home", hint: isID ? "Halaman" : "Page", href: "/", shortcut: ["G", "H"] },
+      { id: "nav-browse", label: isID ? "Jelajahi Produk" : "Browse Products", hint: isID ? "Katalog" : "Catalog", href: "/browse", shortcut: ["G", "B"] },
+      { id: "nav-guide", label: isID ? "Panduan Pesan" : "Order Guide", hint: isID ? "Panduan" : "Guide", href: "/guide", shortcut: ["G", "G"] },
+      { id: "nav-blog", label: isID ? "Baca Artikel" : "Read Blog", hint: isID ? "Artikel" : "Articles", href: "/blog", shortcut: ["G", "L"] },
+    ],
+    [isID]
+  );
+
   const items = useMemo<CommandItem[]>(() => {
     const productItems: CommandItem[] = products.map((p) => ({
       id: `product-${p.id}`,
       label: p.name,
-      hint: `${p.category?.name || "Product"} · ${formatRupiah(p.price)}`,
+      hint: `${p.category?.name || (isID ? "Produk" : "Product")} · ${formatRupiah(p.price)}`,
       keywords: `${p.name} ${p.category?.name || ""}`,
       href: `/browse/${p.category?.slug || "general"}/${p.slug}`,
     }));
 
-    return [...DEFAULT_COMMANDS, ...productItems];
-  }, [products]);
+    return [...defaultCommands, ...productItems];
+  }, [products, defaultCommands, isID]);
 
   const handleSelect = (item: CommandItem) => {
     onOpenChange(false);
@@ -79,8 +85,8 @@ export default function SearchModal({ open, onOpenChange }: SearchModalProps) {
       open={open}
       items={items}
       autoFocus={open}
-      placeholder="Search products or navigate store..."
-      emptyLabel="No products or commands found"
+      placeholder={t.search.placeholder}
+      emptyLabel={t.search.noResults}
       onDismiss={() => onOpenChange(false)}
       onSelect={handleSelect}
     />

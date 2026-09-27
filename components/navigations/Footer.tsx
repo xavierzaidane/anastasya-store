@@ -1,8 +1,13 @@
+'use client';
+
 import Link from 'next/link';
 import React from 'react';
 import Image from 'next/image';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 const Footer: React.FC = () => {
+  const { t } = useLanguage();
+
   return (
     <footer className="container mx-auto px-6 md:px-10 lg:px-12 max-w-8xl border-t border-border/40 bg-background">
       <div className="mx-auto max-w-8xl px-4 py-12 sm:px-6 lg:px-8 text-center md:text-left">
@@ -18,75 +23,75 @@ const Footer: React.FC = () => {
               />
             </Link>
             <p className="text-sm text-muted-foreground sm:max-w-md">
-              Create memorable floral gifts with modern bouquets and curated arrangements.
+              {t.footer.tagline}
             </p>
             <p className="text-sm text-muted-foreground sm:max-w-md">
-              Have feedback? Feel free to send us a message.
+              {t.footer.feedback}
             </p>
             <p className="text-sm text-muted-foreground">
-              Crafted by <a className="text-primary underline" target="_blank" rel="noopener noreferrer" href="https://www.linkedin.com/in/xavier-zaidane/">Xavier</a>
+              {t.footer.craftedBy} <a className="text-primary underline" target="_blank" rel="noopener noreferrer" href="https://www.linkedin.com/in/xavier-zaidane/">Xavier</a>
             </p>
           </div>
 
           <div className="hidden md:grid grid-cols-3 gap-8">
             <div className="space-y-4">
-              <h3 className="text-sm font-semibold">Quick Links</h3>
+              <h3 className="text-sm font-semibold">{t.footer.quickLinks}</h3>
               <ul className="space-y-2">
                 <li>
                   <Link className="text-sm text-muted-foreground transition-colors hover:text-foreground" href="/">
-                    Home
+                    {t.footer.home}
                   </Link>
                 </li>
                 <li>
                   <Link className="text-sm text-muted-foreground transition-colors hover:text-foreground" href="/browse">
-                    Bouquets
+                    {t.footer.bouquets}
                   </Link>
                 </li>
                 <li>
                   <Link className="text-sm text-muted-foreground transition-colors hover:text-foreground" href="/contact">
-                    Contact
+                    {t.footer.contact}
                   </Link>
                 </li>
               </ul>
             </div>
 
             <div className="space-y-4">
-              <h3 className="text-sm font-semibold">Resources</h3>
+              <h3 className="text-sm font-semibold">{t.footer.resources}</h3>
               <ul className="space-y-2">
                 <li>
                   <Link className="text-sm text-muted-foreground transition-colors hover:text-foreground" href="/guide">
-                    Order Guide
+                    {t.footer.orderGuide}
                   </Link>
                 </li>
                 <li>
                   <Link className="text-sm text-muted-foreground transition-colors hover:text-foreground" href="/blog">
-                    Floral Tips
+                    {t.footer.floralTips}
                   </Link>
                 </li>
                 <li>
                   <Link className="text-sm text-muted-foreground transition-colors hover:text-foreground" href="/care">
-                    Care Guide
+                    {t.footer.careGuide}
                   </Link>
                 </li>
                 <li>
                   <Link className="text-sm text-muted-foreground transition-colors hover:text-foreground" href="/help">
-                    Help Center
+                    {t.footer.helpCenter}
                   </Link>
                 </li>
               </ul>
             </div>
 
             <div className="space-y-4">
-              <h3 className="text-sm font-semibold">Legal</h3>
+              <h3 className="text-sm font-semibold">{t.footer.legal}</h3>
               <ul className="space-y-2">
                 <li>
                   <Link className="text-sm text-muted-foreground transition-colors hover:text-foreground" href="/privacy">
-                    Privacy Policy
+                    {t.footer.privacyPolicy}
                   </Link>
                 </li>
                 <li>
                   <Link className="text-sm text-muted-foreground transition-colors hover:text-foreground" href="/terms">
-                    Terms of Service
+                    {t.footer.termsOfService}
                   </Link>
                 </li>
               </ul>
@@ -96,8 +101,8 @@ const Footer: React.FC = () => {
 
         <div className="mt-12 border-t border-border/40 pt-8">
           <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
-            <p className="text-sm text-muted-foreground">© 2026 Anastasya. All rights reserved.</p>
-            <p className="text-sm text-muted-foreground">Made in <span className="underline">Malang</span>, Indonesia</p>
+            <p className="text-sm text-muted-foreground">© 2026 Anastasya. {t.footer.rights}</p>
+            <p className="text-sm text-muted-foreground">{t.footer.madeIn} <span className="underline">Malang</span>, Indonesia</p>
           </div>
         </div>
       </div>

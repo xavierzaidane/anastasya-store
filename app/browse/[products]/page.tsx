@@ -17,69 +17,13 @@ import {
   PaginationEllipsis,
 } from '@/components/ui/pagination';
 import { FilterBar, type Filter, type FilterFieldDef } from '@/components/ui/filter-token-bar';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 function parsePrice(priceStr: string | number): number {
   if (typeof priceStr === 'number') return priceStr;
   const num = Number(priceStr.replace(/[^0-9]/g, ''));
   return Number.isNaN(num) ? 0 : num;
 }
-
-const productFilterFields: FilterFieldDef[] = [
-  {
-    id: 'price',
-    label: 'Price',
-    icon: <Tag className="text-neutral-500 dark:text-zinc-400 w-3.5 h-3.5" />,
-    operators: [{ value: 'is', label: 'is' }],
-    options: [
-      { value: 'under_100k', label: 'Under Rp 100.000' },
-      { value: '100k_250k', label: 'Rp 100.000 – Rp 250.000' },
-      { value: '250k_500k', label: 'Rp 250.000 – Rp 500.000' },
-      { value: 'above_500k', label: 'Above Rp 500.000' },
-    ],
-  },
-  {
-    id: 'staff_pick',
-    label: 'Staff Pick',
-    icon: <Sparkles className=" text-neutral-500 dark:text-zinc-400 w-3.5 h-3.5" />,
-    operators: [{ value: 'is', label: 'is' }],
-    options: [
-      { value: 'yes', label: 'Staff Picks Only' },
-      { value: 'no', label: 'All Products' },
-    ],
-  },
-  {
-    id: 'flower',
-    label: 'Flower',
-    icon: <Flower2 className="text-neutral-500 dark:text-zinc-400 w-3.5 h-3.5" />,
-    operators: [
-      { value: 'is', label: 'contains' },
-      { value: 'is_any', label: 'contains any of', multi: true },
-    ],
-    options: [
-      { value: 'rose', label: 'Rose' },
-      { value: 'tulip', label: 'Tulip' },
-      { value: 'daisy', label: 'Daisy' },
-      { value: 'breath', label: "Baby's Breath" },
-      { value: 'hydrangea', label: 'Hydrangea' },
-      { value: 'sunflower', label: 'Sunflower' },
-      { value: 'lily', label: 'Lily' },
-      { value: 'carnation', label: 'Carnation' },
-      { value: 'orchid', label: 'Orchid' },
-    ],
-  },
-  {
-    id: 'sort',
-    label: 'Sort',
-    icon: <ArrowUpDown className=" text-neutral-500 dark:text-zinc-400 w-3.5 h-3.5" />,
-    operators: [{ value: 'is', label: 'is' }],
-    options: [
-      { value: 'price_asc', label: 'Price: Low to High' },
-      { value: 'price_desc', label: 'Price: High to Low' },
-      { value: 'name_asc', label: 'Name: A to Z' },
-      { value: 'staff_first', label: 'Staff Picks First' },
-    ],
-  },
-];
 
 interface CategoryDetailData {
   id: number;
@@ -119,6 +63,7 @@ function useMediaQuery(query: string) {
 }
 
 export default function CategoryPage() {
+  const { t } = useLanguage();
   const params = useParams();
   const categorySlug = params?.products as string;
   const [products, setProducts] = useState<StorefrontProduct[]>([]);
@@ -130,6 +75,66 @@ export default function CategoryPage() {
 
   const isMobile = useMediaQuery('(max-width: 640px)');
   const isTablet = useMediaQuery('(max-width: 768px)');
+
+  const productFilterFields: FilterFieldDef[] = useMemo(
+    () => [
+      {
+        id: 'price',
+        label: t.filters.price,
+        icon: <Tag className="text-neutral-500 dark:text-zinc-400 w-3.5 h-3.5" />,
+        operators: [{ value: 'is', label: 'is' }],
+        options: [
+          { value: 'under_100k', label: t.filters.under100k },
+          { value: '100k_250k', label: t.filters.between100k250k },
+          { value: '250k_500k', label: t.filters.between250k500k },
+          { value: 'above_500k', label: t.filters.above500k },
+        ],
+      },
+      {
+        id: 'staff_pick',
+        label: t.filters.staffPick,
+        icon: <Sparkles className=" text-neutral-500 dark:text-zinc-400 w-3.5 h-3.5" />,
+        operators: [{ value: 'is', label: 'is' }],
+        options: [
+          { value: 'yes', label: t.filters.staffPicksOnly },
+          { value: 'no', label: t.filters.allProducts },
+        ],
+      },
+      {
+        id: 'flower',
+        label: t.filters.flower,
+        icon: <Flower2 className="text-neutral-500 dark:text-zinc-400 w-3.5 h-3.5" />,
+        operators: [
+          { value: 'is', label: 'contains' },
+          { value: 'is_any', label: 'contains any of', multi: true },
+        ],
+        options: [
+          { value: 'rose', label: 'Rose' },
+          { value: 'tulip', label: 'Tulip' },
+          { value: 'daisy', label: 'Daisy' },
+          { value: 'breath', label: "Baby's Breath" },
+          { value: 'hydrangea', label: 'Hydrangea' },
+          { value: 'sunflower', label: 'Sunflower' },
+          { value: 'lily', label: 'Lily' },
+          { value: 'carnation', label: 'Carnation' },
+          { value: 'orchid', label: 'Orchid' },
+        ],
+      },
+      {
+        id: 'sort',
+        label: t.filters.sort,
+        icon: <ArrowUpDown className=" text-neutral-500 dark:text-zinc-400 w-3.5 h-3.5" />,
+        operators: [{ value: 'is', label: 'is' }],
+        options: [
+          { value: 'price_asc', label: t.filters.priceLowToHigh },
+          { value: 'price_desc', label: t.filters.priceHighToLow },
+          { value: 'name_asc', label: t.filters.nameAToZ },
+          { value: 'staff_first', label: t.filters.staffPicksFirst },
+        ],
+      },
+    ],
+    [t.filters]
+  );
 
   const fallbackCategoryName = useMemo(() => {
     if (!categorySlug) return '';
@@ -324,11 +329,11 @@ export default function CategoryPage() {
       <div className="w-full min-h-screen flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-2xl font-['KoPub_Batang'] text-zinc-800 mb-4">
-            {error ? 'Unable to load category' : 'Category not found'}
+            {error ? t.browse.unableToLoad : t.browse.categoryNotFound}
           </h1>
           {error && <p className="text-zinc-500 mb-4">{error}</p>}
           <Link href="/browse" className="text-orange-600 hover:text-orange-700">
-            Back to Catalog
+            {t.browse.backToCatalog}
           </Link>
         </div>
       </div>
@@ -352,10 +357,10 @@ export default function CategoryPage() {
       <div id="products-section" className="container mx-auto px-6 md:px-10 lg:px-12 max-w-8xl">
         <div className="transition-all duration-700 z-30 w-full flex items-center justify-between text-neutral-600 min-h-10 md:min-h-14 font-light text-sm px-0 md:mb-12 mb-6 backdrop-blur-xl border-b border-t border-neutral-200 flex-wrap gap-2 py-1.5 md:py-0">
           <p className="font-medium text-neutral-900 shrink-0">
-            Products ({filteredProducts.length})
+            {t.browse.products} ({filteredProducts.length})
             {totalPages > 1 && (
               <span className="text-muted-foreground font-normal ml-2 text-xs sm:text-sm">
-                • Page {currentPage} of {totalPages}
+                • {t.browse.page} {currentPage} {t.browse.of} {totalPages}
               </span>
             )}
           </p>
@@ -365,8 +370,8 @@ export default function CategoryPage() {
               value={filters}
               onChange={setFilters}
               aria-label="Filter products"
-              addLabel="Filter"
-              emptyLabel="Filter"
+              addLabel={t.browse.filter}
+              emptyLabel={t.browse.filter}
             />
             {filters.length > 0 && (
               <button
@@ -374,7 +379,7 @@ export default function CategoryPage() {
                 onClick={() => setFilters([])}
                 className="text-xs text-neutral-500 hover:text-neutral-900 transition-colors underline underline-offset-4 ml-1 cursor-pointer"
               >
-                Reset
+                {t.browse.reset}
               </button>
             )}
           </div>
@@ -385,13 +390,13 @@ export default function CategoryPage() {
       <div className="container mx-auto px-6 md:px-10 lg:px-12 max-w-8xl">
         {filteredProducts.length === 0 ? (
           <div className="py-20 text-center flex flex-col items-center justify-center">
-            <p className="text-neutral-600 mb-4 text-sm sm:text-base">No products match your active filters.</p>
+            <p className="text-neutral-600 mb-4 text-sm sm:text-base">{t.browse.noProductsMatch}</p>
             <button
               type="button"
               onClick={() => setFilters([])}
               className="inline-flex items-center justify-center px-4 py-2 border border-neutral-300 text-xs sm:text-sm font-medium rounded-md hover:bg-neutral-100 transition-colors cursor-pointer"
             >
-              Clear filters
+              {t.browse.clearFilters}
             </button>
           </div>
         ) : (
@@ -415,7 +420,7 @@ export default function CategoryPage() {
                 {product.isStaffPick && (
                   <div className="absolute top-1.5 left-1.5 sm:top-2 sm:left-2 px-2 py-0.5 sm:px-2.5 sm:py-1 bg-white/50 text-black backdrop-blur-sm rounded-full text-[10px] sm:text-xs font-normal flex items-center gap-1 z-10">
                     <Star className="w-2.5 h-2.5 sm:w-3 sm:h-3 fill-white/50 text-black" />
-                    <span>Staff Pick</span>
+                    <span>{t.staffPicks.staffPickBadge}</span>
                   </div>
                 )}
 
@@ -479,7 +484,7 @@ export default function CategoryPage() {
                 disabled={currentPage === 1}
                 size={isMobile ? 'sm' : 'default'}
               >
-                {isMobile ? 'Prev' : 'Previous'}
+                {t.browse.prev}
               </PaginationPrevious>
               {getVisiblePages().map((page, index) =>
                 page === '...' ? (
@@ -500,7 +505,7 @@ export default function CategoryPage() {
                 disabled={currentPage === totalPages}
                 size={isMobile ? 'sm' : 'default'}
               >
-                {isMobile ? 'Next' : 'Next'}
+                {t.browse.next}
               </PaginationNext>
             </Pagination>
           </div>

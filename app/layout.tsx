@@ -6,6 +6,8 @@ import { SavedItemsProvider } from "@/hooks/use-saved-items";
 import ConditionalFooter from "@/components/navigations/ConditionalFooter";
 import ScrollToTop from "@/components/common/ScrollToTop";
 
+import { LanguageProvider } from "@/contexts/LanguageContext";
+
 const fontSans = Manrope({
   subsets: ["latin"],
   variable: "--font-sans",
@@ -37,11 +39,13 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={`${fontSans.variable} ${fontSerif.variable} ${fontMono.variable} antialiased`}>
         <ClerkProvider>
-          <SavedItemsProvider>
-            <ScrollToTop />
-            {children}
-            <ConditionalFooter />
-          </SavedItemsProvider>
+          <LanguageProvider>
+            <SavedItemsProvider>
+              <ScrollToTop />
+              {children}
+              <ConditionalFooter />
+            </SavedItemsProvider>
+          </LanguageProvider>
         </ClerkProvider>
       </body>
     </html>

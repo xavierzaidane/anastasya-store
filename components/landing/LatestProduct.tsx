@@ -5,8 +5,10 @@ import React, { useEffect, useRef, useState } from 'react'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { mapApiProductToStorefront } from '@/lib/storefront-products'
 import { StorefrontApiResponse, StorefrontPaginatedProducts, StorefrontProduct } from '@/types/storefront'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 function LatestProduct() {
+  const { t } = useLanguage()
   const [products, setProducts] = useState<StorefrontProduct[]>([])
   const productLimit = 10
   const scrollRef = useRef<HTMLDivElement>(null)
@@ -52,11 +54,11 @@ function LatestProduct() {
                     {/* Left Column */}
                     <div>
                        <h1 className="text-7xl font-medium tracking-tighter text-neutral-900 leading-[0.95] pb-5 text-center md:text-left">
-                        Our Latest.
+                        {t.latestProducts.title}
                     </h1>
 
                     <p className="hidden md:block text-base md:text-lg text-neutral-600 leading-relaxed max-w-xl">
-                      Handcrafted bouquets made with fresh flowers and modern design, thoughtfully arranged to celebrate life&apos;s most meaningful moments.
+                      {t.latestProducts.subtitle1}
                     </p>
                    
                     </div>
@@ -64,7 +66,7 @@ function LatestProduct() {
                     {/* Right Column */}
                     <div className="flex flex-col items-end text-left">
                     <p className="text-base text-center md:text-lg text-neutral-600 leading-relaxed max-w-xl">
-                        Inspired by modern floristry, we create elegant bouquets that transform simple moments into memorable experiences.
+                        {t.latestProducts.subtitle2}
                     </p>
                     </div>
 
