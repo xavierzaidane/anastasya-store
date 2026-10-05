@@ -1,21 +1,28 @@
+'use client';
+
 import React from 'react';
 import RippleLink from '@/components/ui/ripple-link';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { RevealGroup, RevealItem } from './Reveal';
 
 function CTA() {
   const { t } = useLanguage();
 
   return (
     <section className="border-t border-neutral-200 py-12 reveal-text-container">
-      <div className="grid gap-10 pt-10 md:grid-cols-2 items-start mt-15">
+      <RevealGroup className="grid gap-10 pt-10 md:grid-cols-2 items-start mt-15">
         <div className="flex flex-col gap-3 text-center md:text-left">
-          <h2 className="text-5xl md:text-6xl font-normal tracking-tighter text-neutral-900 leading-[0.95]">
-            {t.cta.orderHere}
-          </h2>
-          <p className="mt-3 text-base text-neutral-600 leading-relaxed max-w-xl">
-            {t.cta.orderHereDesc}
-          </p>
-          <div className="relative flex justify-center md:justify-start pt-6 pb-12 sm:pb-8">
+          <RevealItem>
+            <h2 className="text-5xl md:text-6xl font-normal tracking-tighter text-neutral-900 leading-[0.95]">
+              {t.cta.orderHere}
+            </h2>
+          </RevealItem>
+          <RevealItem>
+            <p className="mt-3 text-base text-neutral-600 leading-relaxed max-w-xl">
+              {t.cta.orderHereDesc}
+            </p>
+          </RevealItem>
+          <RevealItem className="relative flex justify-center md:justify-start pt-6 pb-12 sm:pb-8">
             <div className="relative inline-flex items-center">
               {/* Hand-drawn "order here" and curved arrow pointing to the button */}
               <div className="absolute -bottom-11 -left-10 sm:-bottom-20 sm:-left-24 md:-left-28 flex items-center select-none pointer-events-none z-10">
@@ -52,13 +59,13 @@ function CTA() {
                 {t.cta.browseCollection}
               </RippleLink>
             </div>
-          </div>
+          </RevealItem>
         </div>
 
         <div className="flex flex-col items-center text-center md:text-right gap-5">
           
         </div>
-      </div>
+      </RevealGroup>
     </section>
   );
 }

@@ -1,0 +1,56 @@
+{
+  "name": "advisor",
+  "version": "1.0.0",
+  "role": "Two-axis code reviewer (Standards + Spec compliance)",
+  "mode": "subagent-only",
+  "primary": false,
+  "subagent_only": true,
+  "description": "Two-axis code reviewer agent restricted to programmatic subagent invocation. Evaluates Standards and Spec compliance, delivering structured reviews categorized by P1/P2/P3 severity with exact line references and actionable fixes.",
+  "system_prompt_file": "./advisor.md",
+  "capabilities": {
+    "file_read": true,
+    "file_write": false,
+    "terminal_read": true,
+    "terminal_write": false,
+    "subagents": false,
+    "mcp": true
+  },
+  "access_control": {
+    "allow_primary_chat": false,
+    "invocation_methods": [
+      "invoke_subagent"
+    ],
+    "authorized_callers": [
+      "build",
+      "surgical",
+      "plan"
+    ]
+  },
+  "output_contract": {
+    "format": "markdown",
+    "axes": [
+      "Standards Compliance (TypeScript, React/Next.js best practices, Prisma, Clerk, Tailwind, architecture)",
+      "Spec Compliance (functional requirements, contract satisfaction, edge-case coverage)"
+    ],
+    "severity_levels": [
+      "P1",
+      "P2",
+      "P3"
+    ],
+    "mandatory_fields": [
+      "severity",
+      "line_reference (file#L<line>)",
+      "observation",
+      "actionable_fix"
+    ]
+  },
+  "constraints": [
+    "Strictly follow the 31 Universal Rules",
+    "Must NOT be selectable as a primary chat agent",
+    "Only invoked programmatically as a subagent via invoke_subagent",
+    "Strict read-only sandbox mode; no write permissions",
+    "All findings must cite exact line references in file#L<line> format",
+    "Deliver actionable remediation snippets for every finding",
+    "Categorize all findings strictly into P1 (Blocker), P2 (Maintainability/Risk), P3 (Polish/Minor)"
+  ]
+}

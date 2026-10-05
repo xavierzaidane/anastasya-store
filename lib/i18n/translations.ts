@@ -52,7 +52,8 @@ export const translations = {
     faq: {
       badge: 'Frequently Asked Questions',
       title: 'Everything You Need to Know',
-      subtitle: 'Find answers about ordering, customizations, delivery, and bouquet care.',
+      subtitle:
+        'Everything you need to know about Anastasya Bouquet — from placing orders and custom designs to delivery and flower care.',
     },
     // Order Guide Page
     guide: {
@@ -244,7 +245,8 @@ export const translations = {
     faq: {
       badge: 'Pertanyaan Umum (FAQ)',
       title: 'Segala Hal yang Perlu Anda Ketahui',
-      subtitle: 'Temukan jawaban seputar pemesanan, kustomisasi, pengiriman, dan perawatan buket bunga.',
+      subtitle:
+        'Segala hal yang perlu Anda ketahui tentang Anastasya Bouquet — mulai dari pemesanan, kustomisasi buket, pengiriman, hingga panduan perawatan bunga.',
     },
     // Order Guide Page
     guide: {

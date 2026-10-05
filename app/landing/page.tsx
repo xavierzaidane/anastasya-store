@@ -1,16 +1,17 @@
 "use client";
-import Hero from '@/components/landing/Hero'
+import Hero from '@/components/landing/Hero';
+import { MotionConfig } from 'motion/react';
 
 function LandingPage() {
-
   return (
-    <div className="relative overflow-x-hidden">
-
-      <div className="relative z-10">
-        <Hero />
+    <MotionConfig reducedMotion="user">
+      <div className="relative overflow-x-hidden">
+        <div className="relative z-10">
+          <Hero />
+        </div>
       </div>
-    </div>
-  )
+    </MotionConfig>
+  );
 }
 
 

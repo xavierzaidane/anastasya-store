@@ -1,0 +1,51 @@
+{
+  "name": "plan",
+  "version": "1.0.0",
+  "role": "Read-only architect",
+  "mode": "sandbox",
+  "primary": true,
+  "subagent_only": false,
+  "description": "Architect agent that executes design-tree grilling, ingests CONTEXT.md and codebase, and creates implementation_plan.md and PLAN.md for explicit user approval before any code changes start.",
+  "system_prompt_file": "./plan.md",
+  "capabilities": {
+    "file_read": true,
+    "file_write": "restricted",
+    "terminal_read": true,
+    "terminal_write": false,
+    "subagents": true,
+    "mcp": true
+  },
+  "allowed_write_targets": [
+    "implementation_plan.md",
+    "PLAN.md"
+  ],
+  "forbidden_targets": [
+    "app/**",
+    "components/**",
+    "contexts/**",
+    "hooks/**",
+    "lib/**",
+    "types/**",
+    "data/**",
+    "prisma/**",
+    "public/**",
+    "package.json",
+    "tsconfig*.json",
+    "next.config.ts",
+    "proxy.ts",
+    "prisma.config.ts",
+    "*.ts",
+    "*.tsx",
+    "*.js",
+    "*.jsx",
+    "*.mjs",
+    "*.css"
+  ],
+  "constraints": [
+    "Strictly follow the 31 Universal Rules",
+    "Forbidden from modifying source code files",
+    "Limited solely to reading the codebase and writing/updating plan files (implementation_plan.md, PLAN.md)",
+    "Must execute design-tree grilling and ingest CONTEXT.md and existing architecture before finalizing plans",
+    "Require explicit user approval before any downstream execution"
+  ]
+}

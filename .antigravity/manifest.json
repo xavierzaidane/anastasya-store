@@ -1,0 +1,93 @@
+{
+  "$schema": "https://antigravity.google/schemas/agent-manifest-v1.json",
+  "version": "1.0.0",
+  "name": "anastasya-store-core-agents",
+  "description": "Core multi-agent configuration and governance framework for the repository.",
+  "baseline_rules": {
+    "title": "31 Universal Rules",
+    "path": "./rules/31-universal-rules.md"
+  },
+  "agents": [
+    {
+      "id": "plan",
+      "name": "plan",
+      "role": "Read-only architect",
+      "mode": "sandbox",
+      "primary": true,
+      "subagent_only": false,
+      "manifest": "./agents/plan.json",
+      "prompt": "./agents/plan.md",
+      "task": "Execute design-tree grilling, ingest CONTEXT.md and the existing codebase, and output implementation_plan.md and PLAN.md for explicit user approval before any code changes start.",
+      "scope": {
+        "source_code_modification": "forbidden",
+        "allowed_writes": ["implementation_plan.md", "PLAN.md"]
+      }
+    },
+    {
+      "id": "build",
+      "name": "build",
+      "role": "TDD implementer",
+      "mode": "auto",
+      "primary": true,
+      "subagent_only": false,
+      "manifest": "./agents/build.json",
+      "prompt": "./agents/build.md",
+      "task": "Implement narrow vertical slices at interface seams. Enforce strict Red-Green TDD (write a failing test first, implement minimum viable code, verify it passes).",
+      "subagent_integration": {
+        "required_validations": ["advisor", "tester"]
+      }
+    },
+    {
+      "id": "surgical",
+      "name": "surgical",
+      "role": "Minimal-diff bug fixer",
+      "mode": "sandbox",
+      "primary": true,
+      "subagent_only": false,
+      "manifest": "./agents/surgical.json",
+      "prompt": "./agents/surgical.md",
+      "task": "Diagnose the root cause first, then apply the fix using the smallest possible diff.",
+      "safety_rule": {
+        "circuit_breaker": "~10% change cap per pass",
+        "opportunistic_refactoring": "forbidden",
+        "style_cleanup": "forbidden",
+        "modifications_outside_target": "forbidden"
+      }
+    },
+    {
+      "id": "advisor",
+      "name": "advisor",
+      "role": "Two-axis code reviewer (Standards + Spec compliance)",
+      "mode": "subagent-only",
+      "primary": false,
+      "subagent_only": true,
+      "manifest": "./agents/advisor.json",
+      "prompt": "./agents/advisor.md",
+      "access_restriction": "Must NOT be selectable as a primary chat agent. Only invoked programmatically as a subagent via invoke_subagent.",
+      "output_format": {
+        "structure": "Structured two-axis review",
+        "severities": ["P1", "P2", "P3"],
+        "line_reference_format": "file#L<line>",
+        "actionable_fixes": "required"
+      }
+    },
+    {
+      "id": "tester",
+      "name": "tester",
+      "role": "Automated test executor and regression verifier",
+      "mode": "subagent-only",
+      "primary": false,
+      "subagent_only": true,
+      "manifest": "./agents/tester.json",
+      "prompt": "./agents/tester.md",
+      "task": "Execute automated test suites, type checks (tsc) and lint, analyze failure logs, verify test coverage at interface seams, and ensure regression safety.",
+      "access_restriction": "Subagent-only. Programmatically invoked by primary agents (build, surgical) or automated workflows.",
+      "capabilities": {
+        "file_read": true,
+        "file_write": false,
+        "terminal_read": true,
+        "terminal_write": true
+      }
+    }
+  ]
+}

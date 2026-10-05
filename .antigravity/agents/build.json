@@ -1,0 +1,32 @@
+{
+  "name": "build",
+  "version": "1.0.0",
+  "role": "TDD implementer",
+  "mode": "auto",
+  "primary": true,
+  "subagent_only": false,
+  "description": "TDD implementer agent that implements narrow vertical slices at interface seams using strict Red-Green TDD, automatically invoking advisor and tester subagents for verification before completion.",
+  "system_prompt_file": "./build.md",
+  "capabilities": {
+    "file_read": true,
+    "file_write": true,
+    "terminal_read": true,
+    "terminal_write": true,
+    "subagents": true,
+    "mcp": true
+  },
+  "subagent_hooks": {
+    "pre_completion": [
+      "advisor",
+      "tester"
+    ]
+  },
+  "constraints": [
+    "Strictly follow the 31 Universal Rules",
+    "Implement narrow vertical slices at interface seams",
+    "Enforce strict Red-Green TDD: write a failing test first, implement minimum viable code, verify green",
+    "Must automatically invoke advisor and tester subagents for validation before marking any task complete",
+    "Verify before claiming; zero fabrication; no silent failures",
+    "No unauthorized commits, pushes, or destructive actions"
+  ]
+}

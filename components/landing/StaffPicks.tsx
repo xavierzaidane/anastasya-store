@@ -6,6 +6,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { mapApiProductToStorefront } from '@/lib/storefront-products';
 import { StorefrontApiResponse, StorefrontPaginatedProducts, StorefrontProduct } from '@/types/storefront';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { RevealGroup, RevealItem } from './Reveal';
 
 export default function StaffPicks() {
   const { t } = useLanguage();
@@ -91,80 +92,91 @@ export default function StaffPicks() {
 
   return (
     <section className="relative w-full py-12 md:py-16 mt-15">
-      <div className="mb-8 md:mb-10 text-center md:text-left">
-        <h2 className="text-4xl md:text-5xl lg:text-6xl font-normal tracking-tighter text-neutral-900 leading-[0.95]">
-          {t.staffPicks.title}
-        </h2>
-        <p className="mt-3 text-base text-neutral-600 leading-relaxed max-w-xl">
-          {t.staffPicks.subtitle}
-        </p>
-      </div>
+      <RevealGroup>
+        <RevealItem>
+          <div className="mb-8 md:mb-10 text-center md:text-left">
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-normal tracking-tighter text-neutral-900 leading-[0.95]">
+              {t.staffPicks.title}
+            </h2>
+            <p className="mt-3 text-base text-neutral-600 leading-relaxed max-w-xl">
+              {t.staffPicks.subtitle}
+            </p>
+          </div>
+        </RevealItem>
+      </RevealGroup>
 
       {/* Mobile Carousel */}
       <div className="md:hidden">
-        <div className="flex gap-4 overflow-x-auto snap-x snap-mandatory scroll-smooth pb-4 no-scrollbar -mx-6 px-6">
+        <RevealGroup className="flex gap-4 overflow-x-auto snap-x snap-mandatory scroll-smooth pb-4 no-scrollbar -mx-6 px-6">
           {products.map((product) => (
-            <Link
+            <RevealItem
               key={product.id}
-              href={`/browse/${product.category}/${product.slug}`}
-              className="shrink-0 w-72 sm:w-78 snap-start group block focus-visible:outline-none"
-              aria-label={`View details for ${product.name}`}
+              className="shrink-0 w-72 sm:w-78 snap-start"
             >
-              <div className="relative h-86 rounded-lg overflow-hidden cursor-pointer bg-zinc-100 group">
-                <img
-                  src={product.img}
-                  alt={product.name}
-                  className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                />
-                <p className="absolute bottom-2 right-2 px-3 py-1.5 bg-white/80 backdrop-blur-sm rounded-full text-xs font-semibold text-zinc-900 shadow-sm">
-                  {product.price}
-                </p>
-              </div>
+              <Link
+                href={`/browse/${product.category}/${product.slug}`}
+                className="group block focus-visible:outline-none"
+                aria-label={`View details for ${product.name}`}
+              >
+                <div className="relative h-86 rounded-lg overflow-hidden cursor-pointer bg-zinc-100 group">
+                  <img
+                    src={product.img}
+                    alt={product.name}
+                    className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  />
+                  <p className="absolute bottom-2 right-2 px-3 py-1.5 bg-white/80 backdrop-blur-sm rounded-full text-xs font-semibold text-zinc-900 shadow-sm">
+                    {product.price}
+                  </p>
+                </div>
 
-              <div className="pt-3">
-                <p className="text-xs text-zinc-500 line-clamp-1">
-                  {product.categoryName || product.category}
-                </p>
-                <h3 className="text-sm font-medium text-zinc-900 line-clamp-2 mt-0.5">
-                  {product.name}
-                </h3>
-              </div>
-            </Link>
+                <div className="pt-3">
+                  <p className="text-xs text-zinc-500 line-clamp-1">
+                    {product.categoryName || product.category}
+                  </p>
+                  <h3 className="text-sm font-medium text-zinc-900 line-clamp-2 mt-0.5">
+                    {product.name}
+                  </h3>
+                </div>
+              </Link>
+            </RevealItem>
           ))}
-        </div>
+        </RevealGroup>
       </div>
 
       {/* Desktop Grid */}
-      <div className="hidden md:grid md:grid-cols-4 lg:grid-cols-5 gap-4 lg:gap-6">
-        {products.map((product) => (
-          <Link
-            key={product.id}
-            href={`/browse/${product.category}/${product.slug}`}
-            className="group block focus-visible:outline-none"
-            aria-label={`View details for ${product.name}`}
-          >
-            <div className="relative bg-zinc-100 overflow-hidden aspect-[3/4] rounded-md">
-              <img
-                src={product.img}
-                alt={product.name}
-                className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-              />
+      <div className="hidden md:block">
+        <RevealGroup className="grid md:grid-cols-4 lg:grid-cols-5 gap-4 lg:gap-6">
+          {products.map((product) => (
+            <RevealItem key={product.id}>
+              <Link
+                href={`/browse/${product.category}/${product.slug}`}
+                className="group block focus-visible:outline-none"
+                aria-label={`View details for ${product.name}`}
+              >
+                <div className="relative bg-zinc-100 overflow-hidden aspect-[3/4] rounded-md">
+                  <img
+                    src={product.img}
+                    alt={product.name}
+                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                  />
 
-              <p className="absolute bottom-2 right-2 px-3 py-1.5 bg-white/70 backdrop-blur-sm rounded-full text-xs sm:text-sm font-semibold text-zinc-900 shadow-sm">
-                {product.price}
-              </p>
-            </div>
+                  <p className="absolute bottom-2 right-2 px-3 py-1.5 bg-white/70 backdrop-blur-sm rounded-full text-xs sm:text-sm font-semibold text-zinc-900 shadow-sm">
+                    {product.price}
+                  </p>
+                </div>
 
-            <div className="pt-3">
-              <p className="text-xs text-zinc-500 line-clamp-1">
-                {product.categoryName || product.category}
-              </p>
-              <h3 className="text-sm sm:text-base font-medium text-zinc-900 line-clamp-2 mt-0.5">
-                {product.name}
-              </h3>
-            </div>
-          </Link>
-        ))}
+                <div className="pt-3">
+                  <p className="text-xs text-zinc-500 line-clamp-1">
+                    {product.categoryName || product.category}
+                  </p>
+                  <h3 className="text-sm sm:text-base font-medium text-zinc-900 line-clamp-2 mt-0.5">
+                    {product.name}
+                  </h3>
+                </div>
+              </Link>
+            </RevealItem>
+          ))}
+        </RevealGroup>
       </div>
     </section>
   );

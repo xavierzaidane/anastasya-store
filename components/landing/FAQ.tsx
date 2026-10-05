@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
 import { BlurredStagger } from '@/components/ui/text-reveal-faqs'
 import { useLanguage } from '@/contexts/LanguageContext'
+import { RevealGroup, RevealItem } from './Reveal'
 
 export default function FaqLanding() {
   const { isID } = useLanguage()
@@ -77,19 +78,19 @@ export default function FaqLanding() {
   return (
     <section className="py-16 md:py-24 ">
       <div className="mx-auto w-full px-6 text-center md:text-left">
-        <div className="grid gap-8 md:grid-cols-5 md:gap-12">
-          <div className="md:col-span-2">
+        <RevealGroup className="grid gap-8 md:grid-cols-5 md:gap-12">
+          <RevealItem className="md:col-span-2">
             <h2 className="text-neutral-900 text-4xl md:text-5xl font-normal tracking-tighter leading-[0.95]">
               {isID ? 'Pertanyaan Umum (FAQ)' : 'Frequently Asked Questions'}
             </h2>
             <p className="text-muted-foreground mt-4 text-balance text-lg">
               {isID
-                ? 'Segala hal yang perlu Anda ketahui tentang Anastasya Bouquet'
-                : 'Everything you need to know about Anastasya Bouquet'}
+                ? 'Segala hal yang perlu Anda ketahui tentang Anastasya Bouquet — mulai dari pemesanan, kustomisasi buket, pengiriman, hingga panduan perawatan bunga.'
+                : 'Everything you need to know about Anastasya Bouquet — from placing orders and custom designs to delivery and flower care.'}
             </p>
-          </div>
+          </RevealItem>
 
-          <div className="md:col-span-3">
+          <RevealItem className="md:col-span-3">
             <Accordion
               type="single"
               collapsible>
@@ -107,30 +108,32 @@ export default function FaqLanding() {
                 </AccordionItem>
               ))}
             </Accordion>
-          </div>
+          </RevealItem>
 
-          <p className="text-muted-foreground mt-6 md:hidden">
-            {isID ? (
-              <>
-                Tidak menemukan jawaban yang Anda cari? Hubungi{' '}
-                <Link
-                  href="/contact"
-                  className="text-primary font-medium hover:underline">
-                  tim layanan pelanggan kami
-                </Link>
-              </>
-            ) : (
-              <>
-                Can&apos;t find what you&apos;re looking for? Contact our{' '}
-                <Link
-                  href="/contact"
-                  className="text-primary font-medium hover:underline">
-                  customer support team
-                </Link>
-              </>
-            )}
-          </p>
-        </div>
+          <RevealItem className="text-muted-foreground mt-6 md:hidden">
+            <p>
+              {isID ? (
+                <>
+                  Tidak menemukan jawaban yang Anda cari? Hubungi{' '}
+                  <Link
+                    href="/contact"
+                    className="text-primary font-medium hover:underline">
+                    tim layanan pelanggan kami
+                  </Link>
+                </>
+              ) : (
+                <>
+                  Can&apos;t find what you&apos;re looking for? Contact our{' '}
+                  <Link
+                    href="/contact"
+                    className="text-primary font-medium hover:underline">
+                    customer support team
+                  </Link>
+                </>
+              )}
+            </p>
+          </RevealItem>
+        </RevealGroup>
       </div>
     </section>
   )

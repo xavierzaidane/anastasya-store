@@ -3,7 +3,7 @@
 import React from 'react'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
 import Link from 'next/link'
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "motion/react";
 
 export interface FAQItem {
   id: string;
@@ -118,6 +118,18 @@ export const BlurredStagger = ({
 }: {
   text: string;
 }) => {
+  const shouldReduceMotion = useReducedMotion();
+
+  if (shouldReduceMotion) {
+    return (
+      <div className="w-full">
+        <p className="text-base leading-relaxed break-words whitespace-normal text-muted-foreground">
+          {text}
+        </p>
+      </div>
+    );
+  }
+
   const headingText = text;
 
   const container = {
@@ -144,6 +156,7 @@ export const BlurredStagger = ({
   return (
     <div className="w-full">
       <motion.p
+        aria-label={headingText}
         variants={container}
         initial="hidden"
         animate="show"
@@ -155,6 +168,7 @@ export const BlurredStagger = ({
             variants={letterAnimation}
             transition={{ duration: 0.3 }}
             className="inline-block"
+            aria-hidden="true"
           >
             {char === " " ? "\u00A0" : char}
           </motion.span>

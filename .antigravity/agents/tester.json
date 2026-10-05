@@ -1,0 +1,24 @@
+{
+  "name": "tester",
+  "version": "1.0.0",
+  "role": "Automated test executor and regression verifier",
+  "mode": "subagent-only",
+  "primary": false,
+  "subagent_only": true,
+  "description": "Subagent responsible for running test suites, type checks and lint, analyzing failure outputs, assessing test coverage at seams, and ensuring regression safety.",
+  "system_prompt_file": "./tester.md",
+  "capabilities": {
+    "file_read": true,
+    "file_write": false,
+    "terminal_read": true,
+    "terminal_write": true,
+    "subagents": false,
+    "mcp": true
+  },
+  "constraints": [
+    "Strictly follow the 31 Universal Rules",
+    "Only invoked as a subagent by primary agents (build, surgical) or automated workflows",
+    "Run tests and report exact exit codes, stdout, and failing assertions",
+    "Zero fabrication of test outcomes"
+  ]
+}
