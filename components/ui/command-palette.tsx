@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useId, useMemo, useRef, useState } from "react";
+import { useEffect, useId, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 
@@ -86,9 +86,11 @@ export function useCommandPalette({
   const pointer = useRef({ x: -1, y: -1 });
 
   const select = useRef(onSelect);
-  select.current = onSelect;
   const dismiss = useRef(onDismiss);
-  dismiss.current = onDismiss;
+  useEffect(() => {
+    select.current = onSelect;
+    dismiss.current = onDismiss;
+  });
 
   const results = useMemo(() => rank(items, query), [items, query]);
 
@@ -395,11 +397,15 @@ function PaletteLayer({
   reduced: boolean;
   children: React.ReactNode;
 }) {
-  const [host, setHost] = useState<HTMLElement | null>(null);
+  const host = useSyncExternalStore(
+    () => () => {},
+    () => document.body,
+    () => null
+  );
   const leave = useRef(onDismiss);
-  leave.current = onDismiss;
-
-  useEffect(() => setHost(document.body), []);
+  useEffect(() => {
+    leave.current = onDismiss;
+  });
 
   useEffect(() => {
     if (!open) return;

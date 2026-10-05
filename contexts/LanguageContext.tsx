@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useSyncExternalStore } from 'react';
 import { translations, type Language, type TranslationKeys } from '@/lib/i18n/translations';
 
 interface LanguageContextType {
@@ -16,25 +16,52 @@ const LanguageContext = createContext<LanguageContextType | undefined>(undefined
 
 const LANGUAGE_STORAGE_KEY = 'anastasya_language';
 
+const listeners = new Set<() => void>();
+
+function subscribe(callback: () => void) {
+  listeners.add(callback);
+  if (typeof window !== 'undefined') {
+    window.addEventListener('storage', callback);
+  }
+  return () => {
+    listeners.delete(callback);
+    if (typeof window !== 'undefined') {
+      window.removeEventListener('storage', callback);
+    }
+  };
+}
+
+function getSnapshot(): Language {
+  if (typeof window === 'undefined') return 'en';
+  try {
+    const storedLang = localStorage.getItem(LANGUAGE_STORAGE_KEY) as Language | null;
+    return storedLang === 'en' || storedLang === 'id' ? storedLang : 'en';
+  } catch {
+    return 'en';
+  }
+}
+
+function getServerSnapshot(): Language {
+  return 'en';
+}
+
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
-  const [language, setLanguageState] = useState<Language>('en');
-  const [isMounted, setIsMounted] = useState(false);
+  const language = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
 
   useEffect(() => {
-    setIsMounted(true);
-    const storedLang = localStorage.getItem(LANGUAGE_STORAGE_KEY) as Language | null;
-    if (storedLang === 'en' || storedLang === 'id') {
-      setLanguageState(storedLang);
-      document.documentElement.lang = storedLang;
-    }
-  }, []);
+    document.documentElement.lang = language;
+  }, [language]);
 
   const setLanguage = (newLang: Language) => {
-    setLanguageState(newLang);
     if (typeof window !== 'undefined') {
-      localStorage.setItem(LANGUAGE_STORAGE_KEY, newLang);
+      try {
+        localStorage.setItem(LANGUAGE_STORAGE_KEY, newLang);
+      } catch {
+        // ignore
+      }
       document.cookie = `${LANGUAGE_STORAGE_KEY}=${newLang}; path=/; max-age=31536000; SameSite=Lax`;
       document.documentElement.lang = newLang;
+      listeners.forEach((listener) => listener());
     }
   };
 
@@ -68,4 +95,3 @@ export function useLanguage() {
   }
   return context;
 }
-
